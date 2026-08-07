@@ -11,7 +11,7 @@ app = modal.App("rai-master-sdr-pipeline")
 
 # Image containing duckduckgo-search library for reliable scraping
 image = modal.Image.debian_slim().pip_install(
-    "requests", "beautifulsoup4", "openai", "supabase", "resend", "duckduckgo-search"
+    "requests", "beautifulsoup4", "openai", "supabase", "resend", "ddgs"
 )
 
 SKIP_DOMAINS = [
@@ -64,7 +64,7 @@ def run_full_sdr_workflow(niche: str = "Construction", location: str = "United A
     from supabase import create_client
     from openai import OpenAI
     import resend
-    from duckduckgo_search import DDGS
+    from ddgs import DDGS
 
     supabase = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_KEY"])
     ai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
