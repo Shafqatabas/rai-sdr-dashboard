@@ -2,3 +2,5 @@ streamlit
 modal
 pandas
 supabase
+requests
+beautifulsoup4
