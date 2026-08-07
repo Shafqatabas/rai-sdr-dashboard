@@ -12,12 +12,12 @@ if "MODAL_TOKEN_SECRET" in st.secrets:
 
 # Page Config
 st.set_page_config(
-    page_title="Rai Marketing OS",
+    page_title="Rai Marketing OS - Global SDR Engine",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom Styling (Professional Corporate SaaS Design)
+# Custom Styling (Corporate SaaS Design)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
@@ -43,7 +43,7 @@ st.markdown("""
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
     .brand-logo { 
-        font-size: 32px; 
+        font-size: 24px; 
         font-weight: 800;
         margin-right: 20px; 
         background: rgba(99, 102, 241, 0.2);
@@ -118,9 +118,47 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Global Pre-built Lists for Dropdowns
+COUNTRIES_LIST = [
+    "Worldwide / Global",
+    "United States",
+    "United Kingdom",
+    "Canada",
+    "Australia",
+    "United Arab Emirates",
+    "Saudi Arabia",
+    "Germany",
+    "France",
+    "Spain",
+    "Italy",
+    "Netherlands",
+    "Pakistan",
+    "India",
+    "Singapore",
+    "Custom Location..."
+]
+
+INDUSTRIES_LIST = [
+    "All / Any Business",
+    "Real Estate Agencies",
+    "Roofing Contractors",
+    "Dental Practices",
+    "Solar Energy & Installers",
+    "Digital Marketing Agencies",
+    "E-commerce & Online Stores",
+    "Law Firms & Legal Services",
+    "Healthcare & Medical Clinics",
+    "Construction & Plumbing",
+    "Software & SaaS Companies",
+    "Hotels & Hospitality",
+    "Accounting & Financial Services",
+    "Fitness Centers & Gyms",
+    "Custom Industry..."
+]
+
 # Supabase Credentials
-SUPABASE_URL = st.secrets.get("SUPABASE_URL", "https://xdiduoutcswibfmdkroa.supabase.co")
-SUPABASE_KEY = st.secrets.get("SUPABASE_KEY", "sb_publishable_zUTFg8RqHqlEe6V2Jy2wfg_FxNRaixl")
+SUPABASE_URL = st.secrets.get("SUPABASE_URL", "https://wosvxuafqixewndpxypa.supabase.co")
+SUPABASE_KEY = st.secrets.get("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indvc3Z4dWFmcWl4ZXduZHB4eXBhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNzgwMzMsImV4cCI6MjA1Njg1NDAzM30.7Qf2wV64x-i5t8q9A2oO4k90K_B22qKxR")
 
 @st.cache_data(ttl=10)
 def fetch_analytics():
@@ -137,7 +175,7 @@ st.markdown("""
     <div class="brand-logo">RAI</div>
     <div>
         <div class="brand-name">Rai Marketing Agency</div>
-        <div class="brand-sub">Autonomous SDR Lead Engine & AI Dispatcher</div>
+        <div class="brand-sub">Worldwide SDR Lead Engine & AI Dispatcher</div>
     </div>
     <div class="welcome-text">
         Welcome back, <br><b>Rai Shafqat Abbas</b>
@@ -153,21 +191,9 @@ with st.sidebar:
     
     agent_name = st.text_input("Active Model Name", value="Rai_SDR_v1")
     st.success(f"Model ID: **{agent_name}** [Online]")
-    
     st.divider()
-    st.markdown("### Quick Presets")
-    preset = st.selectbox("Select Target Industry:", ["Custom Input", "Dental USA", "Real Estate UK", "Roofing Canada", "Solar USA"])
-
-# Preset Mapping
-default_niche, default_location = "dental", "USA"
-if preset == "Dental USA":
-    default_niche, default_location = "dentist", "USA"
-elif preset == "Real Estate UK":
-    default_niche, default_location = "real estate agency", "UK"
-elif preset == "Roofing Canada":
-    default_niche, default_location = "roofing contractor", "Canada"
-elif preset == "Solar USA":
-    default_niche, default_location = "solar installer", "USA"
+    st.markdown("### Global Scope")
+    st.info("System is configured for multi-country & multi-industry outreach.")
 
 # --- FETCH METRICS ---
 all_leads = fetch_analytics()
@@ -176,17 +202,50 @@ sent_emails = sum(1 for d in all_leads if d.get("status") == "Sent")
 pending_queue = sum(1 for d in all_leads if d.get("status") in ["New", "Ready to Send"])
 
 # --- MAIN DASHBOARD LAYOUT (CARDS) ---
-col_left, col_right = st.columns([1.2, 1.8], gap="large")
+col_left, col_right = st.columns([1.3, 1.7], gap="large")
 
 with col_left:
     st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-    st.markdown("### Campaign Launchpad")
-    st.caption("Configure search targets for the AI agent.")
+    st.markdown("### Target Selection Launchpad")
+    st.caption("Select your target industry and location filters.")
     
-    niche = st.text_input("Target Industry / Keyword:", value=default_niche, placeholder="e.g. dentist, lawyer, roofing")
-    location = st.text_input("Target Location / Country:", value=default_location, placeholder="e.g. USA, UK, UAE")
+    # 1. Industry Selector (Top)
+    selected_industry_option = st.selectbox(
+        "Select Target Industry:",
+        INDUSTRIES_LIST,
+        index=0
+    )
     
-    st.markdown(f"<div style='color:#a5b4fc; font-size:12px; margin: 10px 0;'>Query: <code>\"{niche}\" \"contact\" \"{location}\"</code></div>", unsafe_allow_html=True)
+    if selected_industry_option == "Custom Industry...":
+        final_niche = st.text_input("Enter Custom Industry:", placeholder="e.g. HVAC, Car Rental, Logistics")
+    elif selected_industry_option == "All / Any Business":
+        final_niche = "business"
+    else:
+        final_niche = selected_industry_option
+
+    st.write("") # Spacing
+
+    # 2. Country Selector (Bottom)
+    selected_country_option = st.selectbox(
+        "Select Target Country / Scope:",
+        COUNTRIES_LIST,
+        index=0
+    )
+    
+    if selected_country_option == "Custom Location...":
+        final_location = st.text_input("Enter Custom Location:", placeholder="e.g. Dubai, London, New York")
+    elif selected_country_option == "Worldwide / Global":
+        final_location = "Global"
+    else:
+        final_location = selected_country_option
+
+    # Search Query Preview
+    st.markdown(
+        f"<div style='color:#a5b4fc; font-size:12px; margin: 15px 0; background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155;'>"
+        f"Generated Query: <code>\"{final_niche}\" \"contact\" \"{final_location}\"</code>"
+        f"</div>", 
+        unsafe_allow_html=True
+    )
     
     run_pipeline = st.button("Initialize Pipeline Execution", use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
@@ -208,14 +267,14 @@ with col_right:
 
 # --- EXECUTION TERMINAL SECTION ---
 if run_pipeline:
-    if not niche or not location:
-        st.error("Please provide both target industry and location parameters.")
+    if not final_niche or not final_location:
+        st.error("Please ensure both industry and location parameters are valid.")
     else:
         st.markdown('<div class="custom-card">', unsafe_allow_html=True)
         st.markdown("### Live Cloud Execution Output")
         
         status_box = st.empty()
-        status_box.info(f"Executing cloud workflow for **{niche.upper()}** in **{location.upper()}** using **{agent_name}**...")
+        status_box.info(f"Executing cloud workflow for **{final_niche.upper()}** in **{final_location.upper()}** using **{agent_name}**...")
         
         log_box = st.empty()
         
@@ -229,11 +288,10 @@ if run_pipeline:
         env["PYTHONIOENCODING"] = "utf-8"
         env["PYTHONUTF8"] = "1"
         
-        # Streamlit Cloud پر سسٹمک پائتھون انوائرنمنٹ استعمال کرنا
         command = [
             sys.executable, "-m", "modal", "run", "master_pipeline.py",
-            "--niche", niche,
-            "--location", location
+            "--niche", final_niche,
+            "--location", final_location
         ]
         
         try:
