@@ -9,10 +9,10 @@ import json
 
 app = modal.App("rai-master-sdr-pipeline")
 
-# Image containing duckduckgo-search and core dependencies
+# Image containing duckduckgo-search library for reliable scraping
 image = modal.Image.debian_slim().pip_install(
-    "requests", "beautifulsoup4", "openai", "supabase", "resend", "duckduckgo-search"
-)
+    "requests", "beautifulsoup4", "openai", "supabase", "resend", "ddgs"
+    )
 
 SKIP_DOMAINS = [
     "rocketreach.co", "aeroleads.com", "rentechdigital.com", "spherescout.io",
@@ -33,10 +33,10 @@ INVALID_EMAIL_PATTERNS = [
 def is_valid_email(email: str) -> bool:
     if not email:
         return False
-    email_lower = email.lower().strip()
+    email_lower = email.lower()
     if any(pattern in email_lower for pattern in INVALID_EMAIL_PATTERNS):
         return False
-    if email_lower.endswith(('.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif', '.js', '.css', '.pdf')):
+    if email_lower.endswith(('.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif', '.js', '.css')):
         return False
     
     parts = email_lower.split('@')
@@ -59,17 +59,12 @@ def sanitize_text(text: str) -> str:
         return ""
     return text.replace("\x00", "").encode('utf-8', 'ignore').decode('utf-8')
 
-@app.function(
-    image=image, 
-    secrets=[modal.Secret.from_name("rai-secrets")], 
-    schedule=modal.Cron("0 8 * * *"),
-    timeout=1800
-)
+@app.function(image=image, secrets=[modal.Secret.from_name("rai-secrets")], schedule=modal.Cron("0 8 * * *"))
 def run_full_sdr_workflow(niche: str = "Construction", location: str = "United Arab Emirates"):
     from supabase import create_client
     from openai import OpenAI
     import resend
-    from duckduckgo_search import DDGS
+    from ddgs import DDGS
 
     supabase = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_KEY"])
     ai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
@@ -90,14 +85,14 @@ def run_full_sdr_workflow(niche: str = "Construction", location: str = "United A
     except Exception as err:
         print(f"Warning fetching existing records: {err}")
 
-    # --- PHASE 1: DUCKDUCKGO SEARCH & SCRAPING ---
+    # --- RELIABLE DUCKDUCKGO SEARCH VIA SDK ---
     search_query = f'{niche} contact {location}'
     print(f"[SEARCHING ENGINE] Executing Query: {search_query}")
     
     target_urls = []
     try:
         with DDGS() as ddgs:
-            results = list(ddgs.text(search_query, max_results=20))
+            results = list(ddgs.text(search_query, max_results=15))
             for r in results:
                 href = r.get('href', '')
                 if href and href.startswith('http'):
@@ -105,15 +100,17 @@ def run_full_sdr_workflow(niche: str = "Construction", location: str = "United A
     except Exception as search_err:
         print(f"DDGS Search Error: {search_err}")
 
+    print(f"[SCRAPER] Found {len(target_urls)} dynamic targets.")
+
     # Fallback to direct Bing HTML search if DDG returns empty
     if not target_urls:
         print("[SCRAPER] Primary search empty, trying secondary fallback engine...")
         try:
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
             bing_url = f"https://www.bing.com/search?q={requests.utils.quote(search_query)}"
             b_res = requests.get(bing_url, headers=headers, timeout=10)
             if b_res.status_code == 200:
-                b_soup = BeautifulSoup(b_res.text, 'parser' if 'parser' in b_res.text else 'html.parser')
+                b_soup = BeautifulSoup(b_res.text, 'html.parser')
                 for h2 in b_soup.find_all('h2'):
                     a_tag = h2.find('a')
                     if a_tag and a_tag.get('href', '').startswith('http'):
@@ -121,9 +118,7 @@ def run_full_sdr_workflow(niche: str = "Construction", location: str = "United A
         except Exception as fallback_err:
             print(f"Fallback Search Error: {fallback_err}")
 
-    print(f"[SCRAPER] Found {len(target_urls)} dynamic targets.")
-
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
 
     for website in target_urls:
         parsed_url = urlparse(website)
@@ -142,7 +137,7 @@ def run_full_sdr_workflow(niche: str = "Construction", location: str = "United A
             site_req = requests.get(website, timeout=8, headers=headers)
             soup = BeautifulSoup(site_req.text, 'html.parser')
             page_text = site_req.text
-            scraped_notes = soup.get_text(separator=' ', strip=True)[:1500]
+            scraped_notes = soup.get_text()[:1500]
 
             emails = re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", page_text)
             valid_emails = [e for e in emails if is_valid_email(e)]
@@ -152,7 +147,7 @@ def run_full_sdr_workflow(niche: str = "Construction", location: str = "United A
             if found_email == "Not Found":
                 for a in soup.find_all('a', href=True):
                     href_val = a['href'].lower()
-                    if any(term in href_val for term in ['contact', 'kontakt', 'about', 'reach']):
+                    if 'contact' in href_val or 'kontakt' in href_val or 'about' in href_val:
                         contact_link = urljoin(website, a['href'])
                         try:
                             c_req = requests.get(contact_link, timeout=5, headers=headers)
@@ -164,7 +159,7 @@ def run_full_sdr_workflow(niche: str = "Construction", location: str = "United A
                         except Exception:
                             pass
 
-            phones = re.findall(r"(\+971\s?[0-9\s\-]{7,12}|\+49\s?[0-9\s\-]{6,15}|\+92\s?[0-9\s\-]{9,12}|\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})", page_text)
+            phones = re.findall(r"(\+971\s?[0-9\s\-]{7,12}|\+49\s?[0-9\s\-]{6,15}|\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})", page_text)
             if phones:
                 found_phone = phones[0]
         except Exception as err:
