@@ -114,6 +114,15 @@ st.markdown("""
 SUPABASE_URL = "https://xdiduoutcswibfmdkroa.supabase.co"
 SUPABASE_KEY = "sb_publishable_zUTFg8RqHqlEe6V2Jy2wfg_FxNRaixl"
 
+# Secrets سے ٹوکنز اٹھا کر Environment Variables میں سیٹ کریں
+if "MODAL_TOKEN_ID" in st.secrets:
+    os.environ["MODAL_TOKEN_ID"] = st.secrets["MODAL_TOKEN_ID"]
+    os.environ["MODAL_TOKEN_SECRET"] = st.secrets["MODAL_TOKEN_SECRET"]
+
+# پائپ لائن ایگزیکیوٹ کرنے کی کمانڈ
+cmd = [os.sys.executable, "-m", "modal", "run", "master_pipeline.py"]
+result = subprocess.run(cmd, capture_output=True, text=True)
+
 @st.cache_data(ttl=10)
 def fetch_analytics():
     try:
