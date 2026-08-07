@@ -1,12 +1,18 @@
 import streamlit as st
 import subprocess
+import sys
 import os
 from supabase import create_client
+
+# Streamlit Secrets سے Modal Tokens کو Environment میں سیٹ کرنا
+if "MODAL_TOKEN_ID" in st.secrets:
+    os.environ["MODAL_TOKEN_ID"] = st.secrets["MODAL_TOKEN_ID"]
+if "MODAL_TOKEN_SECRET" in st.secrets:
+    os.environ["MODAL_TOKEN_SECRET"] = st.secrets["MODAL_TOKEN_SECRET"]
 
 # Page Config
 st.set_page_config(
     page_title="Rai Marketing OS",
-    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -37,12 +43,14 @@ st.markdown("""
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
     .brand-logo { 
-        font-size: 42px; 
+        font-size: 32px; 
+        font-weight: 800;
         margin-right: 20px; 
         background: rgba(99, 102, 241, 0.2);
         padding: 10px 16px;
         border-radius: 14px;
         border: 1px solid #6366f1;
+        color: #818cf8;
     }
     .brand-name { 
         font-size: 26px; 
@@ -111,17 +119,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Supabase Credentials
-SUPABASE_URL = "https://xdiduoutcswibfmdkroa.supabase.co"
-SUPABASE_KEY = "sb_publishable_zUTFg8RqHqlEe6V2Jy2wfg_FxNRaixl"
-
-# Secrets سے ٹوکنز اٹھا کر Environment Variables میں سیٹ کریں
-if "MODAL_TOKEN_ID" in st.secrets:
-    os.environ["MODAL_TOKEN_ID"] = st.secrets["MODAL_TOKEN_ID"]
-    os.environ["MODAL_TOKEN_SECRET"] = st.secrets["MODAL_TOKEN_SECRET"]
-
-# پائپ لائن ایگزیکیوٹ کرنے کی کمانڈ
-cmd = [os.sys.executable, "-m", "modal", "run", "master_pipeline.py"]
-result = subprocess.run(cmd, capture_output=True, text=True)
+SUPABASE_URL = st.secrets.get("SUPABASE_URL", "https://xdiduoutcswibfmdkroa.supabase.co")
+SUPABASE_KEY = st.secrets.get("SUPABASE_KEY", "sb_publishable_zUTFg8RqHqlEe6V2Jy2wfg_FxNRaixl")
 
 @st.cache_data(ttl=10)
 def fetch_analytics():
@@ -135,7 +134,7 @@ def fetch_analytics():
 # --- TOP CORPORATE HEADER ---
 st.markdown("""
 <div class="header-container">
-    <div class="brand-logo">🚀</div>
+    <div class="brand-logo">RAI</div>
     <div>
         <div class="brand-name">Rai Marketing Agency</div>
         <div class="brand-sub">Autonomous SDR Lead Engine & AI Dispatcher</div>
@@ -148,15 +147,15 @@ st.markdown("""
 
 # --- SIDEBAR CONTROL PANEL ---
 with st.sidebar:
-    st.markdown("### ⚙️ System Setup")
+    st.markdown("### System Setup")
     st.caption("Core Infrastructure Control")
     st.divider()
     
     agent_name = st.text_input("Active Model Name", value="Rai_SDR_v1")
-    st.success(f"Model ID: **{agent_name}** [Online 🟢]")
+    st.success(f"Model ID: **{agent_name}** [Online]")
     
     st.divider()
-    st.markdown("### 🎯 Quick Presets")
+    st.markdown("### Quick Presets")
     preset = st.selectbox("Select Target Industry:", ["Custom Input", "Dental USA", "Real Estate UK", "Roofing Canada", "Solar USA"])
 
 # Preset Mapping
@@ -181,7 +180,7 @@ col_left, col_right = st.columns([1.2, 1.8], gap="large")
 
 with col_left:
     st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-    st.markdown("### 🎯 Campaign Launchpad")
+    st.markdown("### Campaign Launchpad")
     st.caption("Configure search targets for the AI agent.")
     
     niche = st.text_input("Target Industry / Keyword:", value=default_niche, placeholder="e.g. dentist, lawyer, roofing")
@@ -189,12 +188,12 @@ with col_left:
     
     st.markdown(f"<div style='color:#a5b4fc; font-size:12px; margin: 10px 0;'>Query: <code>\"{niche}\" \"contact\" \"{location}\"</code></div>", unsafe_allow_html=True)
     
-    run_pipeline = st.button("🚀 Initialize Pipeline Execution", use_container_width=True)
+    run_pipeline = st.button("Initialize Pipeline Execution", use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col_right:
     st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-    st.markdown("### 📊 Agent Performance Analytics")
+    st.markdown("### Agent Performance Analytics")
     st.caption(f"Real-time data metrics from model: **{agent_name}**")
     
     m1, m2, m3 = st.columns(3)
@@ -213,23 +212,33 @@ if run_pipeline:
         st.error("Please provide both target industry and location parameters.")
     else:
         st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-        st.markdown("### ⚡ Live Cloud Execution Output")
-        
-        command = f'python -m modal run master_pipeline.py --niche "{niche}" --location "{location}"'
+        st.markdown("### Live Cloud Execution Output")
         
         status_box = st.empty()
-        status_box.info(f"🔄 Executing cloud workflow for **{niche.upper()}** in **{location.upper()}** using **{agent_name}**...")
+        status_box.info(f"Executing cloud workflow for **{niche.upper()}** in **{location.upper()}** using **{agent_name}**...")
         
         log_box = st.empty()
         
+        # Prepare Environment Variables including Modal Tokens
         env = os.environ.copy()
+        if "MODAL_TOKEN_ID" in st.secrets:
+            env["MODAL_TOKEN_ID"] = st.secrets["MODAL_TOKEN_ID"]
+        if "MODAL_TOKEN_SECRET" in st.secrets:
+            env["MODAL_TOKEN_SECRET"] = st.secrets["MODAL_TOKEN_SECRET"]
+            
         env["PYTHONIOENCODING"] = "utf-8"
         env["PYTHONUTF8"] = "1"
+        
+        # Streamlit Cloud پر سسٹمک پائتھون انوائرنمنٹ استعمال کرنا
+        command = [
+            sys.executable, "-m", "modal", "run", "master_pipeline.py",
+            "--niche", niche,
+            "--location", location
+        ]
         
         try:
             process = subprocess.Popen(
                 command, 
-                shell=True, 
                 stdout=subprocess.PIPE, 
                 stderr=subprocess.STDOUT, 
                 text=True,
@@ -246,10 +255,10 @@ if run_pipeline:
             process.wait()
             
             if process.returncode == 0:
-                status_box.success("🎉 **Success!** Pipeline executed successfully. Outbound emails dispatched.")
+                status_box.success("Success! Pipeline executed successfully. Outbound emails dispatched.")
                 st.cache_data.clear()
             else:
-                status_box.error("❌ Pipeline execution failed. Please check the logs above.")
+                status_box.error("Pipeline execution failed. Please check the logs above.")
                 
         except Exception as e:
             st.error(f"Execution Error: {str(e)}")
@@ -260,7 +269,7 @@ st.write("")
 
 # --- DATABASE LEADS TABLE SECTION ---
 st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-st.markdown("### 🗂️ Live Database Records")
+st.markdown("### Live Database Records")
 st.caption("Latest scraped companies, contact details, and outbound status from Supabase.")
 
 if all_leads:
