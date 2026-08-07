@@ -9,8 +9,9 @@ import json
 
 app = modal.App("rai-master-sdr-pipeline")
 
+# Image containing duckduckgo-search library for reliable scraping
 image = modal.Image.debian_slim().pip_install(
-    "requests", "beautifulsoup4", "openai", "supabase", "resend"
+    "requests", "beautifulsoup4", "openai", "supabase", "resend", "duckduckgo-search"
 )
 
 SKIP_DOMAINS = [
@@ -58,12 +59,12 @@ def sanitize_text(text: str) -> str:
         return ""
     return text.replace("\x00", "").encode('utf-8', 'ignore').decode('utf-8')
 
-# Daily Cron Schedule: Runs automatically every day at 8:00 AM UTC
 @app.function(image=image, secrets=[modal.Secret.from_name("rai-secrets")], schedule=modal.Cron("0 8 * * *"))
 def run_full_sdr_workflow(niche: str = "Construction", location: str = "United Arab Emirates"):
     from supabase import create_client
     from openai import OpenAI
     import resend
+    from duckduckgo_search import DDGS
 
     supabase = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_KEY"])
     ai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
@@ -84,28 +85,40 @@ def run_full_sdr_workflow(niche: str = "Construction", location: str = "United A
     except Exception as err:
         print(f"Warning fetching existing records: {err}")
 
-    # --- DYNAMIC SCRAPING VIA DUCKDUCKGO ---
-    search_query = f'"{niche}" "contact" "{location}"'
-    print(f"[SEARCHING ENGINE] Query: {search_query}")
-    
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
-    }
+    # --- RELIABLE DUCKDUCKGO SEARCH VIA SDK ---
+    search_query = f'{niche} contact {location}'
+    print(f"[SEARCHING ENGINE] Executing Query: {search_query}")
     
     target_urls = []
     try:
-        ddg_url = f"https://html.duckduckgo.com/html/?q={requests.utils.quote(search_query)}"
-        ddg_res = requests.get(ddg_url, headers=headers, timeout=10)
-        if ddg_res.status_code == 200:
-            soup_ddg = BeautifulSoup(ddg_res.text, 'html.parser')
-            for a in soup_ddg.find_all('a', class_='result__url'):
-                href = a.get('href', '')
+        with DDGS() as ddgs:
+            results = list(ddgs.text(search_query, max_results=15))
+            for r in results:
+                href = r.get('href', '')
                 if href and href.startswith('http'):
                     target_urls.append(href)
     except Exception as search_err:
-        print(f"Search engine query error: {search_err}")
+        print(f"DDGS Search Error: {search_err}")
 
     print(f"[SCRAPER] Found {len(target_urls)} dynamic targets.")
+
+    # Fallback to direct Bing HTML search if DDG returns empty
+    if not target_urls:
+        print("[SCRAPER] Primary search empty, trying secondary fallback engine...")
+        try:
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+            bing_url = f"https://www.bing.com/search?q={requests.utils.quote(search_query)}"
+            b_res = requests.get(bing_url, headers=headers, timeout=10)
+            if b_res.status_code == 200:
+                b_soup = BeautifulSoup(b_res.text, 'html.parser')
+                for h2 in b_soup.find_all('h2'):
+                    a_tag = h2.find('a')
+                    if a_tag and a_tag.get('href', '').startswith('http'):
+                        target_urls.append(a_tag['href'])
+        except Exception as fallback_err:
+            print(f"Fallback Search Error: {fallback_err}")
+
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
 
     for website in target_urls:
         parsed_url = urlparse(website)
@@ -152,7 +165,6 @@ def run_full_sdr_workflow(niche: str = "Construction", location: str = "United A
         except Exception as err:
             print(f"Scraping error on {website}: {err}")
 
-        # Ensure valid email fallback for processing
         if not is_valid_email(found_email):
             found_email = f"info@{domain.replace('www.', '')}"
 
