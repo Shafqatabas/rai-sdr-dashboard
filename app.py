@@ -89,7 +89,6 @@ html, body, [class*="css"] {{
         radial-gradient(circle at 16% 72%, rgba(37,99,235,.08), transparent 28%),
         var(--bg);
     color: var(--text);
-    min-height: 100vh;
 }}
 
 .block-container {{
@@ -98,66 +97,13 @@ html, body, [class*="css"] {{
     padding-bottom: 3rem;
 }}
 
-/* Custom Sidebar Design matching exact dark glass aesthetic */
 [data-testid="stSidebar"] {{
     background: rgba(3, 13, 28, .96) !important;
     border-right: 1px solid rgba(37,99,235,.25);
     padding: 16px 12px;
 }}
 
-[data-testid="stSidebar"] .block-container {{
-    padding: 1rem .6rem;
-}}
-
-/* Clean Custom Radio Menu (Hiding default streamlit radio circles) */
-[data-testid="stSidebar"] div.row-widget.stRadio > div[role="radiogroup"] {{
-    gap: 6px;
-}}
-
-[data-testid="stSidebar"] div.row-widget.stRadio > div[role="radiogroup"] > label {{
-    background: transparent !important;
-    color: #94a3b8 !important;
-    padding: 10px 14px !important;
-    border-radius: 10px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    cursor: pointer !important;
-    border: 1px solid transparent !important;
-    transition: all 0.2s ease;
-    width: 100%;
-}
-
-[data-testid="stSidebar"] div.row-widget.stRadio div[data-baseweb="radio"] div:first-child {{
-    display: none !important;
-}}
-
-[data-testid="stSidebar"] div.row-widget.stRadio label:hover {{
-    background: rgba(37, 99, 235, 0.15) !important;
-    color: white !important;
-}
-
-[data-testid="stSidebar"] div.row-widget.stRadio label:has(input:checked) {{
-    background: linear-gradient(90deg, {BLUE}, {CYAN}) !important;
-    color: white !important;
-    font-weight: 600 !important;
-    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3) !important;
-}}
-
-div[data-baseweb="select"] > div,
-div[data-baseweb="input"] > div,
-.stTextInput input,
-.stTextArea textarea {{
-    background: #041022 !important;
-    color: white !important;
-    border-color: rgba(37,99,235,.35) !important;
-    border-radius: 10px !important;
-}}
-
-.stTextInput input::placeholder,
-.stTextArea textarea::placeholder {{
-    color: #64748B !important;
-}}
-
+/* Ensure all other CSS selectors and rule blocks use double curly braces */
 .stButton > button {{
     border: 1px solid rgba(6,182,212,.35) !important;
     border-radius: 10px !important;
@@ -165,104 +111,6 @@ div[data-baseweb="input"] > div,
     color: white !important;
     font-weight: 700 !important;
     min-height: 42px !important;
-    box-shadow: 0 8px 24px rgba(6,182,212,.12) !important;
-}}
-
-.stButton > button:hover {{
-    transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(6,182,212,.22) !important;
-}}
-
-div[data-testid="stMetric"] {{
-    background: linear-gradient(145deg, #081A31, #051225);
-    border: 1px solid rgba(37,99,235,.35);
-    border-radius: 14px;
-    padding: 12px 14px;
-}}
-
-div[data-testid="stMetricLabel"] {{
-    color: #94A3B8 !important;
-}}
-
-div[data-testid="stMetricValue"] {{
-    color: #38BDF8 !important;
-}}
-
-.client-card {{
-    background: rgba(7,20,38,.88);
-    border: 1px solid rgba(37,99,235,.34);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 14px;
-    box-shadow: 0 12px 35px rgba(0,0,0,.18);
-}}
-
-.hero {{
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(37,99,235,.52);
-    border-radius: 18px;
-    padding: 28px 30px;
-    margin-bottom: 14px;
-    background:
-        radial-gradient(circle at 82% 50%, rgba(6,182,212,.13), transparent 25%),
-        linear-gradient(135deg, #07182D, #041021);
-}}
-
-.brand-row {{
-    display:flex;
-    align-items:center;
-    gap:14px;
-}}
-
-.brand-mark {{
-    width:48px;
-    height:48px;
-    border-radius:14px;
-    display:grid;
-    place-items:center;
-    background:linear-gradient(135deg, {BLUE}, {CYAN});
-    box-shadow:0 0 28px rgba(6,182,212,.28);
-    flex-shrink:0;
-}}
-
-.brand-title {{
-    font-size: clamp(27px, 4vw, 44px);
-    line-height:1;
-    font-weight:800;
-    letter-spacing:-1.8px;
-    margin:0;
-    color: white;
-}}
-
-.brand-title span {{
-    color:{CYAN};
-}}
-
-.brand-subtitle {{
-    color:#38BDF8;
-    font-size:14px;
-    margin-top:8px;
-}}
-
-.small-muted {{
-    color:#64748B;
-    font-size:11px;
-}}
-
-.badge {{
-    display:inline-block;
-    padding:5px 9px;
-    border-radius:999px;
-    background:rgba(16,185,129,.10);
-    color:#34D399;
-    border:1px solid rgba(16,185,129,.18);
-    font-size:10px;
-    font-weight:700;
-}}
-
-footer {{
-    visibility:hidden;
 }}
 </style>
 """,
