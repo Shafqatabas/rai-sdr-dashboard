@@ -293,45 +293,7 @@ st.markdown(
 [data-testid="stSidebar"] .block-container {{ padding: 14px 12px 20px !important; }}
 .block-container {{ max-width: 1540px !important; padding: .35rem 1rem 2.5rem !important; }}
 
-/* Sidebar navigation */
-[data-testid="stSidebar"] .stRadio > label {{ display:none !important; }}
-[data-testid="stSidebar"] div[role="radiogroup"] {{ gap:5px !important; }}
-[data-testid="stSidebar"] div[role="radiogroup"] label {{
-    position:relative !important;
-    border-radius:10px !important;
-    padding:9px 11px !important;
-    color:#9fb0c6 !important;
-    background:transparent !important;
-    border:1px solid transparent !important;
-    transition:.18s ease !important;
-    cursor:pointer !important;
-}}
-/* Hide Streamlit's native radio circles — navigation is styled as menu items */
-[data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child {{
-    display:none !important;
-}}
-[data-testid="stSidebar"] div[role="radiogroup"] label input[type="radio"] {{
-    position:absolute !important;
-    opacity:0 !important;
-    width:1px !important;
-    height:1px !important;
-    pointer-events:none !important;
-}}
-[data-testid="stSidebar"] div[role="radiogroup"] label:hover {{
-    background:rgba(37,99,235,.12) !important;
-    color:#fff !important;
-}}
-[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) {{
-    background:linear-gradient(90deg,#1677ee,#0b63dc) !important;
-    color:#fff !important;
-    border-color:rgba(56,189,248,.35) !important;
-    box-shadow:0 7px 22px rgba(37,99,235,.22) !important;
-}}
-[data-testid="stSidebar"] div[role="radiogroup"] label p {{
-    font-size:12px !important; font-weight:600 !important; margin:0 !important;
-}}
-[data-testid="stSidebar"] div[role="radiogroup"] label p::before {{ content:"◈  "; color:#38bdf8; }}
-
+/* Sidebar navigation is rendered with custom buttons below. */
 /* Remove Streamlit's white header/toolbar so the dashboard starts at the top */
 header[data-testid="stHeader"] {{
     display:none !important;
@@ -348,6 +310,63 @@ header[data-testid="stHeader"] {{
 .main .block-container {{
     padding-top:.35rem !important;
 }}
+
+/* Clean custom sidebar buttons */
+[data-testid="stSidebar"] .stButton {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+[data-testid="stSidebar"] .stButton > button {
+    width: 100% !important;
+    min-height: 39px !important;
+    height: 39px !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    padding: 0 13px !important;
+    margin: 2px 0 !important;
+    border: 1px solid transparent !important;
+    border-radius: 9px !important;
+    background: transparent !important;
+    color: #9fb0c6 !important;
+    box-shadow: none !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    transform: none !important;
+}
+[data-testid="stSidebar"] .stButton > button:hover {
+    background: rgba(37,99,235,.12) !important;
+    color: #ffffff !important;
+    border-color: rgba(56,189,248,.18) !important;
+}
+[data-testid="stSidebar"] .stButton > button[kind="primary"] {
+    background: linear-gradient(90deg,#1677ee,#0b63dc) !important;
+    color: #ffffff !important;
+    border-color: rgba(56,189,248,.35) !important;
+    box-shadow: 0 7px 22px rgba(37,99,235,.22) !important;
+}
+[data-testid="stSidebar"] .stButton > button p {
+    margin: 0 !important;
+    font-size: 11px !important;
+}
+
+/* Remove the residual Streamlit top strip/offset */
+html, body, #root, .stApp, [data-testid="stAppViewContainer"] {
+    background-color: #020817 !important;
+}
+header[data-testid="stHeader"] {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+}
+[data-testid="stAppViewContainer"],
+[data-testid="stAppViewContainer"] > .main,
+section[data-testid="stSidebar"] {
+    margin-top: 0 !important;
+    top: 0 !important;
+}
+[data-testid="stAppViewContainer"] > .main {
+    padding-top: 0 !important;
+}
 
 /* Top bar */
 .ce-topbar {{
@@ -564,21 +583,34 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    menu = st.radio(
-        "Navigation",
-        [
-            "Dashboard",
-            "Find Leads",
-            "Lead Database",
-            "AI Outreach",
-            "Follow-ups",
-            "Campaigns",
-            "Analytics",
-            "Email Templates",
-            "Settings",
-        ],
-        label_visibility="collapsed",
-    )
+    # Custom sidebar navigation — buttons instead of st.radio so there are
+    # no native radio circles and no Streamlit radio artifacts.
+    nav_items = [
+        ("⌂", "Dashboard"),
+        ("⌕", "Find Leads"),
+        ("▤", "Lead Database"),
+        ("➤", "AI Outreach"),
+        ("◷", "Follow-ups"),
+        ("▥", "Campaigns"),
+        ("◔", "Analytics"),
+        ("✉", "Email Templates"),
+        ("⚙", "Settings"),
+    ]
+
+    if "ce_menu" not in st.session_state:
+        st.session_state.ce_menu = "Dashboard"
+
+    menu = st.session_state.ce_menu
+    for icon, label in nav_items:
+        active = menu == label
+        if st.button(
+            f"{icon}  {label}",
+            key=f"ce_nav_{label}",
+            use_container_width=True,
+            type="primary" if active else "secondary",
+        ):
+            st.session_state.ce_menu = label
+            st.rerun()
 
     st.markdown(
         '<div style="margin:18px 4px 8px;color:#64748b;font-size:9px;font-weight:700;letter-spacing:1px;">AI ENGINE STATUS</div>',
