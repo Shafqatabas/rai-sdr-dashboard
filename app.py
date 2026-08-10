@@ -1146,8 +1146,7 @@ PIPELINE_FILE="master_pipeline.py"
 # -----------------------------
 st.markdown(
     """
-    <div style="text-align:center;color:#475569;font-size:10px;margin-top:28px;">
-        ClientEngine AI · Rai Marketing Agency · Find. Analyze. Engage. Grow.
-    </div>
+    ClientEngine AI · Rai Marketing Agency · Find. Analyze. Engage. Grow.
     """,
     unsafe_allow_html=True,
+)
