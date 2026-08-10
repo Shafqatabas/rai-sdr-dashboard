@@ -291,18 +291,31 @@ st.markdown(
     border-right: 1px solid rgba(6,182,212,.24) !important;
 }}
 [data-testid="stSidebar"] .block-container {{ padding: 14px 12px 20px !important; }}
-.block-container {{ max-width: 1540px !important; padding: .75rem 1rem 2.5rem !important; }}
+.block-container {{ max-width: 1540px !important; padding: .35rem 1rem 2.5rem !important; }}
 
 /* Sidebar navigation */
 [data-testid="stSidebar"] .stRadio > label {{ display:none !important; }}
 [data-testid="stSidebar"] div[role="radiogroup"] {{ gap:5px !important; }}
 [data-testid="stSidebar"] div[role="radiogroup"] label {{
+    position:relative !important;
     border-radius:10px !important;
     padding:9px 11px !important;
     color:#9fb0c6 !important;
     background:transparent !important;
     border:1px solid transparent !important;
     transition:.18s ease !important;
+    cursor:pointer !important;
+}}
+/* Hide Streamlit's native radio circles — navigation is styled as menu items */
+[data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child {{
+    display:none !important;
+}}
+[data-testid="stSidebar"] div[role="radiogroup"] label input[type="radio"] {{
+    position:absolute !important;
+    opacity:0 !important;
+    width:1px !important;
+    height:1px !important;
+    pointer-events:none !important;
 }}
 [data-testid="stSidebar"] div[role="radiogroup"] label:hover {{
     background:rgba(37,99,235,.12) !important;
@@ -318,6 +331,23 @@ st.markdown(
     font-size:12px !important; font-weight:600 !important; margin:0 !important;
 }}
 [data-testid="stSidebar"] div[role="radiogroup"] label p::before {{ content:"◈  "; color:#38bdf8; }}
+
+/* Remove Streamlit's white header/toolbar so the dashboard starts at the top */
+header[data-testid="stHeader"] {{
+    display:none !important;
+}}
+[data-testid="stToolbar"] {{
+    display:none !important;
+}}
+[data-testid="stDecoration"] {{
+    display:none !important;
+}}
+.stAppViewContainer > .main {{
+    padding-top:0 !important;
+}}
+.main .block-container {{
+    padding-top:.35rem !important;
+}}
 
 /* Top bar */
 .ce-topbar {{
