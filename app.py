@@ -283,187 +283,180 @@ footer {{
 # ClientEngine AI — Screenshot-matched UI layer
 # ============================================================
 st.markdown(
-    f"""
+    """
 <style>
 /* Main shell */
-[data-testid="stSidebar"] {{
+[data-testid="stSidebar"] {
     background: linear-gradient(180deg,#030b18 0%,#041326 55%,#020a16 100%) !important;
     border-right: 1px solid rgba(6,182,212,.24) !important;
-}}
-[data-testid="stSidebar"] .block-container {{ padding: 14px 12px 20px !important; }}
-.block-container {{ max-width: 1540px !important; padding: .35rem 1rem 2.5rem !important; }}
+}
+[data-testid="stSidebar"] .block-container { padding: 14px 12px 20px !important; }
+.block-container { max-width: 1540px !important; padding: .35rem 1rem 2.5rem !important; }
 
-/* Sidebar navigation is rendered with custom buttons below. */
+/* Sidebar navigation */
+[data-testid="stSidebar"] .stRadio > label { display:none !important; }
+[data-testid="stSidebar"] div[role="radiogroup"] { gap:5px !important; }
+[data-testid="stSidebar"] div[role="radiogroup"] label {
+    position:relative !important;
+    border-radius:10px !important;
+    padding:9px 11px !important;
+    color:#9fb0c6 !important;
+    background:transparent !important;
+    border:1px solid transparent !important;
+    transition:.18s ease !important;
+    cursor:pointer !important;
+}
+/* Hide Streamlit's native radio circles — navigation is styled as menu items */
+[data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child {
+    display:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label > div[data-baseweb="radio"] {
+    display:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label div[data-baseweb="radio"] > div {
+    display:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label svg {
+    display:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] input[type="radio"] {
+    display:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label input[type="radio"] {
+    position:absolute !important;
+    opacity:0 !important;
+    width:1px !important;
+    height:1px !important;
+    pointer-events:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label:hover {
+    background:rgba(37,99,235,.12) !important;
+    color:#fff !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) {
+    background:linear-gradient(90deg,#1677ee,#0b63dc) !important;
+    color:#fff !important;
+    border-color:rgba(56,189,248,.35) !important;
+    box-shadow:0 7px 22px rgba(37,99,235,.22) !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label p {
+    font-size:12px !important; font-weight:600 !important; margin:0 !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label p::before { content:"◈  "; color:#38bdf8; }
+
 /* Remove Streamlit's white header/toolbar so the dashboard starts at the top */
-header[data-testid="stHeader"] {{
-    display:none !important;
-}}
-[data-testid="stToolbar"] {{
-    display:none !important;
-}}
-[data-testid="stDecoration"] {{
-    display:none !important;
-}}
-.stAppViewContainer > .main {{
-    padding-top:0 !important;
-}}
-.main .block-container {{
-    padding-top:.35rem !important;
-}}
-
-/* Clean custom sidebar buttons */
-[data-testid="stSidebar"] .stButton {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-[data-testid="stSidebar"] .stButton > button {
-    width: 100% !important;
-    min-height: 39px !important;
-    height: 39px !important;
-    justify-content: flex-start !important;
-    text-align: left !important;
-    padding: 0 13px !important;
-    margin: 2px 0 !important;
-    border: 1px solid transparent !important;
-    border-radius: 9px !important;
-    background: transparent !important;
-    color: #9fb0c6 !important;
-    box-shadow: none !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    transform: none !important;
-}
-[data-testid="stSidebar"] .stButton > button:hover {
-    background: rgba(37,99,235,.12) !important;
-    color: #ffffff !important;
-    border-color: rgba(56,189,248,.18) !important;
-}
-[data-testid="stSidebar"] .stButton > button[kind="primary"] {
-    background: linear-gradient(90deg,#1677ee,#0b63dc) !important;
-    color: #ffffff !important;
-    border-color: rgba(56,189,248,.35) !important;
-    box-shadow: 0 7px 22px rgba(37,99,235,.22) !important;
-}
-[data-testid="stSidebar"] .stButton > button p {
-    margin: 0 !important;
-    font-size: 11px !important;
-}
-
-/* Remove the residual Streamlit top strip/offset */
-html, body, #root, .stApp, [data-testid="stAppViewContainer"] {
-    background-color: #020817 !important;
-}
 header[data-testid="stHeader"] {
-    display: none !important;
-    height: 0 !important;
-    min-height: 0 !important;
+    display:none !important;
 }
-[data-testid="stAppViewContainer"],
-[data-testid="stAppViewContainer"] > .main,
-section[data-testid="stSidebar"] {
-    margin-top: 0 !important;
-    top: 0 !important;
+[data-testid="stToolbar"] {
+    display:none !important;
 }
-[data-testid="stAppViewContainer"] > .main {
-    padding-top: 0 !important;
+[data-testid="stDecoration"] {
+    display:none !important;
+}
+.stAppViewContainer > .main {
+    padding-top:0 !important;
+}
+.main .block-container {
+    padding-top:.35rem !important;
 }
 
 /* Top bar */
-.ce-topbar {{
+.ce-topbar {
     height:48px; display:flex; align-items:center; justify-content:space-between;
     margin:0 0 10px; padding:0 4px;
-}}
-.ce-topline {{ color:#43cfff; font-size:12px; letter-spacing:.2px; }}
-.ce-topright {{ display:flex; align-items:center; gap:12px; }}
-.ce-searchbox {{
+}
+.ce-topline { color:#43cfff; font-size:12px; letter-spacing:.2px; }
+.ce-topright { display:flex; align-items:center; gap:12px; }
+.ce-searchbox {
     width:260px; height:36px; display:flex; align-items:center; gap:8px;
     border:1px solid rgba(37,99,235,.45); border-radius:9px;
     background:#061225; color:#64748b; padding:0 12px; font-size:11px;
-}}
-.ce-icon {{ color:#94a3b8; font-size:16px; }}
-.ce-avatar {{
+}
+.ce-icon { color:#94a3b8; font-size:16px; }
+.ce-avatar {
     width:34px; height:34px; border-radius:50%; display:grid; place-items:center;
     background:linear-gradient(135deg,#0ea5e9,#2563eb); color:#fff; font-size:12px; font-weight:800;
     box-shadow:0 0 18px rgba(14,165,233,.25);
-}}
-.ce-user {{ display:flex; align-items:center; gap:8px; font-size:11px; }}
-.ce-user small {{ display:block; color:#64748b; margin-top:2px; font-size:9px; }}
+}
+.ce-user { display:flex; align-items:center; gap:8px; font-size:11px; }
+.ce-user small { display:block; color:#64748b; margin-top:2px; font-size:9px; }
 
 /* Hero */
-.ce-hero {{
+.ce-hero {
     min-height:155px; position:relative; overflow:hidden; border:1px solid rgba(37,99,235,.58);
     border-radius:16px; padding:24px 28px; margin-bottom:12px;
     background:radial-gradient(circle at 75% 50%,rgba(6,182,212,.18),transparent 24%),
                linear-gradient(135deg,#071a32,#031020);
     box-shadow:inset 0 0 40px rgba(6,182,212,.025),0 14px 45px rgba(0,0,0,.18);
-}}
-.ce-hero:after {{
+}
+.ce-hero:after {
     content:""; position:absolute; width:350px; height:350px; right:-80px; top:-95px;
     border-radius:50%; border:1px solid rgba(6,182,212,.16);
     box-shadow:0 0 0 30px rgba(6,182,212,.025),0 0 0 62px rgba(6,182,212,.018),0 0 0 94px rgba(6,182,212,.012);
-}}
-.ce-hero-inner {{ position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:25px; }}
-.ce-brand {{ display:flex; align-items:center; gap:18px; }}
-.ce-logo-large {{ width:78px; height:78px; display:grid; place-items:center; border-radius:16px; flex-shrink:0;
+}
+.ce-hero-inner { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:25px; }
+.ce-brand { display:flex; align-items:center; gap:18px; }
+.ce-logo-large { width:78px; height:78px; display:grid; place-items:center; border-radius:16px; flex-shrink:0;
     background:linear-gradient(145deg,rgba(37,99,235,.16),rgba(6,182,212,.08));
-    border:1px solid rgba(6,182,212,.45); box-shadow:0 0 28px rgba(6,182,212,.20); }}
-.ce-title {{ font-size:clamp(32px,4vw,52px); line-height:.98; font-weight:800; letter-spacing:-2.5px; color:#f8fafc; }}
-.ce-title span {{ color:#06b6d4; }}
-.ce-subtitle {{ color:#38bdf8; font-size:16px; margin-top:9px; }}
-.ce-coverage {{ min-width:220px; position:relative; z-index:3; padding:16px 20px; border:1px solid rgba(37,99,235,.38);
-    border-radius:14px; background:rgba(3,13,28,.72); backdrop-filter:blur(8px); }}
-.ce-coverage-title {{ font-size:13px; font-weight:700; margin-bottom:10px; }}
-.ce-flags {{ font-size:23px; letter-spacing:7px; }}
-.ce-coverage small {{ color:#94a3b8; display:block; margin-top:8px; }}
+    border:1px solid rgba(6,182,212,.45); box-shadow:0 0 28px rgba(6,182,212,.20); }
+.ce-title { font-size:clamp(32px,4vw,52px); line-height:.98; font-weight:800; letter-spacing:-2.5px; color:#f8fafc; }
+.ce-title span { color:#06b6d4; }
+.ce-subtitle { color:#38bdf8; font-size:16px; margin-top:9px; }
+.ce-coverage { min-width:220px; position:relative; z-index:3; padding:16px 20px; border:1px solid rgba(37,99,235,.38);
+    border-radius:14px; background:rgba(3,13,28,.72); backdrop-filter:blur(8px); }
+.ce-coverage-title { font-size:13px; font-weight:700; margin-bottom:10px; }
+.ce-flags { font-size:23px; letter-spacing:7px; }
+.ce-coverage small { color:#94a3b8; display:block; margin-top:8px; }
 
 /* Cards */
-.ce-panel {{ background:rgba(7,20,38,.90); border:1px solid rgba(37,99,235,.38); border-radius:15px; padding:17px; box-shadow:0 12px 35px rgba(0,0,0,.16); }}
-.ce-panel-title {{ font-size:16px; font-weight:750; color:#f8fafc; }}
-.ce-panel-sub {{ color:#64748b; font-size:11px; margin-top:4px; }}
-.ce-search-grid {{ display:grid; grid-template-columns:1fr 1fr 1.05fr; gap:11px; margin-top:16px; }}
-.ce-field {{ background:#041022; border:1px solid rgba(37,99,235,.35); border-radius:9px; padding:9px 11px; min-height:58px; }}
-.ce-field-label {{ color:#38bdf8; font-size:9px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }}
-.ce-feature-row {{ display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }}
-.ce-feature {{ border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34d399; padding:5px 8px; border-radius:20px; font-size:9px; }}
-.ce-status {{ display:flex; justify-content:space-between; align-items:center; margin-bottom:13px; }}
-.ce-online {{ color:#34d399; font-size:9px; background:rgba(16,185,129,.10); border:1px solid rgba(16,185,129,.17); padding:5px 8px; border-radius:20px; }}
-.ce-ai-grid {{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }}
-.ce-ai {{ background:#041022; border:1px solid rgba(37,99,235,.22); border-radius:10px; padding:10px; min-height:70px; }}
-.ce-ai-icon {{ font-size:19px; }} .ce-ai-name {{ font-size:10px; margin-top:5px; }} .ce-ai-active {{ color:#34d399; font-size:8px; margin-top:2px; }}
+.ce-panel { background:rgba(7,20,38,.90); border:1px solid rgba(37,99,235,.38); border-radius:15px; padding:17px; box-shadow:0 12px 35px rgba(0,0,0,.16); }
+.ce-panel-title { font-size:16px; font-weight:750; color:#f8fafc; }
+.ce-panel-sub { color:#64748b; font-size:11px; margin-top:4px; }
+.ce-search-grid { display:grid; grid-template-columns:1fr 1fr 1.05fr; gap:11px; margin-top:16px; }
+.ce-field { background:#041022; border:1px solid rgba(37,99,235,.35); border-radius:9px; padding:9px 11px; min-height:58px; }
+.ce-field-label { color:#38bdf8; font-size:9px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+.ce-feature-row { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+.ce-feature { border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34d399; padding:5px 8px; border-radius:20px; font-size:9px; }
+.ce-status { display:flex; justify-content:space-between; align-items:center; margin-bottom:13px; }
+.ce-online { color:#34d399; font-size:9px; background:rgba(16,185,129,.10); border:1px solid rgba(16,185,129,.17); padding:5px 8px; border-radius:20px; }
+.ce-ai-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.ce-ai { background:#041022; border:1px solid rgba(37,99,235,.22); border-radius:10px; padding:10px; min-height:70px; }
+.ce-ai-icon { font-size:19px; } .ce-ai-name { font-size:10px; margin-top:5px; } .ce-ai-active { color:#34d399; font-size:8px; margin-top:2px; }
 
 /* KPI */
-.ce-kpis {{ display:grid; grid-template-columns:repeat(5,1fr); gap:11px; margin:12px 0; }}
-.ce-kpi {{ position:relative; overflow:hidden; padding:13px 14px; min-height:88px; border-radius:13px;
-    background:linear-gradient(145deg,#081a31,#051225); border:1px solid rgba(37,99,235,.38); }}
-.ce-kpi:after {{ content:""; position:absolute; left:-15%; right:20%; bottom:-22px; height:45px; border-top:2px solid rgba(6,182,212,.55); border-radius:50%; transform:rotate(-4deg); opacity:.7; }}
-.ce-kpi-icon {{ font-size:20px; }} .ce-kpi-value {{ font-size:22px; font-weight:800; margin-top:6px; }} .ce-kpi-name {{ color:#94a3b8; font-size:10px; }} .ce-kpi-growth {{ color:#34d399; font-size:8px; margin-top:6px; }}
+.ce-kpis { display:grid; grid-template-columns:repeat(5,1fr); gap:11px; margin:12px 0; }
+.ce-kpi { position:relative; overflow:hidden; padding:13px 14px; min-height:88px; border-radius:13px;
+    background:linear-gradient(145deg,#081a31,#051225); border:1px solid rgba(37,99,235,.38); }
+.ce-kpi:after { content:""; position:absolute; left:-15%; right:20%; bottom:-22px; height:45px; border-top:2px solid rgba(6,182,212,.55); border-radius:50%; transform:rotate(-4deg); opacity:.7; }
+.ce-kpi-icon { font-size:20px; } .ce-kpi-value { font-size:22px; font-weight:800; margin-top:6px; } .ce-kpi-name { color:#94a3b8; font-size:10px; } .ce-kpi-growth { color:#34d399; font-size:8px; margin-top:6px; }
 
 /* Data rows */
-.ce-three {{ display:grid; grid-template-columns:1.05fr 1fr 1fr; gap:12px; }}
-.ce-funnel {{ display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:14px; }}
-.ce-funnel-item {{ height:27px; display:grid; place-items:center; font-size:9px; font-weight:700; border-radius:5px; color:white; }}
-.ce-f1{{width:92%;background:#2563eb}} .ce-f2{{width:78%;background:#0891b2}} .ce-f3{{width:65%;background:#14b8a6}} .ce-f4{{width:52%;background:#8b5cf6}} .ce-f5{{width:38%;background:#f59e0b}} .ce-f6{{width:25%;background:#ef4444}}
-.ce-country {{ margin-top:12px; }} .ce-country-row {{ display:flex; justify-content:space-between; align-items:center; font-size:10px; margin:10px 0; }}
-.ce-country-track {{ height:5px; margin-top:5px; background:#17243a; border-radius:20px; overflow:hidden; }} .ce-country-fill {{ height:100%; border-radius:20px; background:linear-gradient(90deg,#2563eb,#06b6d4); }}
-.ce-op {{ display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(148,163,184,.08); font-size:10px; }} .ce-op:last-child{{border-bottom:0}} .ce-op span:last-child{{color:#34d399}}
+.ce-three { display:grid; grid-template-columns:1.05fr 1fr 1fr; gap:12px; }
+.ce-funnel { display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:14px; }
+.ce-funnel-item { height:27px; display:grid; place-items:center; font-size:9px; font-weight:700; border-radius:5px; color:white; }
+.ce-f1{width:92%;background:#2563eb} .ce-f2{width:78%;background:#0891b2} .ce-f3{width:65%;background:#14b8a6} .ce-f4{width:52%;background:#8b5cf6} .ce-f5{width:38%;background:#f59e0b} .ce-f6{width:25%;background:#ef4444}
+.ce-country { margin-top:12px; } .ce-country-row { display:flex; justify-content:space-between; align-items:center; font-size:10px; margin:10px 0; }
+.ce-country-track { height:5px; margin-top:5px; background:#17243a; border-radius:20px; overflow:hidden; } .ce-country-fill { height:100%; border-radius:20px; background:linear-gradient(90deg,#2563eb,#06b6d4); }
+.ce-op { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(148,163,184,.08); font-size:10px; } .ce-op:last-child{border-bottom:0} .ce-op span:last-child{color:#34d399}
 
 /* Activity */
-.ce-activity {{ margin-top:12px; }} .ce-event {{ display:flex; gap:10px; padding:9px 0; border-bottom:1px solid rgba(148,163,184,.07); }} .ce-event:last-child{{border-bottom:0}} .ce-event-dot{{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:rgba(37,99,235,.16);color:#38bdf8;flex-shrink:0}} .ce-event-text{{font-size:10px}} .ce-event-text span{{display:block;color:#64748b;margin-top:3px;font-size:9px}}
+.ce-activity { margin-top:12px; } .ce-event { display:flex; gap:10px; padding:9px 0; border-bottom:1px solid rgba(148,163,184,.07); } .ce-event:last-child{border-bottom:0} .ce-event-dot{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:rgba(37,99,235,.16);color:#38bdf8;flex-shrink:0} .ce-event-text{font-size:10px} .ce-event-text span{display:block;color:#64748b;margin-top:3px;font-size:9px}
 
 /* Recent leads */
-.ce-table {{ overflow-x:auto; margin-top:12px; }} .ce-table table{{width:100%;border-collapse:collapse;min-width:850px}} .ce-table th{{text-align:left;color:#64748b;font-size:8px;font-weight:600;padding:9px;border-bottom:1px solid rgba(148,163,184,.10)}} .ce-table td{{padding:10px 9px;font-size:9px;border-bottom:1px solid rgba(148,163,184,.07)}} .ce-score{{background:rgba(16,185,129,.12);color:#34d399;padding:4px 7px;border-radius:7px}} .ce-ready{{color:#34d399}} .ce-follow{{color:#fbbf24}} .ce-draft{{color:#38bdf8}}
+.ce-table { overflow-x:auto; margin-top:12px; } .ce-table table{width:100%;border-collapse:collapse;min-width:850px} .ce-table th{text-align:left;color:#64748b;font-size:8px;font-weight:600;padding:9px;border-bottom:1px solid rgba(148,163,184,.10)} .ce-table td{padding:10px 9px;font-size:9px;border-bottom:1px solid rgba(148,163,184,.07)} .ce-score{background:rgba(16,185,129,.12);color:#34d399;padding:4px 7px;border-radius:7px} .ce-ready{color:#34d399} .ce-follow{color:#fbbf24} .ce-draft{color:#38bdf8}
 
 /* Streamlit widgets in cards */
-.ce-widget-wrap div[data-baseweb="select"] > div, .ce-widget-wrap .stTextInput input {{ min-height:38px !important; }}
-.ce-widget-wrap .stButton > button {{ min-height:42px !important; }}
+.ce-widget-wrap div[data-baseweb="select"] > div, .ce-widget-wrap .stTextInput input { min-height:38px !important; }
+.ce-widget-wrap .stButton > button { min-height:42px !important; }
 
-@media(max-width:1050px){{
-  .ce-search-grid{{grid-template-columns:1fr 1fr}} .ce-search-grid > :last-child{{grid-column:1/-1;height:45px}}
-  .ce-three{{grid-template-columns:1fr}} .ce-kpis{{grid-template-columns:repeat(3,1fr)}} .ce-coverage{{display:none}}
-}}
-@media(max-width:700px){{
-  .ce-topline{{display:none}} .ce-searchbox{{width:170px}} .ce-brand{{gap:10px}} .ce-logo-large{{width:60px;height:60px}} .ce-title{{font-size:30px}} .ce-subtitle{{font-size:12px}} .ce-search-grid{{grid-template-columns:1fr}} .ce-kpis{{grid-template-columns:1fr 1fr}}
-}}
+@media(max-width:1050px){
+  .ce-search-grid{grid-template-columns:1fr 1fr} .ce-search-grid > :last-child{grid-column:1/-1;height:45px}
+  .ce-three{grid-template-columns:1fr} .ce-kpis{grid-template-columns:repeat(3,1fr)} .ce-coverage{display:none}
+}
+@media(max-width:700px){
+  .ce-topline{display:none} .ce-searchbox{width:170px} .ce-brand{gap:10px} .ce-logo-large{width:60px;height:60px} .ce-title{font-size:30px} .ce-subtitle{font-size:12px} .ce-search-grid{grid-template-columns:1fr} .ce-kpis{grid-template-columns:1fr 1fr}
+}
 </style>
 """,
     unsafe_allow_html=True,
@@ -478,7 +471,7 @@ def logo_svg(size=48):
   <defs>
     <linearGradient id="ceg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="{BLUE}"/>
-      <stop offset="100%" stop-color="{CYAN}"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
     </linearGradient>
   </defs>
   <polygon points="50,5 89,27 89,73 50,95 11,73 11,27"
@@ -583,34 +576,21 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    # Custom sidebar navigation — buttons instead of st.radio so there are
-    # no native radio circles and no Streamlit radio artifacts.
-    nav_items = [
-        ("⌂", "Dashboard"),
-        ("⌕", "Find Leads"),
-        ("▤", "Lead Database"),
-        ("➤", "AI Outreach"),
-        ("◷", "Follow-ups"),
-        ("▥", "Campaigns"),
-        ("◔", "Analytics"),
-        ("✉", "Email Templates"),
-        ("⚙", "Settings"),
-    ]
-
-    if "ce_menu" not in st.session_state:
-        st.session_state.ce_menu = "Dashboard"
-
-    menu = st.session_state.ce_menu
-    for icon, label in nav_items:
-        active = menu == label
-        if st.button(
-            f"{icon}  {label}",
-            key=f"ce_nav_{label}",
-            use_container_width=True,
-            type="primary" if active else "secondary",
-        ):
-            st.session_state.ce_menu = label
-            st.rerun()
+    menu = st.radio(
+        "Navigation",
+        [
+            "Dashboard",
+            "Find Leads",
+            "Lead Database",
+            "AI Outreach",
+            "Follow-ups",
+            "Campaigns",
+            "Analytics",
+            "Email Templates",
+            "Settings",
+        ],
+        label_visibility="collapsed",
+    )
 
     st.markdown(
         '<div style="margin:18px 4px 8px;color:#64748b;font-size:9px;font-weight:700;letter-spacing:1px;">AI ENGINE STATUS</div>',
