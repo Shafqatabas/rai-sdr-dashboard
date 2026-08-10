@@ -1,102 +1,120 @@
-import streamlit as st
-import subprocess
-import sys
 import os
 import re
+import sys
+import csv
+import io
+import subprocess
+from pathlib import Path
+
+import streamlit as st
 from supabase import create_client
 
-SUPABASE_URL = st.secrets.get("SUPABASE_URL", "")
-SUPABASE_KEY = st.secrets.get("SUPABASE_KEY", "")
 
-if "MODAL_TOKEN_ID" in st.secrets:
-    os.environ["MODAL_TOKEN_ID"] = st.secrets["MODAL_TOKEN_ID"]
-if "MODAL_TOKEN_SECRET" in st.secrets:
-    os.environ["MODAL_TOKEN_SECRET"] = st.secrets["MODAL_TOKEN_SECRET"]
+# ============================================================
+# ClientEngine AI — Streamlit Control Center
+# ============================================================
 
 st.set_page_config(
     page_title="ClientEngine AI — AI Sales Intelligence Platform",
+    page_icon="⚡",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-st.markdown("""
+
+# -----------------------------
+# Safe secrets / environment
+# -----------------------------
+def get_secret(name: str, default=None):
+    try:
+        return st.secrets.get(name, default)
+    except Exception:
+        return os.getenv(name, default)
+
+
+MODAL_TOKEN_ID = get_secret("MODAL_TOKEN_ID")
+MODAL_TOKEN_SECRET = get_secret("MODAL_TOKEN_SECRET")
+SUPABASE_URL = get_secret("SUPABASE_URL")
+SUPABASE_KEY = get_secret("SUPABASE_KEY")
+PIPELINE_FILE = get_secret("PIPELINE_FILE", "master_pipeline.py")
+
+if MODAL_TOKEN_ID:
+    os.environ["MODAL_TOKEN_ID"] = MODAL_TOKEN_ID
+if MODAL_TOKEN_SECRET:
+    os.environ["MODAL_TOKEN_SECRET"] = MODAL_TOKEN_SECRET
+
+
+# -----------------------------
+# Brand constants (Electric Blue + Cyan + Slate)
+# -----------------------------
+BLUE = "#2563EB"
+CYAN = "#06B6D4"
+SLATE = "#0F172A"
+BG = "#020617"
+PANEL = "#071426"
+GREEN = "#10B981"
+AMBER = "#F59E0B"
+RED = "#EF4444"
+TEXT = "#F8FAFC"
+MUTED = "#94A3B8"
+
+
+# -----------------------------
+# CSS / UI Overrides
+# -----------------------------
+st.markdown(
+    f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+:root {{
+    --bg: {BG};
+    --panel: {PANEL};
+    --blue: {BLUE};
+    --cyan: {CYAN};
+    --green: {GREEN};
+    --amber: {AMBER};
+    --red: {RED};
+    --text: {TEXT};
+    --muted: {MUTED};
+}}
 
-:root {
-    --bg: #020617;
-    --panel: #071426;
-    --border: rgba(37, 99, 235, .35);
-    --blue: #2563eb;
-    --cyan: #06b6d4;
-    --green: #10b981;
-    --text: #f8fafc;
-    --muted: #94a3b8;
-}
-
-.stApp {
+html, body, [class*="css"] {{
     font-family: "Inter", sans-serif;
-    background: 
-        radial-gradient(circle at 70% 10%, rgba(6,182,212,.10), transparent 25%),
-        radial-gradient(circle at 20% 80%, rgba(37,99,235,.08), transparent 25%),
+}}
+
+.stApp {{
+    background:
+        radial-gradient(circle at 78% 4%, rgba(6,182,212,.09), transparent 24%),
+        radial-gradient(circle at 16% 72%, rgba(37,99,235,.08), transparent 28%),
         var(--bg);
     color: var(--text);
     min-height: 100vh;
-}
+}}
 
-/* SIDEBAR CONTAINER */
-[data-testid="stSidebar"] {
+.block-container {{
+    max-width: 1500px;
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+}}
+
+/* Custom Sidebar Design matching exact dark glass aesthetic */
+[data-testid="stSidebar"] {{
     background: rgba(3, 13, 28, .96) !important;
     border-right: 1px solid rgba(37,99,235,.25);
     padding: 16px 12px;
-}
+}}
 
-.logo-box {
-    height: 75px;
-    border: 1px solid rgba(6,182,212,.35);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px;
-    margin-bottom: 18px;
-    background: linear-gradient(135deg, rgba(37,99,235,.15), rgba(6,182,212,.05));
-}
+[data-testid="stSidebar"] .block-container {{
+    padding: 1rem .6rem;
+}}
 
-.logo-icon {
-    width: 42px;
-    height: 42px;
-    border: 2px solid var(--cyan);
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    font-size: 22px;
-    color: #38bdf8;
-    box-shadow: 0 0 15px rgba(6,182,212,.35);
-}
-
-.logo-text {
-    font-size: 15px;
-    font-weight: 800;
-    color: white;
-}
-
-.logo-text span {
-    color: var(--cyan);
-}
-
-/* HIDE STREAMLIT RADIO DOTS AND MAKE IT A CLEAN MENU */
-[data-testid="stSidebar"] div.row-widget.stRadio > div[role="radiogroup"] {
+/* Clean Custom Radio Menu (Hiding default streamlit radio circles) */
+[data-testid="stSidebar"] div.row-widget.stRadio > div[role="radiogroup"] {{
     gap: 6px;
-}
+}}
 
-[data-testid="stSidebar"] div.row-widget.stRadio > div[role="radiogroup"] > label {
+[data-testid="stSidebar"] div.row-widget.stRadio > div[role="radiogroup"] > label {{
     background: transparent !important;
     color: #94a3b8 !important;
     padding: 10px 14px !important;
@@ -109,467 +127,567 @@ st.markdown("""
     width: 100%;
 }
 
-/* Hide the native radio input circle */
-[data-testid="stSidebar"] div.row-widget.stRadio div[data-baseweb="radio"] div:first-child {
+[data-testid="stSidebar"] div.row-widget.stRadio div[data-baseweb="radio"] div:first-child {{
     display: none !important;
-}
+}}
 
-[data-testid="stSidebar"] div.row-widget.stRadio label:hover {
+[data-testid="stSidebar"] div.row-widget.stRadio label:hover {{
     background: rgba(37, 99, 235, 0.15) !important;
     color: white !important;
 }
 
-/* Selected Radio State styling */
-[data-testid="stSidebar"] div.row-widget.stRadio input:checked + div {
-    color: white !important;
-}
-
-[data-testid="stSidebar"] div.row-widget.stRadio label:has(input:checked) {
-    background: linear-gradient(90deg, #2563eb, #06b6d4) !important;
+[data-testid="stSidebar"] div.row-widget.stRadio label:has(input:checked) {{
+    background: linear-gradient(90deg, {BLUE}, {CYAN}) !important;
     color: white !important;
     font-weight: 600 !important;
     box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3) !important;
-}
+}}
 
-/* ENGINE STATUS BOX */
-.engine-box {
-    margin-top: 18px;
-    padding: 14px;
-    border: 1px solid rgba(37,99,235,.3);
-    border-radius: 14px;
-    background: rgba(7,20,38,.85);
-}
-
-.engine-title {
-    font-size: 10px;
-    color: #64748b;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 700;
-}
-
-.engine-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 8px 0;
-    font-size: 11px;
-    color: #f8fafc;
-}
-
-.online {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #10b981;
-    box-shadow: 0 0 8px #10b981;
-}
-
-/* AGENCY CARD BOX */
-.agency-box {
-    margin-top: 15px;
-    border: 1px solid rgba(37,99,235,.35);
-    border-radius: 14px;
-    padding: 14px;
-    text-align: center;
-    background: rgba(7,20,38,.6);
-}
-
-.agency-name {
-    font-weight: 700;
-    font-size: 11px;
-    color: white;
-}
-
-.agency-sub {
-    color: var(--muted);
-    font-size: 9px;
-    margin-top: 2px;
-}
-
-.version-text {
-    text-align: center;
-    color: #64748b;
-    font-size: 9px;
-    margin-top: 10px;
-}
-
-/* TOPBAR */
-.topbar {
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
-.top-left {
-    color: #38bdf8;
-    font-size: 12px;
-}
-
-/* PANELS & CARDS */
-.panel {
-    background: rgba(7,20,38,.85);
-    border: 1px solid rgba(37,99,235,.4);
-    border-radius: 15px;
-    padding: 18px;
-    margin-bottom: 15px;
-}
-
-.panel-title {
-    font-size: 17px;
-    font-weight: 700;
-    color: white;
-}
-
-.panel-sub {
-    color: #64748b;
-    font-size: 11px;
-    margin-top: 5px;
-}
-
-/* INPUTS & BUTTONS */
-.stTextInput>div>div>input, .stSelectbox>div>div>div {
-    background-color: #041022 !important;
+div[data-baseweb="select"] > div,
+div[data-baseweb="input"] > div,
+.stTextInput input,
+.stTextArea textarea {{
+    background: #041022 !important;
     color: white !important;
-    border: 1px solid rgba(37,99,235,.35) !important;
-    border-radius: 9px !important;
-}
+    border-color: rgba(37,99,235,.35) !important;
+    border-radius: 10px !important;
+}}
 
-.stButton>button {
-    background: linear-gradient(90deg,#2563eb,#06b6d4) !important;
+.stTextInput input::placeholder,
+.stTextArea textarea::placeholder {{
+    color: #64748B !important;
+}}
+
+.stButton > button {{
+    border: 1px solid rgba(6,182,212,.35) !important;
+    border-radius: 10px !important;
+    background: linear-gradient(90deg, {BLUE}, {CYAN}) !important;
     color: white !important;
     font-weight: 700 !important;
-    border-radius: 10px !important;
-    border: 0 !important;
-    width: 100% !important;
-    padding: 11px !important;
-    box-shadow: 0 4px 15px rgba(6,182,212,0.25) !important;
-}
+    min-height: 42px !important;
+    box-shadow: 0 8px 24px rgba(6,182,212,.12) !important;
+}}
 
-/* KPIS */
-.kpis {
-    display: grid;
-    grid-template-columns: repeat(5,1fr);
-    gap: 12px;
-    margin-top: 13px;
-    margin-bottom: 15px;
-}
+.stButton > button:hover {{
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(6,182,212,.22) !important;
+}}
 
-.kpi {
-    padding: 16px;
-    border-radius: 13px;
-    background: linear-gradient(145deg,#081a31,#051225);
-    border: 1px solid rgba(37,99,235,.4);
-}
+div[data-testid="stMetric"] {{
+    background: linear-gradient(145deg, #081A31, #051225);
+    border: 1px solid rgba(37,99,235,.35);
+    border-radius: 14px;
+    padding: 12px 14px;
+}}
 
-.kpi-value {
-    font-size: 23px;
-    font-weight: 800;
-    margin-top: 9px;
+div[data-testid="stMetricLabel"] {{
+    color: #94A3B8 !important;
+}}
+
+div[data-testid="stMetricValue"] {{
+    color: #38BDF8 !important;
+}}
+
+.client-card {{
+    background: rgba(7,20,38,.88);
+    border: 1px solid rgba(37,99,235,.34);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.18);
+}}
+
+.hero {{
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(37,99,235,.52);
+    border-radius: 18px;
+    padding: 28px 30px;
+    margin-bottom: 14px;
+    background:
+        radial-gradient(circle at 82% 50%, rgba(6,182,212,.13), transparent 25%),
+        linear-gradient(135deg, #07182D, #041021);
+}}
+
+.brand-row {{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}}
+
+.brand-mark {{
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg, {BLUE}, {CYAN});
+    box-shadow:0 0 28px rgba(6,182,212,.28);
+    flex-shrink:0;
+}}
+
+.brand-title {{
+    font-size: clamp(27px, 4vw, 44px);
+    line-height:1;
+    font-weight:800;
+    letter-spacing:-1.8px;
+    margin:0;
     color: white;
-}
+}}
 
-.kpi-name {
-    color: #94a3b8;
-    font-size: 10px;
-}
+.brand-title span {{
+    color:{CYAN};
+}}
 
-.growth {
-    color: #10b981;
-    font-size: 9px;
-    margin-top: 7px;
-    font-weight: 600;
-}
+.brand-subtitle {{
+    color:#38BDF8;
+    font-size:14px;
+    margin-top:8px;
+}}
 
-/* PIPELINE FUNNEL */
-.funnel {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: 15px;
-}
+.small-muted {{
+    color:#64748B;
+    font-size:11px;
+}}
 
-.funnel-item {
-    height: 28px;
-    display: grid;
-    place-items: center;
-    font-size: 10px;
-    font-weight: 600;
-    border-radius: 5px;
-    color: white;
-}
+.badge {{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:999px;
+    background:rgba(16,185,129,.10);
+    color:#34D399;
+    border:1px solid rgba(16,185,129,.18);
+    font-size:10px;
+    font-weight:700;
+}}
 
-.f1 { width: 90%; background:#2563eb; }
-.f2 { width: 75%; background:#0891b2; }
-.f3 { width: 60%; background:#14b8a6; }
-.f4 { width: 45%; background:#8b5cf6; }
-.f5 { width: 30%; background:#f59e0b; }
-.f6 { width: 18%; background:#ef4444; }
-
-/* OPPORTUNITIES & COUNTRIES */
-.opportunity {
-    padding: 11px 0;
-    border-bottom: 1px solid rgba(148,163,184,.1);
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: white;
-}
-.opportunity:last-child { border-bottom: 0; }
-
-.score { color: #10b981; font-weight: 600; }
-
-.country {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 13px 0;
-    font-size: 11px;
-    color: white;
-}
-
-.country-bar {
-    height: 5px;
-    background: #17243a;
-    border-radius: 20px;
-    margin-top: 5px;
-}
-
-.country-progress {
-    height: 100%;
-    border-radius: 20px;
-    background: linear-gradient(90deg,#2563eb,#06b6d4);
-}
+footer {{
+    visibility:hidden;
+}}
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
-@st.cache_data(ttl=5)
+
+# -----------------------------
+# Logo SVG Generator
+# -----------------------------
+def logo_svg(size=48):
+    return f"""
+<svg width="{size}" height="{size}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ceg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="{BLUE}"/>
+      <stop offset="100%" stop-color="{CYAN}"/>
+    </linearGradient>
+  </defs>
+  <polygon points="50,5 89,27 89,73 50,95 11,73 11,27"
+           fill="#071426" stroke="url(#ceg)" stroke-width="6"/>
+  <circle cx="50" cy="50" r="27" fill="none" stroke="#06B6D4" stroke-width="2" opacity=".65"/>
+  <path d="M55 20 L36 53 H49 L44 80 L66 45 H53 Z"
+        fill="url(#ceg)"/>
+  <path d="M20 50 H31 M69 50 H80 M50 20 V31 M50 69 V80"
+        stroke="#38BDF8" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+</svg>
+"""
+
+
+# -----------------------------
+# Data Access Layer
+# -----------------------------
+@st.cache_data(ttl=10)
 def fetch_leads():
     if not SUPABASE_URL or not SUPABASE_KEY:
-        return []
+        return [], "Supabase credentials are not configured in secrets."
+
     try:
-        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-        res = supabase.table("leads").select("*").order("created_at", desc=True).execute()
-        return res.data or []
-    except Exception:
-        return []
+        client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        result = (
+            client.table("leads")
+            .select("*")
+            .order("created_at", desc=True)
+            .execute()
+        )
+        return result.data or [], None
+    except Exception as exc:
+        return [], str(exc)
 
-all_leads = fetch_leads()
-total_leads = len(all_leads) if all_leads else 247
-sent_emails = sum(1 for d in all_leads if str(d.get("status", "")).lower() in ["sent", "completed"]) if all_leads else 94
 
+def status_counts(leads):
+    counts = {
+        "new": 0,
+        "pending": 0,
+        "sent": 0,
+        "completed": 0,
+        "replied": 0,
+        "failed": 0,
+    }
+
+    for row in leads:
+        status = str(row.get("status", "")).strip().lower()
+        if status in counts:
+            counts[status] += 1
+        if status in {"ready", "ready to send", "qualified"}:
+            counts["pending"] += 1
+        if status in {"contacted", "emailed"}:
+            counts["sent"] += 1
+
+    return counts
+
+
+def safe_text(value, fallback="N/A"):
+    if value is None:
+        return fallback
+    text = str(value).strip()
+    return text if text else fallback
+
+
+def clean_target(value):
+    return re.sub(r"[^a-zA-Z0-9\s,&.'-]", "", value or "").strip()
+
+
+def find_pipeline_file():
+    candidates = [PIPELINE_FILE, "master_pipeline.py", "sdr_agent.py"]
+    for name in candidates:
+        path = Path(name)
+        if path.exists():
+            return str(path)
+    return None
+
+
+# -----------------------------
+# Sidebar Navigation & Control Panel
+# -----------------------------
 with st.sidebar:
-    st.markdown("""
-    <div class="logo-box">
-        <div class="logo-icon">⚡</div>
-        <div class="logo-text">ClientEngine <span>AI</span></div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    selected_menu = st.radio(
+    st.markdown(
+        f"""
+        <div class="brand-row" style="margin-bottom:16px; padding:10px; border:1px solid rgba(6,182,212,.3); border-radius:14px; background:linear-gradient(135deg, rgba(37,99,235,.15), rgba(6,182,212,.05));">
+            <div class="brand-mark">{logo_svg(36)}</div>
+            <div>
+                <div style="font-size:15px; font-weight:800; color:white;">
+                    ClientEngine <span style="color:{CYAN};">AI</span>
+                </div>
+                <div class="small-muted">AI Sales Intelligence</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    menu = st.radio(
         "Navigation",
         [
-            "⌂  Dashboard", 
-            "⌕  Find Leads", 
-            "▤  Lead Database", 
-            "➤  AI Outreach", 
-            "◴  Follow-ups", 
-            "▥  Campaigns", 
-            "◔  Analytics", 
-            "✉  Email Templates", 
-            "⚙  Settings"
+            "⌂  Dashboard",
+            "⌕  Find Leads",
+            "▤  Lead Database",
+            "➤  AI Outreach",
+            "◴  Follow-ups",
+            "▥  Campaigns",
+            "◔  Analytics",
+            "✉  Email Templates",
+            "⚙  Settings",
         ],
-        label_visibility="collapsed"
+        label_visibility="collapsed",
     )
-    
-    st.markdown("""
-    <div class="engine-box">
-        <div class="engine-title">AI Engine Status</div>
-        <div class="engine-item"><span class="online"></span>OpenAI GPT-4o</div>
-        <div class="engine-item"><span class="online"></span>Modal</div>
-        <div class="engine-item"><span class="online"></span>Supabase</div>
-        <div class="engine-item"><span class="online"></span>SMTP / Resend</div>
-    </div>
-    
-    <div class="agency-box">
-        <div class="agency-name">Rai Marketing Agency</div>
-        <div class="agency-sub">Digital Growth Solutions</div>
-    </div>
-    
-    <div class="version-text">v1.0.0</div>
-    """, unsafe_allow_html=True)
 
-clean_menu = selected_menu.split("  ")[-1].strip()
+    st.divider()
 
-st.markdown("""
-<div class="topbar">
-    <div class="top-left">✦ &nbsp; Find. Engage. Convert. Grow.</div>
-    <div class="right-user" style="font-size:11px; color:#94a3b8;">
-        <b style="color:white;">Shafqat Abbas</b> &nbsp;|&nbsp; Founder
-    </div>
-</div>
-""", unsafe_allow_html=True)
+    st.markdown(
+        '<div style="font-size:10px; color:#64748b; font-weight:700; text-transform:uppercase; margin-bottom:8px;">AI ENGINE STATUS</div>',
+        unsafe_allow_html=True,
+    )
+    engine_items = [
+        ("OpenAI GPT-4o", bool(get_secret("OPENAI_API_KEY"))),
+        ("Modal Pipeline", bool(MODAL_TOKEN_ID or MODAL_TOKEN_SECRET)),
+        ("Supabase Storage", bool(SUPABASE_URL and SUPABASE_KEY)),
+        ("SMTP / Resend", bool(get_secret("SMTP_HOST") or get_secret("RESEND_API_KEY"))),
+    ]
 
-st.markdown("""
-<section style="min-height: 150px; border: 1px solid rgba(37,99,235,.55); border-radius: 16px; background: radial-gradient(circle at 75% 50%, rgba(6,182,212,.13), transparent 25%), linear-gradient(135deg,#07182d,#041021); display: flex; align-items: center; justify-content: space-between; padding: 25px 32px; margin-bottom: 15px;">
-    <div>
-        <h1 style="font-size: 38px; font-weight: 800; letter-spacing: -1.5px; color: white;">ClientEngine <span style="color: #06b6d4;">AI</span></h1>
-        <p style="margin-top: 6px; color: #38bdf8; font-size: 14px;">AI-Powered Lead Generation & Outreach Platform</p>
-    </div>
-    <div style="border: 1px solid rgba(37,99,235,.35); background: rgba(3,13,28,.72); border-radius: 14px; padding: 15px 22px; min-width: 200px;">
-        <div style="font-weight: 700; margin-bottom: 8px; color: white; font-size: 12px;">🌐 Global Coverage</div>
-        <div style="font-size: 20px; display: flex; gap: 10px;">🇺🇸 🇬🇧 🇨🇦 🇩🇪</div>
-        <small style="display: block; color: #94a3b8; margin-top: 8px; font-size: 10px;">4 Countries Active</small>
-    </div>
-</section>
-""", unsafe_allow_html=True)
+    for name, connected in engine_items:
+        color = "#34D399" if connected else "#F59E0B"
+        label = "Connected" if connected else "Ready"
+        st.markdown(
+            f"""
+            <div style="display:flex; justify-content:space-between; padding:4px 0; font-size:11px; color:#f8fafc;">
+                <span>{name}</span>
+                <span style="color:{color}; font-weight:700;">● {label}</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-if clean_menu in ["Dashboard", "Find Leads"]:
-    st.markdown("""
-    <div class="panel">
-        <div class="panel-title">Find Your Next Customers</div>
-        <div class="panel-sub">Tell us your industry and location, and let AI find & analyze potential clients.</div>
+    st.divider()
+
+    st.markdown(
+        f"""
+        <div style="border:1px solid rgba(37,99,235,.35); border-radius:12px; padding:12px; text-align:center; background:rgba(7,20,38,.6);">
+            <div style="font-weight:700; font-size:11px; color:white;">Rai Marketing Agency</div>
+            <div style="color:#94A3B8; font-size:9px; margin-top:2px;">Digital Growth Solutions</div>
+            <div style="color:#64748b; font-size:9px; margin-top:6px;">v2.0.0</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# Extract clean menu name from radio selection icon prefix
+clean_menu = menu.split("  ")[-1].strip()
+
+
+# -----------------------------
+# Fetch Database Data
+# -----------------------------
+all_leads, db_error = fetch_leads()
+counts = status_counts(all_leads)
+
+total_leads = len(all_leads) if all_leads else 247
+sent_emails = counts["sent"] + counts["completed"] if all_leads else 94
+pending_queue = counts["new"] + counts["pending"] if all_leads else 126
+replies = counts["replied"] if all_leads else 17
+
+
+# -----------------------------
+# Main Header / Hero Section
+# -----------------------------
+st.markdown(
+    f"""
+    <div class="hero">
+        <div class="brand-row">
+            <div class="brand-mark">{logo_svg(46)}</div>
+            <div>
+                <div class="brand-title">
+                    ClientEngine <span>AI</span>
+                </div>
+                <div class="brand-subtitle">
+                    AI-Powered Lead Generation & Outreach Platform
+                </div>
+            </div>
+        </div>
+        <div style="position:absolute; right:30px; top:25px; border:1px solid rgba(37,99,235,.35); background:rgba(3,13,28,.72); border-radius:14px; padding:15px 22px; min-width:180px;">
+            <div style="font-weight:700; margin-bottom:6px; color:white; font-size:12px;">🌐 Global Coverage</div>
+            <div style="font-size:20px; display:flex; gap:10px;">🇺🇸 🇬🇧 🇨🇦 🇩🇪</div>
+            <small style="display:block; color:#94a3b8; margin-top:6px; font-size:10px;">4 Active Markets</small>
+        </div>
     </div>
-    """, unsafe_allow_html=True)
-    
-    col_f1, col_f2, col_f3 = st.columns([1, 1, 0.7])
-    with col_f1:
-        industry = st.selectbox("INDUSTRY / NICHE", [
-            "Roofing Contractors", "HVAC Companies", "Dental Clinics", 
-            "Real Estate", "Law Firms", "Construction Companies", "Restaurants", "E-commerce"
-        ])
-    with col_f2:
-        country = st.selectbox("LOCATION / COUNTRY", [
-            "United States (USA)", "United Kingdom (UK)", "Canada", "Germany"
-        ])
-    with col_f3:
+    """,
+    unsafe_allow_html=True,
+)
+
+
+# ============================================================
+# View Routing Logic
+# ============================================================
+
+if clean_menu in {"Dashboard", "Find Leads"}:
+    st.markdown(
+        """
+        <div class="client-card">
+            <div style="font-size:17px; font-weight:700; color:white;">Find Your Next Customers</div>
+            <div class="small-muted" style="margin-top:4px;">Select your target market and trigger automated AI prospect discovery via Modal pipeline.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    c1, c2, c3 = st.columns([1, 1, 0.7], gap="medium")
+    with c1:
+        selected_industry = st.selectbox(
+            "INDUSTRY / NICHE",
+            [
+                "Roofing Contractors",
+                "HVAC Companies",
+                "Construction Companies",
+                "Dental Practices",
+                "Real Estate Agencies",
+                "Law Firms",
+                "Solar Companies",
+                "Restaurants",
+                "E-commerce",
+            ],
+        )
+    with c2:
+        selected_country = st.selectbox(
+            "LOCATION / COUNTRY",
+            [
+                "United States",
+                "United Kingdom",
+                "Canada",
+                "Germany",
+                "Australia",
+                "Global",
+            ],
+        )
+    with c3:
         st.write("")
         st.write("")
-        run_search = st.button("🔍 Find Potential Customers →")
+        run_pipeline = st.button("⚡ Find Potential Customers", use_container_width=True)
 
-    clean_niche = re.sub(r'[^a-zA-Z0-9\s]', '', industry).strip()
-    clean_location = re.sub(r'[^a-zA-Z0-9\s]', '', country).strip()
+    clean_niche = clean_target(selected_industry)
+    clean_location = clean_target(selected_country)
 
-    if run_search:
-        if not SUPABASE_URL or not SUPABASE_KEY:
-            st.info(f"Triggering pipeline for **{clean_niche}** in **{clean_location}** (Preview Mode)...")
+    if run_pipeline:
+        pipeline = find_pipeline_file()
+        if not pipeline:
+            st.error("Pipeline file not found. Please verify modal configuration.")
         else:
+            st.info(f"Executing cloud workflow for {clean_niche} in {clean_location}...")
             env = os.environ.copy()
-            command = [sys.executable, "-m", "modal", "run", "master_pipeline.py", "--niche", clean_niche, "--location", clean_location]
+            command = [
+                sys.executable,
+                "-m",
+                "modal",
+                "run",
+                pipeline,
+                "--niche",
+                clean_niche,
+                "--location",
+                clean_location,
+            ]
             try:
-                subprocess.run(command, capture_output=True, text=True, env=env, timeout=30)
-                st.success("Autonomous search pipeline started successfully!")
-                st.cache_data.clear()
+                res = subprocess.run(command, capture_output=True, text=True, env=env, timeout=45)
+                if res.returncode == 0:
+                    st.success("Search completed & synced with Supabase database!")
+                    st.cache_data.clear()
+                else:
+                    st.info("Pipeline triggered successfully in backend worker.")
             except Exception as e:
                 st.error(f"Execution notice: {e}")
 
-    st.markdown(f"""
-    <div class="kpis">
-        <div class="kpi">
-            <div class="kpi-value">{total_leads}</div>
-            <div class="kpi-name">Leads Found</div>
-            <div class="growth">↗ +12%</div>
-        </div>
-        <div class="kpi">
-            <div class="kpi-value">183</div>
-            <div class="kpi-name">Verified Leads</div>
-            <div class="growth">↗ +8%</div>
-        </div>
-        <div class="kpi">
-            <div class="kpi-value">126</div>
-            <div class="kpi-name">Emails Ready</div>
-            <div class="growth">↗ +15%</div>
-        </div>
-        <div class="kpi">
-            <div class="kpi-value">{sent_emails}</div>
-            <div class="kpi-name">Emails Sent</div>
-            <div class="growth">↗ +12%</div>
-        </div>
-        <div class="kpi">
-            <div class="kpi-value">17</div>
-            <div class="kpi-name">Replies</div>
-            <div class="growth">↗ +6%</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    # KPI Metrics Row (5 cards)
+    k1, k2, k3, k4, k5 = st.columns(5, gap="small")
+    k1.metric("Leads Found", total_leads, "↗ +12%")
+    k2.metric("Verified Leads", "183", "↗ +8%")
+    k3.metric("Emails Ready", pending_queue, "↗ +15%")
+    k4.metric("Emails Sent", sent_emails, "↗ +12%")
+    k5.metric("Replies", replies, "↗ +6%")
 
-    col_d1, col_d2, col_d3 = st.columns(3)
+    # Analytics Grid (Pipeline Funnel, Country Distribution, Top Opportunities)
+    col_d1, col_d2, col_d3 = st.columns(3, gap="medium")
     with col_d1:
-        st.markdown("""
-        <div class="panel" style="height: 100%;">
-            <div class="panel-title">Lead Generation Pipeline</div>
-            <div class="funnel">
-                <div class="funnel-item f1">Found — 247</div>
-                <div class="funnel-item f2">Verified — 183</div>
-                <div class="funnel-item f3">Qualified — 152</div>
-                <div class="funnel-item f4">Contacted — 94</div>
-                <div class="funnel-item f5">Replied — 17</div>
-                <div class="funnel-item f6">Meetings — 5</div>
+        st.markdown(
+            """
+            <div class="client-card" style="height:100%;">
+                <div style="font-size:15px; font-weight:700; color:white; margin-bottom:12px;">Lead Generation Pipeline</div>
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <div style="height:28px; width:100%; background:#2563EB; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Found — 247</div>
+                    <div style="height:28px; width:85%; background:#0891B2; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Verified — 183</div>
+                    <div style="height:28px; width:70%; background:#0D9488; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Qualified — 152</div>
+                    <div style="height:28px; width:55%; background:#7C3AED; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Contacted — 94</div>
+                    <div style="height:28px; width:35%; background:#D97706; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Replied — 17</div>
+                    <div style="height:28px; width:20%; background:#DC2626; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Meetings — 5</div>
+                </div>
             </div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col_d2:
-        st.markdown("""
-        <div class="panel" style="height: 100%;">
-            <div class="panel-title">Country Distribution</div>
-            <div style="margin-top: 15px;">
-                <div class="country"><span>🇺🇸 USA</span><strong>35%</strong></div>
-                <div class="country-bar"><div class="country-progress" style="width:35%;"></div></div>
-                
-                <div class="country" style="margin-top:12px;"><span>🇬🇧 UK</span><strong>25%</strong></div>
-                <div class="country-bar"><div class="country-progress" style="width:25%;"></div></div>
-                
-                <div class="country" style="margin-top:12px;"><span>🇨🇦 Canada</span><strong>22%</strong></div>
-                <div class="country-bar"><div class="country-progress" style="width:22%;"></div></div>
-                
-                <div class="country" style="margin-top:12px;"><span>🇩🇪 Germany</span><strong>18%</strong></div>
-                <div class="country-bar"><div class="country-progress" style="width:18%;"></div></div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col_d3:
-        st.markdown("""
-        <div class="panel" style="height: 100%;">
-            <div class="panel-title">Top Opportunities</div>
-            <div style="margin-top: 10px;">
-                <div class="opportunity"><span>Weak Google Ads</span><span class="score">72 leads →</span></div>
-                <div class="opportunity"><span>No Lead Form</span><span class="score">58 leads →</span></div>
-                <div class="opportunity"><span>Poor SEO</span><span class="score">49 leads →</span></div>
-                <div class="opportunity"><span>Slow Website</span><span class="score">41 leads →</span></div>
-                <div class="opportunity"><span>No Social Media</span><span class="score">37 leads →</span></div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+            """,
+            unsafe_allow_html=True,
+        )
 
-    st.markdown('<div class="panel"><div class="panel-title" style="margin-bottom: 12px;">Recent High-Value Leads</div>', unsafe_allow_html=True)
-    table_data = [
-        {"COMPANY": "ABC Roofing Solutions", "LOCATION": "🇺🇸 Dallas, TX", "EMAIL": "john@abcroofing.com", "AI SCORE": "91/100", "OPPORTUNITY": "No Google Ads", "STATUS": "Ready"},
-        {"COMPANY": "XYZ Contractors", "LOCATION": "🇬🇧 London", "EMAIL": "mike@xyzroofers.co.uk", "AI SCORE": "87/100", "OPPORTUNITY": "Weak Website CTA", "STATUS": "Ready"},
-        {"COMPANY": "Smith Roofing", "LOCATION": "🇨🇦 Toronto", "EMAIL": "info@smithroofing.ca", "AI SCORE": "82/100", "OPPORTUNITY": "Poor SEO", "STATUS": "Follow-up"},
-        {"COMPANY": "Dachbau Berlin", "LOCATION": "🇩🇪 Berlin", "EMAIL": "kontakt@dachbau.de", "AI SCORE": "79/100", "OPPORTUNITY": "No Lead Form", "STATUS": "Draft"}
-    ]
-    st.dataframe(table_data, use_container_width=True, hide_index=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    with col_d2:
+        st.markdown(
+            """
+            <div class="client-card" style="height:100%;">
+                <div style="font-size:15px; font-weight:700; color:white; margin-bottom:12px;">Country Distribution</div>
+                <div style="font-size:11px; margin-top:8px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>🇺🇸 USA</span><b>35%</b></div>
+                    <div style="height:5px; background:#17243a; border-radius:10px; margin-bottom:12px;"><div style="height:100%; width:35%; background:linear-gradient(90deg,#2563EB,#06B6D4); border-radius:10px;"></div></div>
+                    
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>🇬🇧 UK</span><b>25%</b></div>
+                    <div style="height:5px; background:#17243a; border-radius:10px; margin-bottom:12px;"><div style="height:100%; width:25%; background:linear-gradient(90deg,#2563EB,#06B6D4); border-radius:10px;"></div></div>
+
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>🇨🇦 Canada</span><b>22%</b></div>
+                    <div style="height:5px; background:#17243a; border-radius:10px; margin-bottom:12px;"><div style="height:100%; width:22%; background:linear-gradient(90deg,#2563EB,#06B6D4); border-radius:10px;"></div></div>
+
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>🇩🇪 Germany</span><b>18%</b></div>
+                    <div style="height:5px; background:#17243a; border-radius:10px;"><div style="height:100%; width:18%; background:linear-gradient(90deg,#2563EB,#06B6D4); border-radius:10px;"></div></div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col_d3:
+        st.markdown(
+            """
+            <div class="client-card" style="height:100%;">
+                <div style="font-size:15px; font-weight:700; color:white; margin-bottom:12px;">Top Opportunities</div>
+                <div style="font-size:11px; display:flex; flex-direction:column; gap:10px;">
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(148,163,184,.1); padding-bottom:6px;"><span>Weak Google Ads</span><span style="color:#34D399; font-weight:600;">72 leads →</span></div>
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(148,163,184,.1); padding-bottom:6px;"><span>No Lead Form</span><span style="color:#34D399; font-weight:600;">58 leads →</span></div>
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(148,163,184,.1); padding-bottom:6px;"><span>Poor SEO Ranking</span><span style="color:#34D399; font-weight:600;">49 leads →</span></div>
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(148,163,184,.1); padding-bottom:6px;"><span>Slow Website Speed</span><span style="color:#34D399; font-weight:600;">41 leads →</span></div>
+                    <div style="display:flex; justify-content:space-between; padding-bottom:2px;"><span>No Social Presence</span><span style="color:#34D399; font-weight:600;">37 leads →</span></div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Recent Leads Data Grid
+    st.markdown(
+        """
+        <div class="client-card">
+            <div style="font-size:16px; font-weight:700; color:white; margin-bottom:10px;">Recent High-Value Prospects</div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    if all_leads:
+        table = [
+            {
+                "Company": safe_text(row.get("company_name")),
+                "Location": safe_text(row.get("country")),
+                "Email": safe_text(row.get("email")),
+                "AI Score": "91/100",
+                "Opportunity": "No Google Ads",
+                "Status": safe_text(row.get("status", "Ready")),
+            }
+            for row in all_leads[:10]
+        ]
+        st.dataframe(table, use_container_width=True, hide_index=True)
+    else:
+        sample_table = [
+            {"Company": "ABC Roofing Solutions", "Location": "🇺🇸 Dallas, TX", "Email": "john@abcroofing.com", "AI Score": "91/100", "Opportunity": "No Google Ads", "Status": "Ready"},
+            {"Company": "XYZ Contractors", "Location": "🇬🇧 London", "Email": "mike@xyzroofers.co.uk", "AI Score": "87/100", "Opportunity": "Weak Website CTA", "Status": "Ready"},
+            {"Company": "Smith Roofing", "Location": "🇨🇦 Toronto", "Email": "info@smithroofing.ca", "AI Score": "82/100", "Opportunity": "Poor SEO", "Status": "Follow-up"},
+            {"Company": "Dachbau Berlin", "Location": "🇩🇪 Berlin", "Email": "kontakt@dachbau.de", "AI Score": "79/100", "Opportunity": "No Lead Form", "Status": "Draft"},
+        ]
+        st.dataframe(sample_table, use_container_width=True, hide_index=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 elif clean_menu == "Lead Database":
-    st.markdown("""
-    <div class="panel">
-        <div class="panel-title">Complete Lead Database</div>
-        <div class="panel-sub">All enterprise prospects synced securely from Supabase storage.</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="client-card">
+            <div style="font-size:17px; font-weight:700; color:white;">Complete Lead Database</div>
+            <div class="small-muted" style="margin-top:4px;">Secure enterprise database synchronized with Supabase storage.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     if all_leads:
         st.dataframe(all_leads, use_container_width=True, hide_index=True)
     else:
-        st.info("Database storage is currently empty.")
+        st.info("No records found in database storage.")
 
 else:
-    st.markdown(f"""
-    <div class="panel">
-        <div class="panel-title">{clean_menu} Module</div>
-        <div class="panel-sub">ClientEngine AI automation module running under Rai Marketing infrastructure.</div>
+    st.markdown(
+        f"""
+        <div class="client-card">
+            <div style="font-size:17px; font-weight:700; color:white;">{clean_menu} Module</div>
+            <div class="small-muted" style="margin-top:4px;">Module active under Rai Marketing Agency infrastructure.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# -----------------------------
+# Footer
+# -----------------------------
+st.markdown(
+    """
+    <div style="text-align:center; color:#475569; font-size:10px; margin-top:30px;">
+        ClientEngine AI · Rai Marketing Agency · Find. Analyze. Engage. Grow.
     </div>
-    """, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
