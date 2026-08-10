@@ -5,7 +5,7 @@ import os
 import re
 from supabase import create_client
 
-# Streamlit Secrets سے Modal Tokens کو Environment میں سیٹ کرنا
+# Streamlit Secrets se Modal Tokens ko Environment mein set karna
 if "MODAL_TOKEN_ID" in st.secrets:
     os.environ["MODAL_TOKEN_ID"] = st.secrets["MODAL_TOKEN_ID"]
 if "MODAL_TOKEN_SECRET" in st.secrets:
@@ -17,6 +17,11 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# URL query parameters se values uthana (Next.js homepage playground integration)
+query_params = st.query_params
+url_niche = query_params.get("niche", "")
+url_location = query_params.get("location", "")
 
 # Custom Styling
 st.markdown("""
@@ -203,23 +208,41 @@ with col_left:
     st.markdown("### Target Selection Launchpad")
     st.caption("Select your target industry and location filters.")
     
-    selected_industry_option = st.selectbox("Select Target Industry:", INDUSTRIES_LIST, index=0)
+    # Industry Index Determination from URL Query Parameters
+    industry_index = 0
+    if url_niche:
+        if url_niche in INDUSTRIES_LIST:
+            industry_index = INDUSTRIES_LIST.index(url_niche)
+        else:
+            industry_index = INDUSTRIES_LIST.index("Custom Industry...")
+
+    selected_industry_option = st.selectbox("Select Target Industry:", INDUSTRIES_LIST, index=industry_index)
     
     if selected_industry_option == "Custom Industry...":
-        final_niche = st.text_input("Enter Custom Industry:", placeholder="e.g. HVAC, Car Rental")
+        default_custom_niche = url_niche if url_niche not in INDUSTRIES_LIST else ""
+        final_niche = st.text_input("Enter Custom Industry:", value=default_custom_niche, placeholder="e.g. HVAC, Car Rental")
     else:
-        final_niche = selected_industry_option
+        final_niche = selected_industry_option if not url_niche else url_niche
 
     st.write("")
 
-    selected_country_option = st.selectbox("Select Target Country / Scope:", COUNTRIES_LIST, index=5)
+    # Country Index Determination from URL Query Parameters
+    country_index = 5
+    if url_location:
+        if url_location in COUNTRIES_LIST:
+            country_index = COUNTRIES_LIST.index(url_location)
+        else:
+            country_index = COUNTRIES_LIST.index("Custom Location...")
+
+    selected_country_option = st.selectbox("Select Target Country / Scope:", COUNTRIES_LIST, index=country_index)
     
     if selected_country_option == "Custom Location...":
-        final_location = st.text_input("Enter Custom Location:", placeholder="e.g. Dubai, London")
+        default_custom_location = url_location if url_location not in COUNTRIES_LIST else ""
+        final_location = st.text_input("Enter Custom Location:", value=default_custom_location, placeholder="e.g. Dubai, London")
     elif selected_country_option == "Worldwide / Global":
         final_location = "Global"
     else:
-        final_location = selected_country_option
+        final_location = selected_country_option if not url_location else url_location
 
     # Clean special characters like & for search safety
     clean_niche = re.sub(r'[^a-zA-Z0-9\s]', '', final_niche).strip()
