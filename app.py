@@ -23,42 +23,44 @@ query_params = st.query_params
 url_niche = query_params.get("niche", "")
 url_location = query_params.get("location", "")
 
-# Custom Styling
+# Custom Modern Futuristic CSS Styling
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
     .stApp {
-        background: #090d16;
+        background: #080511;
         color: #f8fafc;
     }
 
+    /* Top Corporate Header */
     .header-container {
         display: flex;
         align-items: center;
-        background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+        background: linear-gradient(135deg, rgba(30, 27, 75, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
         padding: 24px 32px;
-        border-radius: 20px;
-        border: 1px solid rgba(99, 102, 241, 0.3);
-        margin-bottom: 25px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border-radius: 24px;
+        border: 1px solid rgba(168, 85, 247, 0.25);
+        margin-bottom: 30px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
     .brand-logo { 
-        font-size: 24px; 
+        font-size: 22px; 
         font-weight: 800;
         margin-right: 20px; 
-        background: rgba(99, 102, 241, 0.2);
-        padding: 10px 16px;
-        border-radius: 14px;
-        border: 1px solid #6366f1;
-        color: #818cf8;
+        background: linear-gradient(135deg, #a855f7, #6366f1);
+        padding: 12px 18px;
+        border-radius: 16px;
+        color: #ffffff;
+        box-shadow: 0 8px 20px rgba(168, 85, 247, 0.3);
     }
     .brand-name { 
-        font-size: 26px; 
+        font-size: 24px; 
         font-weight: 800; 
         color: #ffffff; 
         letter-spacing: -0.5px; 
@@ -66,56 +68,97 @@ st.markdown("""
     }
     .brand-sub {
         font-size: 13px;
-        color: #818cf8;
+        color: #c084fc;
         font-weight: 600;
-        margin-top: 2px;
+        margin-top: 4px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
     }
     .welcome-text { 
-        font-size: 15px; 
-        color: #cbd5e1; 
+        font-size: 13px; 
+        color: #94a3b8; 
         margin-left: auto; 
         text-align: right;
-        background: rgba(15, 23, 42, 0.6);
-        padding: 10px 18px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(15, 23, 42, 0.8);
+        padding: 12px 20px;
+        border-radius: 14px;
+        border: 1px solid rgba(168, 85, 247, 0.15);
+    }
+    .welcome-text b {
+        color: #ffffff;
+        font-size: 14px;
     }
 
+    /* Glassmorphism Cards */
     .custom-card {
-        background: #1e293b;
-        border-radius: 16px;
-        padding: 24px;
-        border: 1px solid #334155;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 24px;
+        padding: 28px;
+        border: 1px solid rgba(168, 85, 247, 0.15);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        margin-bottom: 24px;
     }
 
+    /* Metrics Styling */
+    .metric-box {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 18px;
+        text-align: center;
+    }
     .metric-value {
         font-size: 32px;
         font-weight: 800;
         color: #38bdf8;
+        letter-spacing: -1px;
     }
     .metric-label {
-        font-size: 12px;
+        font-size: 11px;
         color: #94a3b8;
-        font-weight: 600;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
+        margin-top: 4px;
     }
 
+    /* Streamlit Input Fields Customization */
+    .stTextInput>div>div>input, .stSelectbox>div>div>div {
+        background-color: rgba(3, 7, 18, 0.8) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(168, 85, 247, 0.2) !important;
+        border-radius: 12px !important;
+        padding: 12px !important;
+    }
+    .stTextInput>div>div>input:focus, .stSelectbox>div>div>div:focus {
+        border-color: #a855f7 !important;
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.25) !important;
+    }
+
+    /* Buttons Styling */
     .stButton>button {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+        background: linear-gradient(135deg, #9333ea 0%, #4f46e5 100%) !important;
         color: white !important;
         font-weight: 700 !important;
-        border-radius: 12px !important;
-        border: none !important;
+        font-size: 14px !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
         padding: 14px 24px !important;
-        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4) !important;
-        transition: all 0.3s ease !important;
+        box-shadow: 0 8px 25px rgba(147, 51, 234, 0.4) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        width: 100% !important;
     }
     .stButton>button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6) !important;
+        box-shadow: 0 12px 30px rgba(147, 51, 234, 0.6) !important;
+        background: linear-gradient(135deg, #a855f7, #6366f1) !important;
+    }
+
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: #06040d !important;
+        border-right: 1px solid rgba(168, 85, 247, 0.1);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -177,7 +220,7 @@ st.markdown("""
         <div class="brand-sub">Worldwide SDR Lead Engine & AI Dispatcher</div>
     </div>
     <div class="welcome-text">
-        Welcome back, <br><b>Rai Shafqat Abbas</b>
+        Active Operator<br><b>Rai Shafqat Abbas</b>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -189,10 +232,15 @@ with st.sidebar:
     st.divider()
     
     agent_name = st.text_input("Active Model Name", value="Rai_SDR_v1")
-    st.success(f"Model ID: **{agent_name}** [Online]")
+    st.markdown(
+        "<div style='background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); padding: 10px 14px; border-radius: 10px; color: #4ade80; font-size: 12px; font-weight: 600; margin-top: 10px;'>"
+        f"Model Status: <b>{agent_name} [Online]</b>"
+        "</div>",
+        unsafe_allow_html=True
+    )
     st.divider()
     st.markdown("### Global Scope")
-    st.info("System is configured for multi-country & multi-industry outreach.")
+    st.info("System is configured for multi-country & multi-industry autonomous outreach.")
 
 # --- FETCH METRICS ---
 all_leads = fetch_analytics()
@@ -206,9 +254,8 @@ col_left, col_right = st.columns([1.3, 1.7], gap="large")
 with col_left:
     st.markdown('<div class="custom-card">', unsafe_allow_html=True)
     st.markdown("### Target Selection Launchpad")
-    st.caption("Select your target industry and location filters.")
+    st.caption("Select your target industry and location filters for pipeline execution.")
     
-    # Industry Index Determination from URL Query Parameters
     industry_index = 0
     if url_niche:
         if url_niche in INDUSTRIES_LIST:
@@ -226,7 +273,6 @@ with col_left:
 
     st.write("")
 
-    # Country Index Determination from URL Query Parameters
     country_index = 5
     if url_location:
         if url_location in COUNTRIES_LIST:
@@ -244,12 +290,11 @@ with col_left:
     else:
         final_location = selected_country_option if not url_location else url_location
 
-    # Clean special characters like & for search safety
     clean_niche = re.sub(r'[^a-zA-Z0-9\s]', '', final_niche).strip()
     clean_location = re.sub(r'[^a-zA-Z0-9\s]', '', final_location).strip()
 
     st.markdown(
-        f"<div style='color:#a5b4fc; font-size:12px; margin: 15px 0; background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155;'>"
+        f"<div style='color:#c084fc; font-size:12px; margin: 20px 0; background: rgba(3, 7, 18, 0.6); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(168, 85, 247, 0.2); font-family: monospace;'>"
         f"Generated Query: <code>\"{clean_niche}\" \"contact\" \"{clean_location}\"</code>"
         f"</div>", 
         unsafe_allow_html=True
@@ -261,15 +306,25 @@ with col_left:
 with col_right:
     st.markdown('<div class="custom-card">', unsafe_allow_html=True)
     st.markdown("### Agent Performance Analytics")
-    st.caption(f"Real-time data metrics from model: **{agent_name}**")
+    st.caption(f"Real-time data metrics from active model: **{agent_name}**")
+    st.write("")
     
-    m1, m2, m3 = st.columns(3)
+    m1, m2, m3 = st.columns(3, gap="medium")
     with m1:
-        st.markdown(f'<div class="metric-value">{total_leads}</div><div class="metric-label">Total Leads</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="metric-box"><div class="metric-value">{total_leads}</div><div class="metric-label">Total Leads</div></div>', 
+            unsafe_allow_html=True
+        )
     with m2:
-        st.markdown(f'<div class="metric-value" style="color:#4ade80;">{sent_emails}</div><div class="metric-label">Emails Sent</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="metric-box"><div class="metric-value" style="color:#4ade80;">{sent_emails}</div><div class="metric-label">Emails Sent</div></div>', 
+            unsafe_allow_html=True
+        )
     with m3:
-        st.markdown(f'<div class="metric-value" style="color:#facc15;">{pending_queue}</div><div class="metric-label">In Queue</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="metric-box"><div class="metric-value" style="color:#facc15;">{pending_queue}</div><div class="metric-label">In Queue</div></div>', 
+            unsafe_allow_html=True
+        )
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -336,6 +391,7 @@ st.write("")
 st.markdown('<div class="custom-card">', unsafe_allow_html=True)
 st.markdown("### Live Database Records")
 st.caption("Latest scraped companies, contact details, and outbound status from Supabase.")
+st.write("")
 
 if all_leads:
     clean_table = []
