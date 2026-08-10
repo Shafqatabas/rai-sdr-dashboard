@@ -5,6 +5,7 @@ import csv
 import io
 import subprocess
 from pathlib import Path
+from datetime import datetime, timezone
 
 import streamlit as st
 from supabase import create_client
@@ -15,7 +16,7 @@ from supabase import create_client
 # ============================================================
 
 st.set_page_config(
-    page_title="ClientEngine AI — AI Sales Intelligence Platform",
+    page_title="ClientEngine AI",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -45,12 +46,12 @@ if MODAL_TOKEN_SECRET:
 
 
 # -----------------------------
-# Brand constants (Electric Blue + Cyan + Slate)
+# Brand constants
 # -----------------------------
 BLUE = "#2563EB"
 CYAN = "#06B6D4"
 SLATE = "#0F172A"
-BG = "#020617"
+BG = "#020817"
 PANEL = "#071426"
 GREEN = "#10B981"
 AMBER = "#F59E0B"
@@ -60,7 +61,7 @@ MUTED = "#94A3B8"
 
 
 # -----------------------------
-# CSS / UI Overrides
+# CSS / UI
 # -----------------------------
 st.markdown(
     f"""
@@ -98,12 +99,29 @@ html, body, [class*="css"] {{
 }}
 
 [data-testid="stSidebar"] {{
-    background: rgba(3, 13, 28, .96) !important;
-    border-right: 1px solid rgba(37,99,235,.25);
-    padding: 16px 12px;
+    background: #030D1C !important;
+    border-right: 1px solid rgba(37,99,235,.24);
 }}
 
-/* Ensure all other CSS selectors and rule blocks use double curly braces */
+[data-testid="stSidebar"] .block-container {{
+    padding: 1rem .8rem;
+}}
+
+div[data-baseweb="select"] > div,
+div[data-baseweb="input"] > div,
+.stTextInput input,
+.stTextArea textarea {{
+    background: #041022 !important;
+    color: white !important;
+    border-color: rgba(37,99,235,.35) !important;
+    border-radius: 10px !important;
+}}
+
+.stTextInput input::placeholder,
+.stTextArea textarea::placeholder {{
+    color: #64748B !important;
+}}
+
 .stButton > button {{
     border: 1px solid rgba(6,182,212,.35) !important;
     border-radius: 10px !important;
@@ -111,6 +129,149 @@ html, body, [class*="css"] {{
     color: white !important;
     font-weight: 700 !important;
     min-height: 42px !important;
+    box-shadow: 0 8px 24px rgba(6,182,212,.12) !important;
+}}
+
+.stButton > button:hover {{
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(6,182,212,.22) !important;
+}}
+
+div[data-testid="stMetric"] {{
+    background: linear-gradient(145deg, #081A31, #051225);
+    border: 1px solid rgba(37,99,235,.35);
+    border-radius: 14px;
+    padding: 12px 14px;
+}}
+
+div[data-testid="stMetricLabel"] {{
+    color: #94A3B8 !important;
+}}
+
+div[data-testid="stMetricValue"] {{
+    color: #38BDF8 !important;
+}}
+
+.client-card {{
+    background: rgba(7,20,38,.88);
+    border: 1px solid rgba(37,99,235,.34);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.18);
+}}
+
+.hero {{
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(37,99,235,.52);
+    border-radius: 18px;
+    padding: 28px 30px;
+    margin-bottom: 14px;
+    background:
+        radial-gradient(circle at 82% 50%, rgba(6,182,212,.13), transparent 25%),
+        linear-gradient(135deg, #07182D, #041021);
+}}
+
+.hero:after {{
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    right: -160px;
+    top: -180px;
+    border-radius: 50%;
+    border: 1px solid rgba(6,182,212,.13);
+    box-shadow:
+        0 0 0 35px rgba(6,182,212,.025),
+        0 0 0 70px rgba(6,182,212,.018);
+}}
+
+.hero-content {{
+    position: relative;
+    z-index: 2;
+}}
+
+.brand-row {{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}}
+
+.brand-mark {{
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg, {BLUE}, {CYAN});
+    box-shadow:0 0 28px rgba(6,182,212,.28);
+    flex-shrink:0;
+}}
+
+.brand-title {{
+    font-size: clamp(27px, 4vw, 44px);
+    line-height:1;
+    font-weight:800;
+    letter-spacing:-1.8px;
+    margin:0;
+}}
+
+.brand-title span {{
+    color:{CYAN};
+}}
+
+.brand-subtitle {{
+    color:#38BDF8;
+    font-size:14px;
+    margin-top:8px;
+}}
+
+.small-muted {{
+    color:#64748B;
+    font-size:11px;
+}}
+
+.status-online {{
+    color:#34D399;
+    font-size:11px;
+    font-weight:700;
+}}
+
+.badge {{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:999px;
+    background:rgba(16,185,129,.10);
+    color:#34D399;
+    border:1px solid rgba(16,185,129,.18);
+    font-size:10px;
+    font-weight:700;
+}}
+
+.pipeline-log {{
+    background:#020B16;
+    border:1px solid rgba(37,99,235,.25);
+    border-radius:12px;
+    padding:12px;
+}}
+
+[data-testid="stDataFrame"] {{
+    border: 1px solid rgba(37,99,235,.22);
+    border-radius: 12px;
+}}
+
+hr {{
+    border-color: rgba(148,163,184,.10) !important;
+}}
+
+footer {{
+    visibility:hidden;
+}}
+
+@media (max-width: 800px) {{
+    .hero {{ padding:20px; }}
+    .brand-title {{ font-size:30px; }}
 }}
 </style>
 """,
@@ -119,7 +280,7 @@ html, body, [class*="css"] {{
 
 
 # -----------------------------
-# Logo SVG Generator
+# Logo SVG
 # -----------------------------
 def logo_svg(size=48):
     return f"""
@@ -142,12 +303,12 @@ def logo_svg(size=48):
 
 
 # -----------------------------
-# Data Access Layer
+# Data access
 # -----------------------------
 @st.cache_data(ttl=10)
 def fetch_leads():
     if not SUPABASE_URL or not SUPABASE_KEY:
-        return [], "Supabase credentials are not configured in secrets."
+        return [], "Supabase credentials are not configured."
 
     try:
         client = create_client(SUPABASE_URL, SUPABASE_KEY)
@@ -176,6 +337,8 @@ def status_counts(leads):
         status = str(row.get("status", "")).strip().lower()
         if status in counts:
             counts[status] += 1
+
+        # tolerate common alternative status values
         if status in {"ready", "ready to send", "qualified"}:
             counts["pending"] += 1
         if status in {"contacted", "emailed"}:
@@ -196,7 +359,11 @@ def clean_target(value):
 
 
 def find_pipeline_file():
-    candidates = [PIPELINE_FILE, "master_pipeline.py", "sdr_agent.py"]
+    candidates = [
+        PIPELINE_FILE,
+        "master_pipeline.py",
+        "sdr_agent.py",
+    ]
     for name in candidates:
         path = Path(name)
         if path.exists():
@@ -205,18 +372,18 @@ def find_pipeline_file():
 
 
 # -----------------------------
-# Sidebar Navigation & Control Panel
+# Sidebar
 # -----------------------------
 with st.sidebar:
     st.markdown(
         f"""
-        <div class="brand-row" style="margin-bottom:16px; padding:10px; border:1px solid rgba(6,182,212,.3); border-radius:14px; background:linear-gradient(135deg, rgba(37,99,235,.15), rgba(6,182,212,.05));">
-            <div class="brand-mark">{logo_svg(36)}</div>
+        <div class="brand-row" style="margin-bottom:18px;">
+            <div class="brand-mark">{logo_svg(38)}</div>
             <div>
-                <div style="font-size:15px; font-weight:800; color:white;">
+                <div style="font-size:16px;font-weight:800;">
                     ClientEngine <span style="color:{CYAN};">AI</span>
                 </div>
-                <div class="small-muted">AI Sales Intelligence</div>
+                <div class="small-muted">Lead generation & outreach</div>
             </div>
         </div>
         """,
@@ -226,40 +393,38 @@ with st.sidebar:
     menu = st.radio(
         "Navigation",
         [
-            "⌂  Dashboard",
-            "⌕  Find Leads",
-            "▤  Lead Database",
-            "➤  AI Outreach",
-            "◴  Follow-ups",
-            "▥  Campaigns",
-            "◔  Analytics",
-            "✉  Email Templates",
-            "⚙  Settings",
+            "Dashboard",
+            "Find Leads",
+            "Lead Database",
+            "AI Outreach",
+            "Follow-ups",
+            "Campaigns",
+            "Analytics",
+            "Email Templates",
+            "Settings",
         ],
         label_visibility="collapsed",
     )
 
     st.divider()
 
-    st.markdown(
-        '<div style="font-size:10px; color:#64748b; font-weight:700; text-transform:uppercase; margin-bottom:8px;">AI ENGINE STATUS</div>',
-        unsafe_allow_html=True,
-    )
+    st.markdown("**AI ENGINE**")
     engine_items = [
-        ("OpenAI GPT-4o", bool(get_secret("OPENAI_API_KEY"))),
-        ("Modal Pipeline", bool(MODAL_TOKEN_ID or MODAL_TOKEN_SECRET)),
-        ("Supabase Storage", bool(SUPABASE_URL and SUPABASE_KEY)),
-        ("SMTP / Resend", bool(get_secret("SMTP_HOST") or get_secret("RESEND_API_KEY"))),
+        ("OpenAI", bool(get_secret("OPENAI_API_KEY"))),
+        ("Modal", bool(MODAL_TOKEN_ID or MODAL_TOKEN_SECRET)),
+        ("Supabase", bool(SUPABASE_URL and SUPABASE_KEY)),
+        ("Email", bool(get_secret("SMTP_HOST") or get_secret("RESEND_API_KEY"))),
     ]
 
     for name, connected in engine_items:
         color = "#34D399" if connected else "#F59E0B"
-        label = "Connected" if connected else "Ready"
+        label = "Connected" if connected else "Not configured"
         st.markdown(
             f"""
-            <div style="display:flex; justify-content:space-between; padding:4px 0; font-size:11px; color:#f8fafc;">
+            <div style="display:flex;justify-content:space-between;
+                        padding:6px 0;font-size:11px;">
                 <span>{name}</span>
-                <span style="color:{color}; font-weight:700;">● {label}</span>
+                <span style="color:{color};font-weight:700;">● {label}</span>
             </div>
             """,
             unsafe_allow_html=True,
@@ -269,52 +434,53 @@ with st.sidebar:
 
     st.markdown(
         f"""
-        <div style="border:1px solid rgba(37,99,235,.35); border-radius:12px; padding:12px; text-align:center; background:rgba(7,20,38,.6);">
-            <div style="font-weight:700; font-size:11px; color:white;">Rai Marketing Agency</div>
-            <div style="color:#94A3B8; font-size:9px; margin-top:2px;">Digital Growth Solutions</div>
-            <div style="color:#64748b; font-size:9px; margin-top:6px;">v2.0.0</div>
+        <div style="border:1px solid rgba(37,99,235,.28);
+                    border-radius:12px;padding:12px;text-align:center;
+                    background:rgba(37,99,235,.05);">
+            <div style="font-weight:800;font-size:12px;">Rai Marketing Agency</div>
+            <div class="small-muted">ClientEngine AI</div>
+            <div style="color:#38BDF8;font-size:9px;margin-top:5px;">v2.0</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-# Extract clean menu name from radio selection icon prefix
-clean_menu = menu.split("  ")[-1].strip()
-
 
 # -----------------------------
-# Fetch Database Data
+# Load data
 # -----------------------------
 all_leads, db_error = fetch_leads()
 counts = status_counts(all_leads)
 
-total_leads = len(all_leads) if all_leads else 247
-sent_emails = counts["sent"] + counts["completed"] if all_leads else 94
-pending_queue = counts["new"] + counts["pending"] if all_leads else 126
-replies = counts["replied"] if all_leads else 17
+total_leads = len(all_leads)
+sent_emails = counts["sent"] + counts["completed"]
+pending_queue = counts["new"] + counts["pending"]
+replies = counts["replied"]
 
 
 # -----------------------------
-# Main Header / Hero Section
+# Header
 # -----------------------------
 st.markdown(
     f"""
     <div class="hero">
-        <div class="brand-row">
-            <div class="brand-mark">{logo_svg(46)}</div>
-            <div>
-                <div class="brand-title">
-                    ClientEngine <span>AI</span>
-                </div>
-                <div class="brand-subtitle">
-                    AI-Powered Lead Generation & Outreach Platform
+        <div class="hero-content">
+            <div class="brand-row">
+                <div class="brand-mark">{logo_svg(48)}</div>
+                <div>
+                    <div class="brand-title">
+                        ClientEngine <span>AI</span>
+                    </div>
+                    <div class="brand-subtitle">
+                        AI-Powered Lead Generation & Outreach Platform
+                    </div>
                 </div>
             </div>
-        </div>
-        <div style="position:absolute; right:30px; top:25px; border:1px solid rgba(37,99,235,.35); background:rgba(3,13,28,.72); border-radius:14px; padding:15px 22px; min-width:180px;">
-            <div style="font-weight:700; margin-bottom:6px; color:white; font-size:12px;">🌐 Global Coverage</div>
-            <div style="font-size:20px; display:flex; gap:10px;">🇺🇸 🇬🇧 🇨🇦 🇩🇪</div>
-            <small style="display:block; color:#94a3b8; margin-top:6px; font-size:10px;">4 Active Markets</small>
+            <div style="margin-top:18px;color:#94A3B8;font-size:12px;">
+                Find prospects, collect public business contact data,
+                analyze opportunities, generate personalized outreach,
+                and manage follow-ups from one control center.
+            </div>
         </div>
     </div>
     """,
@@ -322,220 +488,666 @@ st.markdown(
 )
 
 
-# ============================================================
-# View Routing Logic
-# ============================================================
+# -----------------------------
+# Dashboard / Find Leads
+# -----------------------------
+if menu in {"Dashboard", "Find Leads"}:
+    query_params = st.query_params
+    url_niche = query_params.get("niche", "")
+    url_location = query_params.get("location", "")
 
-if clean_menu in {"Dashboard", "Find Leads"}:
+    industries = [
+        "Roofing Contractors",
+        "HVAC Companies",
+        "Construction Companies",
+        "Plumbing Companies",
+        "Dental Practices",
+        "Real Estate Agencies",
+        "Law Firms",
+        "Solar Companies",
+        "Restaurants",
+        "E-commerce",
+        "Digital Marketing Agencies",
+        "Software Companies",
+        "Hotels",
+        "Accounting Services",
+        "Custom Industry...",
+    ]
+
+    countries = [
+        "United States",
+        "United Kingdom",
+        "Canada",
+        "Germany",
+        "Australia",
+        "United Arab Emirates",
+        "Saudi Arabia",
+        "Pakistan",
+        "France",
+        "Italy",
+        "Netherlands",
+        "Worldwide / Global",
+        "Custom Location...",
+    ]
+
+    st.markdown('<div class="client-card">', unsafe_allow_html=True)
+    st.markdown("### Find Your Next Customers")
+    st.caption(
+        "Give ClientEngine AI an industry and location. "
+        "The configured Modal pipeline will perform the actual search."
+    )
+
+    c1, c2 = st.columns(2, gap="medium")
+
+    with c1:
+        industry_default = (
+            industries.index(url_niche) if url_niche in industries else 0
+        )
+        selected_industry = st.selectbox(
+            "Industry / Niche",
+            industries,
+            index=industry_default,
+        )
+
+        if selected_industry == "Custom Industry...":
+            final_niche = st.text_input(
+                "Custom industry",
+                value="" if url_niche in industries else url_niche,
+                placeholder="e.g. commercial cleaning",
+            )
+        else:
+            final_niche = selected_industry
+
+    with c2:
+        country_default = (
+            countries.index(url_location) if url_location in countries else 0
+        )
+        selected_country = st.selectbox(
+            "Location / Country",
+            countries,
+            index=country_default,
+        )
+
+        if selected_country == "Custom Location...":
+            final_location = st.text_input(
+                "Custom location",
+                value="" if url_location in countries else url_location,
+                placeholder="e.g. Dallas, Texas",
+            )
+        elif selected_country == "Worldwide / Global":
+            final_location = "Global"
+        else:
+            final_location = selected_country
+
+    clean_niche = clean_target(final_niche)
+    clean_location = clean_target(final_location)
+
     st.markdown(
-        """
-        <div class="client-card">
-            <div style="font-size:17px; font-weight:700; color:white;">Find Your Next Customers</div>
-            <div class="small-muted" style="margin-top:4px;">Select your target market and trigger automated AI prospect discovery via Modal pipeline.</div>
+        f"""
+        <div style="margin-top:14px;padding:10px 12px;border-radius:10px;
+                    background:#020B16;border:1px solid rgba(37,99,235,.25);
+                    color:#38BDF8;font-family:monospace;font-size:11px;">
+            Query preview:
+            "{clean_niche}" + "{clean_location}" + public business contact data
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    c1, c2, c3 = st.columns([1, 1, 0.7], gap="medium")
-    with c1:
-        selected_industry = st.selectbox(
-            "INDUSTRY / NICHE",
-            [
-                "Roofing Contractors",
-                "HVAC Companies",
-                "Construction Companies",
-                "Dental Practices",
-                "Real Estate Agencies",
-                "Law Firms",
-                "Solar Companies",
-                "Restaurants",
-                "E-commerce",
-            ],
+    b1, b2 = st.columns([2, 1])
+    with b1:
+        run_pipeline = st.button(
+            "⚡ Find Potential Customers",
+            use_container_width=True,
+            type="primary",
         )
-    with c2:
-        selected_country = st.selectbox(
-            "LOCATION / COUNTRY",
-            [
-                "United States",
-                "United Kingdom",
-                "Canada",
-                "Germany",
-                "Australia",
-                "Global",
-            ],
-        )
-    with c3:
-        st.write("")
-        st.write("")
-        run_pipeline = st.button("⚡ Find Potential Customers", use_container_width=True)
+    with b2:
+        refresh = st.button("↻ Refresh Database", use_container_width=True)
 
-    clean_niche = clean_target(selected_industry)
-    clean_location = clean_target(selected_country)
-
-    if run_pipeline:
-        pipeline = find_pipeline_file()
-        if not pipeline:
-            st.error("Pipeline file not found. Please verify modal configuration.")
-        else:
-            st.info(f"Executing cloud workflow for {clean_niche} in {clean_location}...")
-            env = os.environ.copy()
-            command = [
-                sys.executable,
-                "-m",
-                "modal",
-                "run",
-                pipeline,
-                "--niche",
-                clean_niche,
-                "--location",
-                clean_location,
-            ]
-            try:
-                res = subprocess.run(command, capture_output=True, text=True, env=env, timeout=45)
-                if res.returncode == 0:
-                    st.success("Search completed & synced with Supabase database!")
-                    st.cache_data.clear()
-                else:
-                    st.info("Pipeline triggered successfully in backend worker.")
-            except Exception as e:
-                st.error(f"Execution notice: {e}")
-
-    # KPI Metrics Row (5 cards)
-    k1, k2, k3, k4, k5 = st.columns(5, gap="small")
-    k1.metric("Leads Found", total_leads, "↗ +12%")
-    k2.metric("Verified Leads", "183", "↗ +8%")
-    k3.metric("Emails Ready", pending_queue, "↗ +15%")
-    k4.metric("Emails Sent", sent_emails, "↗ +12%")
-    k5.metric("Replies", replies, "↗ +6%")
-
-    # Analytics Grid (Pipeline Funnel, Country Distribution, Top Opportunities)
-    col_d1, col_d2, col_d3 = st.columns(3, gap="medium")
-    with col_d1:
-        st.markdown(
-            """
-            <div class="client-card" style="height:100%;">
-                <div style="font-size:15px; font-weight:700; color:white; margin-bottom:12px;">Lead Generation Pipeline</div>
-                <div style="display:flex; flex-direction:column; gap:5px;">
-                    <div style="height:28px; width:100%; background:#2563EB; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Found — 247</div>
-                    <div style="height:28px; width:85%; background:#0891B2; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Verified — 183</div>
-                    <div style="height:28px; width:70%; background:#0D9488; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Qualified — 152</div>
-                    <div style="height:28px; width:55%; background:#7C3AED; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Contacted — 94</div>
-                    <div style="height:28px; width:35%; background:#D97706; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Replied — 17</div>
-                    <div style="height:28px; width:20%; background:#DC2626; border-radius:6px; display:grid; place-items:center; font-size:10px; font-weight:600;">Meetings — 5</div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with col_d2:
-        st.markdown(
-            """
-            <div class="client-card" style="height:100%;">
-                <div style="font-size:15px; font-weight:700; color:white; margin-bottom:12px;">Country Distribution</div>
-                <div style="font-size:11px; margin-top:8px;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>🇺🇸 USA</span><b>35%</b></div>
-                    <div style="height:5px; background:#17243a; border-radius:10px; margin-bottom:12px;"><div style="height:100%; width:35%; background:linear-gradient(90deg,#2563EB,#06B6D4); border-radius:10px;"></div></div>
-                    
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>🇬🇧 UK</span><b>25%</b></div>
-                    <div style="height:5px; background:#17243a; border-radius:10px; margin-bottom:12px;"><div style="height:100%; width:25%; background:linear-gradient(90deg,#2563EB,#06B6D4); border-radius:10px;"></div></div>
-
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>🇨🇦 Canada</span><b>22%</b></div>
-                    <div style="height:5px; background:#17243a; border-radius:10px; margin-bottom:12px;"><div style="height:100%; width:22%; background:linear-gradient(90deg,#2563EB,#06B6D4); border-radius:10px;"></div></div>
-
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>🇩🇪 Germany</span><b>18%</b></div>
-                    <div style="height:5px; background:#17243a; border-radius:10px;"><div style="height:100%; width:18%; background:linear-gradient(90deg,#2563EB,#06B6D4); border-radius:10px;"></div></div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with col_d3:
-        st.markdown(
-            """
-            <div class="client-card" style="height:100%;">
-                <div style="font-size:15px; font-weight:700; color:white; margin-bottom:12px;">Top Opportunities</div>
-                <div style="font-size:11px; display:flex; flex-direction:column; gap:10px;">
-                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(148,163,184,.1); padding-bottom:6px;"><span>Weak Google Ads</span><span style="color:#34D399; font-weight:600;">72 leads →</span></div>
-                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(148,163,184,.1); padding-bottom:6px;"><span>No Lead Form</span><span style="color:#34D399; font-weight:600;">58 leads →</span></div>
-                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(148,163,184,.1); padding-bottom:6px;"><span>Poor SEO Ranking</span><span style="color:#34D399; font-weight:600;">49 leads →</span></div>
-                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(148,163,184,.1); padding-bottom:6px;"><span>Slow Website Speed</span><span style="color:#34D399; font-weight:600;">41 leads →</span></div>
-                    <div style="display:flex; justify-content:space-between; padding-bottom:2px;"><span>No Social Presence</span><span style="color:#34D399; font-weight:600;">37 leads →</span></div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    # Recent Leads Data Grid
-    st.markdown(
-        """
-        <div class="client-card">
-            <div style="font-size:16px; font-weight:700; color:white; margin-bottom:10px;">Recent High-Value Prospects</div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    if all_leads:
-        table = [
-            {
-                "Company": safe_text(row.get("company_name")),
-                "Location": safe_text(row.get("country")),
-                "Email": safe_text(row.get("email")),
-                "AI Score": "91/100",
-                "Opportunity": "No Google Ads",
-                "Status": safe_text(row.get("status", "Ready")),
-            }
-            for row in all_leads[:10]
-        ]
-        st.dataframe(table, use_container_width=True, hide_index=True)
-    else:
-        sample_table = [
-            {"Company": "ABC Roofing Solutions", "Location": "🇺🇸 Dallas, TX", "Email": "john@abcroofing.com", "AI Score": "91/100", "Opportunity": "No Google Ads", "Status": "Ready"},
-            {"Company": "XYZ Contractors", "Location": "🇬🇧 London", "Email": "mike@xyzroofers.co.uk", "AI Score": "87/100", "Opportunity": "Weak Website CTA", "Status": "Ready"},
-            {"Company": "Smith Roofing", "Location": "🇨🇦 Toronto", "Email": "info@smithroofing.ca", "AI Score": "82/100", "Opportunity": "Poor SEO", "Status": "Follow-up"},
-            {"Company": "Dachbau Berlin", "Location": "🇩🇪 Berlin", "Email": "kontakt@dachbau.de", "AI Score": "79/100", "Opportunity": "No Lead Form", "Status": "Draft"},
-        ]
-        st.dataframe(sample_table, use_container_width=True, hide_index=True)
+    if refresh:
+        st.cache_data.clear()
+        st.rerun()
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-elif clean_menu == "Lead Database":
-    st.markdown(
-        """
-        <div class="client-card">
-            <div style="font-size:17px; font-weight:700; color:white;">Complete Lead Database</div>
-            <div class="small-muted" style="margin-top:4px;">Secure enterprise database synchronized with Supabase storage.</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    if all_leads:
-        st.dataframe(all_leads, use_container_width=True, hide_index=True)
-    else:
-        st.info("No records found in database storage.")
+    # KPI row
+    k1, k2, k3, k4, k5 = st.columns(5, gap="small")
+    k1.metric("Leads Found", total_leads)
+    k2.metric("Emails Ready", pending_queue)
+    k3.metric("Emails Sent", sent_emails)
+    k4.metric("Replies", replies)
+    k5.metric("Failed", counts["failed"])
 
-else:
-    st.markdown(
-        f"""
-        <div class="client-card">
-            <div style="font-size:17px; font-weight:700; color:white;">{clean_menu} Module</div>
-            <div class="small-muted" style="margin-top:4px;">Module active under Rai Marketing Agency infrastructure.</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
+    # Pipeline execution
+    if run_pipeline:
+        if not clean_niche or not clean_location:
+            st.error("Please enter both an industry and a location.")
+        else:
+            pipeline = find_pipeline_file()
+
+            st.markdown('<div class="client-card">', unsafe_allow_html=True)
+            st.markdown("### Live Cloud Execution")
+
+            if not pipeline:
+                st.error(
+                    "No pipeline file was found. Put master_pipeline.py or "
+                    "sdr_agent.py in the same folder as app.py."
+                )
+            else:
+                status_box = st.empty()
+                status_box.info(
+                    f"Running {Path(pipeline).name} for "
+                    f"{clean_niche} → {clean_location}"
+                )
+
+                log_box = st.empty()
+                env = os.environ.copy()
+                env["PYTHONIOENCODING"] = "utf-8"
+                env["PYTHONUTF8"] = "1"
+
+                command = [
+                    sys.executable,
+                    "-m",
+                    "modal",
+                    "run",
+                    pipeline,
+                    "--niche",
+                    clean_niche,
+                    "--location",
+                    clean_location,
+                ]
+
+                output_logs = ""
+
+                try:
+                    process = subprocess.Popen(
+                        command,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        encoding="utf-8",
+                        errors="replace",
+                        env=env,
+                    )
+
+                    if process.stdout:
+                        for line in process.stdout:
+                            output_logs += line
+                            log_box.code(output_logs, language="text")
+
+                    return_code = process.wait()
+
+                    if return_code == 0:
+                        status_box.success(
+                            "Pipeline completed successfully. "
+                            "Refreshing lead database..."
+                        )
+                        st.cache_data.clear()
+                    else:
+                        status_box.error(
+                            f"Pipeline stopped with exit code {return_code}."
+                        )
+
+                except FileNotFoundError:
+                    status_box.error(
+                        "Modal CLI was not found. Install it with: "
+                        "pip install modal"
+                    )
+                except Exception as exc:
+                    status_box.error(f"Execution error: {exc}")
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+    # Dashboard analytics
+    a1, a2, a3 = st.columns([1.15, 1, 1.15], gap="medium")
+
+    with a1:
+        st.markdown('<div class="client-card">', unsafe_allow_html=True)
+        st.markdown("### Lead Pipeline")
+        st.write(f"Found — **{total_leads}**")
+        st.write(f"Ready — **{pending_queue}**")
+        st.write(f"Contacted — **{sent_emails}**")
+        st.write(f"Replies — **{replies}**")
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with a2:
+        st.markdown('<div class="client-card">', unsafe_allow_html=True)
+        st.markdown("### Lead Status")
+        st.write(f"New: **{counts['new']}**")
+        st.write(f"Pending: **{counts['pending']}**")
+        st.write(f"Sent: **{counts['sent']}**")
+        st.write(f"Completed: **{counts['completed']}**")
+        st.write(f"Failed: **{counts['failed']}**")
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with a3:
+        st.markdown('<div class="client-card">', unsafe_allow_html=True)
+        st.markdown("### Engine Capabilities")
+        st.write("✓ Public web lead discovery")
+        st.write("✓ Contact email extraction")
+        st.write("✓ Supabase lead storage")
+        st.write("✓ Modal cloud execution")
+        st.write("✓ AI outreach layer")
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    # Recent leads
+    st.markdown('<div class="client-card">', unsafe_allow_html=True)
+    st.markdown("### Recent Leads")
+
+    if db_error:
+        st.warning(f"Supabase: {db_error}")
+
+    if all_leads:
+        table = []
+        for row in all_leads[:100]:
+            table.append(
+                {
+                    "Company": safe_text(row.get("company_name")),
+                    "Email": safe_text(row.get("email")),
+                    "Industry": safe_text(row.get("industry")),
+                    "Country": safe_text(row.get("country")),
+                    "Status": safe_text(row.get("status")),
+                    "Website": safe_text(row.get("website")),
+                }
+            )
+
+        st.dataframe(
+            table,
+            use_container_width=True,
+            hide_index=True,
+        )
+    else:
+        st.info("No leads found yet. Launch a campaign above.")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# -----------------------------
+# Lead Database
+# -----------------------------
+elif menu == "Lead Database":
+    st.markdown('<div class="client-card">', unsafe_allow_html=True)
+    st.markdown("### Lead Database")
+    st.caption("Live records loaded from Supabase.")
+
+    search = st.text_input(
+        "Search",
+        placeholder="Company, email, country, industry...",
     )
+
+    filtered = all_leads
+
+    if search:
+        needle = search.lower().strip()
+        filtered = [
+            row
+            for row in all_leads
+            if needle in " ".join(
+                [
+                    safe_text(row.get("company_name"), ""),
+                    safe_text(row.get("email"), ""),
+                    safe_text(row.get("country"), ""),
+                    safe_text(row.get("industry"), ""),
+                    safe_text(row.get("status"), ""),
+                    safe_text(row.get("website"), ""),
+                ]
+            ).lower()
+        ]
+
+    st.write(f"Showing **{len(filtered)}** records.")
+
+    if filtered:
+        table = [
+            {
+                "Company": safe_text(r.get("company_name")),
+                "Email": safe_text(r.get("email")),
+                "Industry": safe_text(r.get("industry")),
+                "Country": safe_text(r.get("country")),
+                "Status": safe_text(r.get("status")),
+                "Website": safe_text(r.get("website")),
+            }
+            for r in filtered
+        ]
+        st.dataframe(table, use_container_width=True, hide_index=True)
+
+        csv_buffer = io.StringIO()
+        writer = csv.DictWriter(csv_buffer, fieldnames=table[0].keys())
+        writer.writeheader()
+        writer.writerows(table)
+
+        st.download_button(
+            "Download CSV",
+            data=csv_buffer.getvalue(),
+            file_name="clientengine_leads.csv",
+            mime="text/csv",
+        )
+    else:
+        st.info("No matching leads.")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# -----------------------------
+# AI Outreach
+# -----------------------------
+elif menu == "AI Outreach":
+    st.markdown('<div class="client-card">', unsafe_allow_html=True)
+    st.markdown("### AI Outreach Workspace")
+    st.caption(
+        "Generate personalized outreach from the information already stored "
+        "for a lead. Connect your OpenAI/email provider in secrets before sending."
+    )
+
+    if not all_leads:
+        st.info("Add leads first from Find Leads.")
+    else:
+        options = []
+        for i, row in enumerate(all_leads[:200]):
+            options.append(
+                f"{i}: {safe_text(row.get('company_name'))} — "
+                f"{safe_text(row.get('email'))}"
+            )
+
+        selected = st.selectbox("Lead", options)
+        index = int(selected.split(":", 1)[0])
+        lead = all_leads[index]
+
+        st.markdown(
+            f"""
+            **Company:** {safe_text(lead.get('company_name'))}  
+            **Email:** {safe_text(lead.get('email'))}  
+            **Website:** {safe_text(lead.get('website'))}  
+            **Industry:** {safe_text(lead.get('industry'))}
+            """
+        )
+
+        service = st.text_input(
+            "Offer / service",
+            value="Google Ads, Meta Ads, Social Media Management and Local SEO",
+        )
+
+        problem = st.text_area(
+            "Known problem / observation",
+            placeholder="Example: weak Google visibility, slow website, poor CTA...",
+        )
+
+        if st.button("Generate Outreach Draft", use_container_width=True):
+            company = safe_text(lead.get("company_name"), "your company")
+            email = safe_text(lead.get("email"), "")
+            subject = f"Ideas to help {company} generate more qualified leads"
+
+            body = f"""Hi {company} team,
+
+I came across your business while researching {safe_text(lead.get('industry'), 'local businesses')} in {safe_text(lead.get('country'), 'your market')}.
+
+I noticed this opportunity:
+{problem or 'There may be opportunities to improve your online lead generation and conversion process.'}
+
+At Rai Marketing Agency, we help businesses improve lead generation through:
+- Google Ads
+- Facebook & Instagram Ads
+- Social Media Management
+- Local SEO
+- Website and landing-page optimization
+
+I would be happy to share a quick audit and a practical plan based on your current setup.
+
+Best,
+Rai Marketing Agency
+"""
+
+            st.success("Draft generated.")
+            st.code(f"Subject: {subject}\n\n{body}", language="text")
+            if email and email != "N/A":
+                st.caption(
+                    "The draft is prepared for review. Automatic sending should "
+                    "only be enabled after your email provider, consent/compliance "
+                    "rules, sending limits, and opt-out process are configured."
+                )
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# -----------------------------
+# Follow-ups
+# -----------------------------
+elif menu == "Follow-ups":
+    st.markdown('<div class="client-card">', unsafe_allow_html=True)
+    st.markdown("### Follow-ups")
+    st.caption("Use lead status to identify records that need a follow-up.")
+
+    followups = [
+        r for r in all_leads
+        if str(r.get("status", "")).lower()
+        in {"sent", "contacted", "follow-up", "followup"}
+    ]
+
+    if followups:
+        st.dataframe(
+            [
+                {
+                    "Company": safe_text(r.get("company_name")),
+                    "Email": safe_text(r.get("email")),
+                    "Country": safe_text(r.get("country")),
+                    "Status": safe_text(r.get("status")),
+                    "Website": safe_text(r.get("website")),
+                }
+                for r in followups
+            ],
+            use_container_width=True,
+            hide_index=True,
+        )
+    else:
+        st.info("No follow-up records are currently marked in Supabase.")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# -----------------------------
+# Campaigns
+# -----------------------------
+elif menu == "Campaigns":
+    st.markdown('<div class="client-card">', unsafe_allow_html=True)
+    st.markdown("### Campaigns")
+    st.caption("Launch campaigns from a reusable target configuration.")
+
+    campaign_name = st.text_input("Campaign name", placeholder="USA Roofing — August")
+    campaign_notes = st.text_area(
+        "Campaign notes",
+        placeholder="Offer, target profile, exclusions, messaging notes...",
+    )
+
+    if st.button("Save Campaign Plan", use_container_width=True):
+        if campaign_name.strip():
+            st.success(
+                "Campaign plan prepared. Connect a campaign table in Supabase "
+                "to persist it permanently."
+            )
+        else:
+            st.error("Enter a campaign name.")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# -----------------------------
+# Analytics
+# -----------------------------
+elif menu == "Analytics":
+    st.markdown('<div class="client-card">', unsafe_allow_html=True)
+    st.markdown("### Analytics")
+    st.caption("Calculated from the live lead records available in Supabase.")
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Total Leads", total_leads)
+    c2.metric("Ready / Pending", pending_queue)
+    c3.metric("Sent / Completed", sent_emails)
+    c4.metric("Replies", replies)
+
+    if all_leads:
+        countries = {}
+        industries = {}
+
+        for row in all_leads:
+            country = safe_text(row.get("country"), "Unknown")
+            industry = safe_text(row.get("industry"), "Unknown")
+            countries[country] = countries.get(country, 0) + 1
+            industries[industry] = industries.get(industry, 0) + 1
+
+        left, right = st.columns(2)
+
+        with left:
+            st.markdown("#### Leads by Country")
+            st.dataframe(
+                [
+                    {"Country": k, "Leads": v}
+                    for k, v in sorted(
+                        countries.items(),
+                        key=lambda x: x[1],
+                        reverse=True,
+                    )
+                ],
+                use_container_width=True,
+                hide_index=True,
+            )
+
+        with right:
+            st.markdown("#### Leads by Industry")
+            st.dataframe(
+                [
+                    {"Industry": k, "Leads": v}
+                    for k, v in sorted(
+                        industries.items(),
+                        key=lambda x: x[1],
+                        reverse=True,
+                    )
+                ],
+                use_container_width=True,
+                hide_index=True,
+            )
+    else:
+        st.info("Analytics will appear after leads are stored.")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# -----------------------------
+# Email Templates
+# -----------------------------
+elif menu == "Email Templates":
+    st.markdown('<div class="client-card">', unsafe_allow_html=True)
+    st.markdown("### Email Templates")
+
+    template_type = st.selectbox(
+        "Template",
+        [
+            "First outreach",
+            "Follow-up #1",
+            "Follow-up #2",
+            "Audit offer",
+        ],
+    )
+
+    if template_type == "First outreach":
+        subject = "Quick idea for improving your lead generation"
+        body = """Hi {{company_name}},
+
+I came across {{company_name}} while researching {{industry}} businesses in {{country}}.
+
+I noticed {{problem}}.
+
+We help businesses improve lead generation with Google Ads, Meta Ads,
+social media management, Local SEO and landing-page optimization.
+
+Would you be open to a quick conversation?
+
+Best,
+Rai Marketing Agency"""
+    elif template_type == "Follow-up #1":
+        subject = "Following up — {{company_name}}"
+        body = """Hi {{company_name}},
+
+Just following up on my previous message.
+
+If improving your online lead generation is a priority, I can send over
+a short audit with the main opportunities I found.
+
+Best,
+Rai Marketing Agency"""
+    elif template_type == "Follow-up #2":
+        subject = "Should I close the loop?"
+        body = """Hi {{company_name}},
+
+I don't want to keep filling your inbox.
+
+If marketing improvements are not a priority right now, no problem.
+If they are, I can send a concise audit and recommended next steps.
+
+Best,
+Rai Marketing Agency"""
+    else:
+        subject = "Free marketing audit for {{company_name}}"
+        body = """Hi {{company_name}},
+
+I can prepare a short review of your website, search visibility,
+social presence and lead-generation opportunities.
+
+If you'd like the audit, reply with "AUDIT" and I'll send the findings.
+
+Best,
+Rai Marketing Agency"""
+
+    st.text_input("Subject", value=subject)
+    st.text_area("Body", value=body, height=280)
+
+    st.caption(
+        "Use placeholders such as {{company_name}}, {{industry}}, "
+        "{{country}}, and {{problem}} when your sending layer supports them."
+    )
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# -----------------------------
+# Settings
+# -----------------------------
+elif menu == "Settings":
+    st.markdown('<div class="client-card">', unsafe_allow_html=True)
+    st.markdown("### Settings")
+
+    st.markdown("#### Pipeline")
+    st.code(
+        f"Pipeline file: {PIPELINE_FILE}\n"
+        f"Detected file: {find_pipeline_file() or 'None'}",
+        language="text",
+    )
+
+    st.markdown("#### Required Streamlit secrets")
+    st.code(
+        """MODAL_TOKEN_ID="..."
+MODAL_TOKEN_SECRET="..."
+SUPABASE_URL="https://YOUR_PROJECT.supabase.co"
+SUPABASE_KEY="YOUR_SUPABASE_KEY"
+OPENAI_API_KEY="..."
+PIPELINE_FILE="master_pipeline.py"
+""",
+        language="toml",
+    )
+
+    st.warning(
+        "Do not hard-code API keys or database credentials in app.py. "
+        "Use .streamlit/secrets.toml locally and Streamlit Secrets in deployment."
+    )
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
 
 # -----------------------------
 # Footer
 # -----------------------------
 st.markdown(
     """
-    <div style="text-align:center; color:#475569; font-size:10px; margin-top:30px;">
+    <div style="text-align:center;color:#475569;font-size:10px;margin-top:28px;">
         ClientEngine AI · Rai Marketing Agency · Find. Analyze. Engage. Grow.
     </div>
     """,
     unsafe_allow_html=True,
-)
