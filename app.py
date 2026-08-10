@@ -50,9 +50,9 @@ st.markdown("""
     min-height: 100vh;
 }
 
-/* EXACT SIDEBAR STYLING MATCHING DEMO */
+/* SIDEBAR CONTAINER */
 [data-testid="stSidebar"] {
-    background: rgba(3, 13, 28, .94) !important;
+    background: rgba(3, 13, 28, .96) !important;
     border-right: 1px solid rgba(37,99,235,.25);
     padding: 16px 12px;
 }
@@ -91,27 +91,44 @@ st.markdown("""
     color: var(--cyan);
 }
 
-/* SIDEBAR NAVIGATION BUTTONS OVERRIDE */
-[data-testid="stSidebar"] .stRadio > div {
-    gap: 4px;
+/* HIDE STREAMLIT RADIO DOTS AND MAKE IT A CLEAN MENU */
+[data-testid="stSidebar"] div.row-widget.stRadio > div[role="radiogroup"] {
+    gap: 6px;
 }
 
-[data-testid="stSidebar"] .stRadio label {
+[data-testid="stSidebar"] div.row-widget.stRadio > div[role="radiogroup"] > label {
     background: transparent !important;
     color: #94a3b8 !important;
-    padding: 10px 12px !important;
+    padding: 10px 14px !important;
     border-radius: 10px !important;
     font-size: 13px !important;
     font-weight: 500 !important;
+    cursor: pointer !important;
+    border: 1px solid transparent !important;
     transition: all 0.2s ease;
     width: 100%;
-    display: flex;
-    align-items: center;
 }
 
-[data-testid="stSidebar"] .stRadio label:hover {
+/* Hide the native radio input circle */
+[data-testid="stSidebar"] div.row-widget.stRadio div[data-baseweb="radio"] div:first-child {
+    display: none !important;
+}
+
+[data-testid="stSidebar"] div.row-widget.stRadio label:hover {
+    background: rgba(37, 99, 235, 0.15) !important;
     color: white !important;
-    background: rgba(37,99,235,0.15) !important;
+}
+
+/* Selected Radio State styling */
+[data-testid="stSidebar"] div.row-widget.stRadio input:checked + div {
+    color: white !important;
+}
+
+[data-testid="stSidebar"] div.row-widget.stRadio label:has(input:checked) {
+    background: linear-gradient(90deg, #2563eb, #06b6d4) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3) !important;
 }
 
 /* ENGINE STATUS BOX */
@@ -344,7 +361,6 @@ all_leads = fetch_leads()
 total_leads = len(all_leads) if all_leads else 247
 sent_emails = sum(1 for d in all_leads if str(d.get("status", "")).lower() in ["sent", "completed"]) if all_leads else 94
 
-# --- EXACT SIDEBAR FROM DEMO ---
 with st.sidebar:
     st.markdown("""
     <div class="logo-box">
@@ -386,7 +402,6 @@ with st.sidebar:
     <div class="version-text">v1.0.0</div>
     """, unsafe_allow_html=True)
 
-# --- TOPBAR ---
 clean_menu = selected_menu.split("  ")[-1].strip()
 
 st.markdown("""
@@ -398,7 +413,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- HERO SECTION ---
 st.markdown("""
 <section style="min-height: 150px; border: 1px solid rgba(37,99,235,.55); border-radius: 16px; background: radial-gradient(circle at 75% 50%, rgba(6,182,212,.13), transparent 25%), linear-gradient(135deg,#07182d,#041021); display: flex; align-items: center; justify-content: space-between; padding: 25px 32px; margin-bottom: 15px;">
     <div>
@@ -413,7 +427,6 @@ st.markdown("""
 </section>
 """, unsafe_allow_html=True)
 
-# --- VIEW ROUTING ---
 if clean_menu in ["Dashboard", "Find Leads"]:
     st.markdown("""
     <div class="panel">
@@ -453,7 +466,6 @@ if clean_menu in ["Dashboard", "Find Leads"]:
             except Exception as e:
                 st.error(f"Execution notice: {e}")
 
-    # KPIS
     st.markdown(f"""
     <div class="kpis">
         <div class="kpi">
@@ -484,7 +496,6 @@ if clean_menu in ["Dashboard", "Find Leads"]:
     </div>
     """, unsafe_allow_html=True)
 
-    # Analytics Grid
     col_d1, col_d2, col_d3 = st.columns(3)
     with col_d1:
         st.markdown("""
@@ -533,7 +544,6 @@ if clean_menu in ["Dashboard", "Find Leads"]:
         </div>
         """, unsafe_allow_html=True)
 
-    # Leads Table
     st.markdown('<div class="panel"><div class="panel-title" style="margin-bottom: 12px;">Recent High-Value Leads</div>', unsafe_allow_html=True)
     table_data = [
         {"COMPANY": "ABC Roofing Solutions", "LOCATION": "🇺🇸 Dallas, TX", "EMAIL": "john@abcroofing.com", "AI SCORE": "91/100", "OPPORTUNITY": "No Google Ads", "STATUS": "Ready"},
