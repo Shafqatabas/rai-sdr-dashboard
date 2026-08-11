@@ -302,6 +302,144 @@ footer {{
     visibility:hidden;
 }}
 
+/* ============================================================
+   FIX: FIND CUSTOMERS / ENGINE STATUS
+   ============================================================ */
+
+.ce-section-card {{
+    background: linear-gradient(
+        145deg,
+        rgba(7, 20, 38, 0.96),
+        rgba(3, 13, 28, 0.96)
+    );
+    border: 1px solid rgba(37, 99, 235, 0.42);
+    border-radius: 15px 15px 0 0;
+    padding: 17px 18px 10px 18px;
+    margin: 0;
+    color: #FFFFFF !important;
+}}
+
+.ce-section-card .ce-panel-title {{
+    color: #FFFFFF !important;
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0;
+}}
+
+.ce-section-card .ce-panel-sub {{
+    color: #7DD3FC !important;
+    font-size: 11px;
+    margin-top: 5px;
+}}
+
+/* Field headings */
+.ce-field-heading {{
+    color: #38BDF8 !important;
+    font-size: 11px;
+    font-weight: 700;
+    margin: 8px 0 5px 2px;
+}}
+
+/* Select boxes */
+div[data-baseweb="select"] > div {{
+    background: #071A31 !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(37, 99, 235, 0.50) !important;
+    border-radius: 9px !important;
+    min-height: 42px !important;
+}}
+
+div[data-baseweb="select"] span {{
+    color: #FFFFFF !important;
+}}
+
+div[data-baseweb="select"] svg {{
+    fill: #38BDF8 !important;
+}}
+
+/* Buttons */
+.ce-section-card ~ div .stButton > button {{
+    min-height: 42px !important;
+}}
+
+/* Feature badges */
+.ce-feature-row-main {{
+    margin-top: 11px !important;
+    padding: 0 2px 4px 2px;
+}}
+
+/* Right engine card */
+.ce-engine-card {{
+    height: 100%;
+    min-height: 170px;
+    box-sizing: border-box;
+
+    background: linear-gradient(
+        145deg,
+        rgba(7, 20, 38, 0.98),
+        rgba(3, 13, 28, 0.98)
+    );
+
+    border: 1px solid rgba(37, 99, 235, 0.42);
+    border-radius: 15px;
+    padding: 17px;
+
+    color: #FFFFFF !important;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.18),
+        inset 0 0 25px rgba(6,182,212,.025);
+}}
+
+.ce-engine-card .ce-status {{
+    margin-bottom: 13px;
+}}
+
+.ce-engine-card .ce-status strong {{
+    color: #FFFFFF !important;
+    font-size: 15px;
+    font-weight: 800;
+}}
+
+.ce-online {{
+    color: #34D399 !important;
+    background: rgba(16,185,129,.10);
+    border: 1px solid rgba(16,185,129,.25);
+}}
+
+/* AI cards */
+.ce-engine-card .ce-ai {{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(4, 16, 34, 0.98),
+            rgba(5, 20, 40, 0.98)
+        );
+
+    border: 1px solid rgba(37,99,235,.28);
+    border-radius: 10px;
+    padding: 10px;
+    min-height: 68px;
+
+    color: #FFFFFF !important;
+}}
+
+.ce-engine-card .ce-ai-icon {{
+    color: #38BDF8 !important;
+}}
+
+.ce-engine-card .ce-ai-name {{
+    color: #FFFFFF !important;
+    font-size: 10px;
+    font-weight: 700;
+}}
+
+.ce-engine-card .ce-ai-active {{
+    color: #34D399 !important;
+    font-size: 8px;
+    margin-top: 3px;
+}}
+
 @media (max-width: 800px) {{
     .hero {{ padding:20px; }}
     .brand-title {{ font-size:30px; }}
@@ -393,10 +531,7 @@ header[data-testid="stHeader"] {
 .ce-feature-row { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
 .ce-feature { border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#FFFFFF !important; padding:5px 8px; border-radius:20px; font-size:9px; }
 .ce-status { display:flex; justify-content:space-between; align-items:center; margin-bottom:13px; color:#FFFFFF !important; }
-.ce-online { color:#FFFFFF !important; font-size:9px; background:rgba(16,185,129,.10); border:1px solid rgba(16,185,129,.17); padding:5px 8px; border-radius:20px; }
 .ce-ai-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.ce-ai { background:#041022; border:1px solid rgba(37,99,235,.22); border-radius:10px; padding:10px; min-height:70px; color:#FFFFFF !important; }
-.ce-ai-icon { font-size:19px; } .ce-ai-name { font-size:10px; margin-top:5px; color:#FFFFFF !important; } .ce-ai-active { color:#FFFFFF !important; font-size:8px; margin-top:2px; }
 
 /* KPI */
 .ce-kpis { display:grid; grid-template-columns:repeat(5,1fr); gap:11px; margin:12px 0; }
@@ -419,10 +554,6 @@ header[data-testid="stHeader"] {
 
 /* Recent leads */
 .ce-table { overflow-x:auto; margin-top:12px; } .ce-table table{width:100%;border-collapse:collapse;min-width:850px} .ce-table th{text-align:left;color:#FFFFFF !important;font-size:8px;font-weight:600;padding:9px;border-bottom:1px solid rgba(255,255,255,.10)} .ce-table td{padding:10px 9px;font-size:9px;border-bottom:1px solid rgba(255,255,255,.10);color:#FFFFFF !important;} .ce-score{background:rgba(16,185,129,.12);color:#FFFFFF !important;padding:4px 7px;border-radius:7px} .ce-ready{color:#FFFFFF !important} .ce-follow{color:#FFFFFF !important} .ce-draft{color:#FFFFFF !important}
-
-/* Streamlit widgets in cards */
-.ce-widget-wrap div[data-baseweb="select"] > div, .ce-widget-wrap .stTextInput input { min-height:38px !important; color:#FFFFFF !important; }
-.ce-widget-wrap .stButton > button { min-height:42px !important; }
 
 @media(max-width:1050px){
   .ce-search-grid{grid-template-columns:1fr 1fr} .ce-search-grid > :last-child{grid-column:1/-1;height:45px}
@@ -610,7 +741,7 @@ st.markdown(
 )
 
 # -----------------------------
-# Find customers + engine status inside proper placeholders (Fixed positioning)
+# FIND CUSTOMERS + AI ENGINE STATUS
 # -----------------------------
 if menu in {"Dashboard", "Find Leads"}:
     query_params = st.query_params
@@ -628,67 +759,207 @@ if menu in {"Dashboard", "Find Leads"}:
         "Saudi Arabia", "Pakistan", "France", "Italy", "Netherlands", "Worldwide / Global", "Custom Location...",
     ]
 
-    # Two columns precisely matching the layout placeholders shown in the user's second screenshot
-    top_placeholder_col1, top_placeholder_col2 = st.columns([3.2, 1], gap="small")
-    
+    top_placeholder_col1, top_placeholder_col2 = st.columns(
+        [3.2, 1],
+        gap="small"
+    )
+
+    # ------------------------------------------------------------
+    # LEFT: FIND YOUR NEXT CUSTOMERS
+    # ------------------------------------------------------------
     with top_placeholder_col1:
-        st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
-        st.markdown('<div class="ce-panel-title">Find Your Next Customers</div>', unsafe_allow_html=True)
-        st.markdown('<div class="ce-panel-sub">Tell us your industry and location, and let AI find &amp; analyze potential clients.</div>', unsafe_allow_html=True)
 
-        c1, c2, c3 = st.columns([1, 1, 1.05], gap="small")
-        with c1:
-            st.markdown('<p style="color: #FFFFFF; font-size: 14px; font-weight: 500; margin-bottom: 4px;">Industry / Niche</p>', unsafe_allow_html=True)
-            industry_default = industries.index(url_niche) if url_niche in industries else 0
-            selected_industry = st.selectbox("Industry / Niche", industries, index=industry_default, label_visibility="collapsed")
-            if selected_industry == "Custom Industry...":
-                final_niche = st.text_input("Custom industry", value="" if url_niche in industries else url_niche, placeholder="e.g. commercial cleaning")
-            else:
-                final_niche = selected_industry
-        with c2:
-            st.markdown('<p style="color: #FFFFFF; font-size: 14px; font-weight: 500; margin-bottom: 4px;">Location / Country</p>', unsafe_allow_html=True)
-            country_default = countries.index(url_location) if url_location in countries else 0
-            selected_country = st.selectbox("Location / Country", countries, index=country_default, label_visibility="collapsed")
-            if selected_country == "Custom Location...":
-                final_location = st.text_input("Custom location", value="" if url_location in countries else url_location, placeholder="e.g. Dallas, Texas")
-            elif selected_country == "Worldwide / Global":
-                final_location = "Global"
-            else:
-                final_location = selected_country
-        with c3:
-            st.markdown('<div style="height:27px"></div>', unsafe_allow_html=True)
-            run_pipeline = st.button("⌕  Find Potential Customers  →", use_container_width=True, type="primary")
-            refresh = st.button("↻  Refresh Database", use_container_width=True)
-
-        clean_niche = clean_target(final_niche)
-        clean_location = clean_target(final_location)
         st.markdown(
-            '<div class="ce-feature-row">'
-            '<span class="ce-feature">✓ Auto Search</span>'
-            '<span class="ce-feature">✓ Verify Emails</span>'
-            '<span class="ce-feature">✓ Analyze Websites</span>'
-            '<span class="ce-feature">✓ Score Leads</span>'
-            '<span class="ce-feature">✓ Generate Emails</span>'
-            '</div>',
-            unsafe_allow_html=True,
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with top_placeholder_col2:
-        st.markdown('<div class="ce-panel" style="height:100%;">', unsafe_allow_html=True)
-        st.markdown('<div class="ce-status"><strong>AI Engine Status</strong><span class="ce-online">● All Systems Online</span></div>', unsafe_allow_html=True)
-        st.markdown(
-            f"""
-            <div class="ce-ai-grid">
-              <div class="ce-ai"><div class="ce-ai-icon">🌐</div><div class="ce-ai-name">Web Scraping</div><div class="ce-ai-active">● {'Active' if (MODAL_TOKEN_ID or MODAL_TOKEN_SECRET) else 'Offline'}</div></div>
-              <div class="ce-ai"><div class="ce-ai-icon">🧠</div><div class="ce-ai-name">AI Analysis</div><div class="ce-ai-active">● {'Active' if get_secret("OPENAI_API_KEY") else 'Offline'}</div></div>
-              <div class="ce-ai"><div class="ce-ai-icon">✉</div><div class="ce-ai-name">Email Generation</div><div class="ce-ai-active">● {'Active' if get_secret("OPENAI_API_KEY") else 'Offline'}</div></div>
-              <div class="ce-ai"><div class="ce-ai-icon">▥</div><div class="ce-ai-name">Lead Scoring</div><div class="ce-ai-active">● Active</div></div>
+            """
+            <div class="ce-section-card">
+                <div class="ce-panel-title">
+                    Find Your Next Customers
+                </div>
+                <div class="ce-panel-sub">
+                    Tell us your industry and location, and let AI find &amp;
+                    analyze potential clients.
+                </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        st.markdown('</div>', unsafe_allow_html=True)
+
+        c1, c2, c3 = st.columns(
+            [1, 1, 1.05],
+            gap="small"
+        )
+
+        with c1:
+            st.markdown(
+                """
+                <div class="ce-field-heading">
+                    Industry / Niche
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+            industry_default = (
+                industries.index(url_niche)
+                if url_niche in industries
+                else 0
+            )
+
+            selected_industry = st.selectbox(
+                "Industry / Niche",
+                industries,
+                index=industry_default,
+                label_visibility="collapsed",
+            )
+
+            if selected_industry == "Custom Industry...":
+                final_niche = st.text_input(
+                    "Custom industry",
+                    value="" if url_niche in industries else url_niche,
+                    placeholder="e.g. commercial cleaning",
+                )
+            else:
+                final_niche = selected_industry
+
+        with c2:
+            st.markdown(
+                """
+                <div class="ce-field-heading">
+                    Location / Country
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+            country_default = (
+                countries.index(url_location)
+                if url_location in countries
+                else 0
+            )
+
+            selected_country = st.selectbox(
+                "Location / Country",
+                countries,
+                index=country_default,
+                label_visibility="collapsed",
+            )
+
+            if selected_country == "Custom Location...":
+                final_location = st.text_input(
+                    "Custom location",
+                    value="" if url_location in countries else url_location,
+                    placeholder="e.g. Dallas, Texas",
+                )
+            elif selected_country == "Worldwide / Global":
+                final_location = "Global"
+            else:
+                final_location = selected_country
+
+        with c3:
+            st.markdown(
+                '<div style="height:24px;"></div>',
+                unsafe_allow_html=True,
+            )
+
+            run_pipeline = st.button(
+                "⌕  Find Potential Customers  →",
+                use_container_width=True,
+                type="primary",
+            )
+
+            refresh = st.button(
+                "↻  Refresh Database",
+                use_container_width=True,
+            )
+
+        clean_niche = clean_target(final_niche)
+        clean_location = clean_target(final_location)
+
+        st.markdown(
+            """
+            <div class="ce-feature-row ce-feature-row-main">
+                <span class="ce-feature">✓ Auto Search</span>
+                <span class="ce-feature">✓ Verify Emails</span>
+                <span class="ce-feature">✓ Analyze Websites</span>
+                <span class="ce-feature">✓ Score Leads</span>
+                <span class="ce-feature">✓ Generate Emails</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # ------------------------------------------------------------
+    # RIGHT: AI ENGINE STATUS
+    # ------------------------------------------------------------
+    with top_placeholder_col2:
+
+        modal_active = bool(
+            MODAL_TOKEN_ID or MODAL_TOKEN_SECRET
+        )
+
+        openai_active = bool(
+            get_secret("OPENAI_API_KEY")
+        )
+
+        st.markdown(
+            f"""
+            <div class="ce-engine-card">
+
+                <div class="ce-status">
+                    <strong>AI Engine Status</strong>
+                    <span class="ce-online">
+                        ● All Systems Online
+                    </span>
+                </div>
+
+                <div class="ce-ai-grid">
+
+                    <div class="ce-ai">
+                        <div class="ce-ai-icon">🌐</div>
+                        <div class="ce-ai-name">
+                            Web Scraping
+                        </div>
+                        <div class="ce-ai-active">
+                            ● {"Active" if modal_active else "Offline"}
+                        </div>
+                    </div>
+
+                    <div class="ce-ai">
+                        <div class="ce-ai-icon">🧠</div>
+                        <div class="ce-ai-name">
+                            AI Analysis
+                        </div>
+                        <div class="ce-ai-active">
+                            ● {"Active" if openai_active else "Offline"}
+                        </div>
+                    </div>
+
+                    <div class="ce-ai">
+                        <div class="ce-ai-icon">✉</div>
+                        <div class="ce-ai-name">
+                            Email Generation
+                        </div>
+                        <div class="ce-ai-active">
+                            ● {"Active" if openai_active else "Offline"}
+                        </div>
+                    </div>
+
+                    <div class="ce-ai">
+                        <div class="ce-ai-icon">▥</div>
+                        <div class="ce-ai-name">
+                            Lead Scoring
+                        </div>
+                        <div class="ce-ai-active">
+                            ● Active
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     if refresh:
         st.cache_data.clear()
