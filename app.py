@@ -105,7 +105,35 @@ html, body, [class*="css"] {{
     display: none !important;
 }}
 
-div[data-baseweb="select"] > div,
+/* 1. Navigation Menu Dropdown Styling (Text white & Dropdown Box Background) */
+div[data-baseweb="select"] > div {{
+    background: #041022 !important;
+    color: #FFFFFF !important;
+    border-color: rgba(37,99,235,.35) !important;
+    border-radius: 10px !important;
+}}
+
+/* Styling for dropdown options popup background when opened */
+div[data-baseweb="popover"], div[data-baseweb="menu"], ul[role="listbox"] {{
+    background-color: #041022 !important;
+    color: #FFFFFF !important;
+}}
+
+div[role="option"] {{
+    background-color: #041022 !important;
+    color: #FFFFFF !important;
+}}
+
+div[role="option"]:hover {{
+    background-color: #0b2246 !important;
+    color: #FFFFFF !important;
+}}
+
+/* Navigation label and text styling */
+label[data-baseweb="checkbox"], label[data-baseweb="radio"], .stSelectbox label p, p {{
+    color: #FFFFFF !important;
+}}
+
 div[data-baseweb="input"] > div,
 .stTextInput input,
 .stTextArea textarea {{
@@ -500,8 +528,9 @@ def find_pipeline_file():
 
 
 # -----------------------------
-# Navigation Menu Alternative (since sidebar is removed)
+# Navigation Menu Alternative (with white text color)
 # -----------------------------
+st.markdown('<p style="color: #FFFFFF; font-weight: 600; margin-bottom: 4px;">Navigation Menu</p>', unsafe_allow_html=True)
 menu = st.selectbox(
     "Navigation Menu",
     [
@@ -515,6 +544,7 @@ menu = st.selectbox(
         "Email Templates",
         "Settings",
     ],
+    label_visibility="collapsed",
 )
 
 
@@ -606,15 +636,17 @@ if menu in {"Dashboard", "Find Leads"}:
 
         c1, c2, c3 = st.columns([1, 1, 1.05], gap="small")
         with c1:
+            st.markdown('<p style="color: #FFFFFF; font-size: 14px; font-weight: 500; margin-bottom: 4px;">Industry / Niche</p>', unsafe_allow_html=True)
             industry_default = industries.index(url_niche) if url_niche in industries else 0
-            selected_industry = st.selectbox("Industry / Niche", industries, index=industry_default)
+            selected_industry = st.selectbox("Industry / Niche", industries, index=industry_default, label_visibility="collapsed")
             if selected_industry == "Custom Industry...":
                 final_niche = st.text_input("Custom industry", value="" if url_niche in industries else url_niche, placeholder="e.g. commercial cleaning")
             else:
                 final_niche = selected_industry
         with c2:
+            st.markdown('<p style="color: #FFFFFF; font-size: 14px; font-weight: 500; margin-bottom: 4px;">Location / Country</p>', unsafe_allow_html=True)
             country_default = countries.index(url_location) if url_location in countries else 0
-            selected_country = st.selectbox("Location / Country", countries, index=country_default)
+            selected_country = st.selectbox("Location / Country", countries, index=country_default, label_visibility="collapsed")
             if selected_country == "Custom Location...":
                 final_location = st.text_input("Custom location", value="" if url_location in countries else url_location, placeholder="e.g. Dallas, Texas")
             elif selected_country == "Worldwide / Global":
@@ -660,28 +692,42 @@ if menu in {"Dashboard", "Find Leads"}:
         st.cache_data.clear()
         st.rerun()
 
-    kpi_data = [
-        ("👥", total_leads, "Leads Found", "↗ Live database"),
-        ("✓", verified_leads, "Verified Leads", "↗ Email detected"),
-        ("✉", pending_queue, "Emails Ready", "↗ Queue"),
-        ("➤", sent_emails, "Emails Sent", "↗ Outreach"),
-        ("●", replies, "Replies", "↗ Responses"),
+    # 3. Custom metrics display showing requested values
+    custom_kpi_data = [
+        ("👥", 245, "Leads Found", "↗ Live database"),
+        ("✓", 195, "Verified Leads", "↗ Email detected"),
+        ("✉", 145, "Email Ready", "↗ Queue"),
+        ("➤", 95, "Email Send", "↗ Outreach"),
+        ("●", 65, "Reply", "↗ Responses"),
     ]
     cols = st.columns(5, gap="small")
-    for col, (icon, value, name, growth) in zip(cols, kpi_data):
+    for col, (icon, value, name, growth) in zip(cols, custom_kpi_data):
         with col:
             st.markdown(
                 f'<div class="ce-kpi"><div class="ce-kpi-icon">{icon}</div><div class="ce-kpi-value">{value}</div><div class="ce-kpi-name">{name}</div><div class="ce-kpi-growth">{growth}</div></div>',
                 unsafe_allow_html=True,
             )
 
+    # 2. Pipeline execution anchor point / auto-scroll container
     if run_pipeline:
+        st.markdown('<div id="execution-logs"></div>', unsafe_allow_html=True)
         if not clean_niche or not clean_location:
             st.error("Please enter both an industry and a location.")
         else:
             pipeline = find_pipeline_file()
             st.markdown('<div class="ce-panel" style="margin-top:12px;">', unsafe_allow_html=True)
             st.markdown("### Live Cloud Execution")
+            
+            # JavaScript to scroll down to the execution panel automatically when button is clicked
+            st.markdown("""
+                <script>
+                    const element = document.getElementById('execution-logs');
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                </script>
+            """, unsafe_allow_html=True)
+
             if not pipeline:
                 st.error("No pipeline file was found. Put master_pipeline.py or sdr_agent.py in the same folder as app.py.")
             else:
