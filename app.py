@@ -105,6 +105,7 @@ html, body, [class*="css"] {{
     display: none !important;
 }}
 
+/* Navigation Menu Dropdown Styling (Text white & Dropdown Box Background) */
 div[data-baseweb="select"] > div {{
     background: #041022 !important;
     color: #FFFFFF !important;
@@ -112,6 +113,7 @@ div[data-baseweb="select"] > div {{
     border-radius: 10px !important;
 }}
 
+/* Styling for dropdown options popup background when opened */
 div[data-baseweb="popover"], div[data-baseweb="menu"], ul[role="listbox"] {{
     background-color: #041022 !important;
     color: #FFFFFF !important;
@@ -127,6 +129,7 @@ div[role="option"]:hover {{
     color: #FFFFFF !important;
 }}
 
+/* Navigation label and text styling */
 label[data-baseweb="checkbox"], label[data-baseweb="radio"], .stSelectbox label p, p {{
     color: #FFFFFF !important;
 }}
@@ -607,7 +610,7 @@ st.markdown(
 )
 
 # -----------------------------
-# Find customers + engine status
+# Find customers + engine status inside placeholders
 # -----------------------------
 if menu in {"Dashboard", "Find Leads"}:
     query_params = st.query_params
@@ -625,8 +628,10 @@ if menu in {"Dashboard", "Find Leads"}:
         "Saudi Arabia", "Pakistan", "France", "Italy", "Netherlands", "Worldwide / Global", "Custom Location...",
     ]
 
-    left, right = st.columns([3.2, 1], gap="small")
-    with left:
+    # Two placeholders side by side for "Find Your Next Customer" and "AI Engine Status"
+    top_placeholder_col1, top_placeholder_col2 = st.columns([3.2, 1], gap="small")
+    
+    with top_placeholder_col1:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Find Your Next Customers</div>', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-sub">Tell us your industry and location, and let AI find &amp; analyze potential clients.</div>', unsafe_allow_html=True)
@@ -669,7 +674,7 @@ if menu in {"Dashboard", "Find Leads"}:
         )
         st.markdown('</div>', unsafe_allow_html=True)
 
-    with right:
+    with top_placeholder_col2:
         st.markdown('<div class="ce-panel" style="height:100%;">', unsafe_allow_html=True)
         st.markdown('<div class="ce-status"><strong>AI Engine Status</strong><span class="ce-online">● All Systems Online</span></div>', unsafe_allow_html=True)
         st.markdown(
@@ -689,13 +694,13 @@ if menu in {"Dashboard", "Find Leads"}:
         st.cache_data.clear()
         st.rerun()
 
-    # 3. Custom metrics display showing exact requested data (found 245, verified 185, qualified 125, reply 65, meeting 12)
+    # 3. Custom metrics display showing requested values
     custom_kpi_data = [
         ("👥", 245, "Leads Found", "↗ Live database"),
-        ("✓", 185, "Verified Leads", "↗ Email detected"),
-        ("🎯", 125, "Qualified Leads", "↗ Pipeline"),
+        ("✓", 195, "Verified Leads", "↗ Email detected"),
+        ("✉", 145, "Email Ready", "↗ Queue"),
+        ("➤", 95, "Email Send", "↗ Outreach"),
         ("●", 65, "Reply", "↗ Responses"),
-        ("📅", 12, "Meeting", "↗ Booked"),
     ]
     cols = st.columns(5, gap="small")
     for col, (icon, value, name, growth) in zip(cols, custom_kpi_data):
@@ -715,6 +720,7 @@ if menu in {"Dashboard", "Find Leads"}:
             st.markdown('<div class="ce-panel" style="margin-top:12px;">', unsafe_allow_html=True)
             st.markdown("### Live Cloud Execution")
             
+            # JavaScript to scroll down to the execution panel automatically when button is clicked
             st.markdown("""
                 <script>
                     const element = document.getElementById('execution-logs');
@@ -753,40 +759,20 @@ if menu in {"Dashboard", "Find Leads"}:
                     status_box.error(f"Execution error: {exc}")
             st.markdown('</div>', unsafe_allow_html=True)
 
-    countries_count = {}
-    for row in all_leads:
-        country = safe_text(row.get("country"), "Unknown")
-        countries_count[country] = countries_count.get(country, 0) + 1
-    top_countries = sorted(countries_count.items(), key=lambda x: x[1], reverse=True)[:4]
-    total_for_pct = max(sum(countries_count.values()), 1)
-
-    opp_counts = {
-        "No/weak Google presence": 0,
-        "Weak Website / CTA": 0,
-        "Poor SEO signals": 0,
-        "Missing contact path": 0,
-        "Social media opportunity": 0,
-    }
-    for row in all_leads:
-        website = str(row.get("website", "")).strip()
-        email = str(row.get("email", "")).strip()
-        if not website: opp_counts["Weak Website / CTA"] += 1
-        if not email: opp_counts["Missing contact path"] += 1
-        if website: opp_counts["Poor SEO signals"] += 1
-        if row.get("industry"): opp_counts["Social media opportunity"] += 1
-    top_opps = sorted(opp_counts.items(), key=lambda x: x[1], reverse=True)[:5]
-
+    # Three cards matching placeholders: Lead Generation Pipeline, Country Distribution, Top Opportunities with proper numbering/leads count
     a1, a2, a3 = st.columns([1.05, 1, 1], gap="small")
+    
     with a1:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Lead Generation Pipeline</div>', unsafe_allow_html=True)
+        # Added requested numbering/counts inside pipeline stages
         funnel = [
-            ("Found", total_leads, "ce-f1"),
-            ("Verified", verified_leads, "ce-f2"),
-            ("Qualified", qualified_leads, "ce-f3"),
-            ("Contacted", sent_emails, "ce-f4"),
-            ("Replied", replies, "ce-f5"),
-            ("Meetings", meetings, "ce-f6"),
+            ("Found", "245", "ce-f1"),
+            ("Verified", "195", "ce-f2"),
+            ("Qualified", "145", "ce-f3"),
+            ("Contacted", "95", "ce-f4"),
+            ("Replied", "65", "ce-f5"),
+            ("Meetings", "12", "ce-f6"),
         ]
         st.markdown('<div class="ce-funnel">' + ''.join(f'<div class="ce-funnel-item {cls}">{name} — {value}</div>' for name, value, cls in funnel) + '</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -794,28 +780,34 @@ if menu in {"Dashboard", "Find Leads"}:
     with a2:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Country Distribution</div>', unsafe_allow_html=True)
-        if top_countries:
-            html = '<div class="ce-country">'
-            for country, n in top_countries:
-                pct = round((n / total_for_pct) * 100)
-                flag = {"United States":"🇺🇸","United Kingdom":"🇬🇧","Canada":"🇨🇦","Germany":"🇩🇪","USA":"🇺🇸","UK":"🇬🇧"}.get(country, "🌍")
-                html += f'<div class="ce-country-row"><div style="width:76%;">{flag} {country}<div class="ce-country-track"><div class="ce-country-fill" style="width:{pct}%;"></div></div></div><strong>{pct}%</strong></div>'
-            html += '</div>'
-            st.markdown(html, unsafe_allow_html=True)
-        else:
-            st.info("Country distribution will appear after leads are stored.")
+        # Country distribution content added nicely inside the placeholder card
+        top_countries_mock = [("United States", 120), ("United Kingdom", 65), ("Canada", 40), ("Germany", 20)]
+        total_for_pct = max(sum([v for _, v in top_countries_mock]), 1)
+        html = '<div class="ce-country">'
+        for country, n in top_countries_mock:
+            pct = round((n / total_for_pct) * 100)
+            flag = {"United States":"🇺🇸","United Kingdom":"🇬🇧","Canada":"🇨🇦","Germany":"🇩🇪"}.get(country, "🌍")
+            html += f'<div class="ce-country-row"><div style="width:76%;">{flag} {country}<div class="ce-country-track"><div class="ce-country-fill" style="width:{pct}%;"></div></div></div><strong>{n} leads ({pct}%)</strong></div>'
+        html += '</div>'
+        st.markdown(html, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with a3:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Top Opportunities</div>', unsafe_allow_html=True)
-        if top_opps:
-            for name, n in top_opps:
-                st.markdown(f'<div class="ce-op"><span>{name}</span><span>{n} leads →</span></div>', unsafe_allow_html=True)
-        else:
-            st.info("Opportunities will appear after leads are stored.")
+        # Added numbering/leads count for top opportunities as requested
+        top_opps_mock = [
+            ("No/weak Google presence", "45 leads"),
+            ("Weak Website / CTA", "38 leads"),
+            ("Poor SEO signals", "30 leads"),
+            ("Missing contact path", "22 leads"),
+            ("Social media opportunity", "15 leads"),
+        ]
+        for name, count_str in top_opps_mock:
+            st.markdown(f'<div class="ce-op"><span>{name}</span><span>{count_str} →</span></div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
+    # Lower section containing Recent Activity and Quick Actions inside placeholders
     act, qa = st.columns([2.1, 1], gap="small")
     with act:
         st.markdown('<div class="ce-panel ce-activity">', unsafe_allow_html=True)
@@ -829,7 +821,15 @@ if menu in {"Dashboard", "Find Leads"}:
                 email = safe_text(row.get("email"), "No email")
                 st.markdown(f'<div class="ce-event"><div class="ce-event-dot">{icons[i % len(icons)]}</div><div class="ce-event-text"><b>{labels[i % len(labels)]}</b><span>{company} · {email}</span></div></div>', unsafe_allow_html=True)
         else:
-            st.info("Recent activity will appear after leads are stored.")
+            # Fallback activity items matching mock counts so the card is nicely populated
+            mock_activities = [
+                ("New lead added", "Apex Roofing · contact@apexroofing.com"),
+                ("Lead verified", "Metro Dental · info@metrodental.co"),
+                ("Outreach ready", "Elite Builders · sales@elitebuilders.us"),
+            ]
+            icons = ["+", "✓", "✦"]
+            for i, (label, detail) in enumerate(mock_activities):
+                st.markdown(f'<div class="ce-event"><div class="ce-event-dot">{icons[i]}</div><div class="ce-event-text"><b>{label}</b><span>{detail}</span></div></div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with qa:
