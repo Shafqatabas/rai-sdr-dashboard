@@ -105,7 +105,6 @@ html, body, [class*="css"] {{
     display: none !important;
 }}
 
-/* 1. Navigation Menu Dropdown Styling (Text white & Dropdown Box Background) */
 div[data-baseweb="select"] > div {{
     background: #041022 !important;
     color: #FFFFFF !important;
@@ -113,7 +112,6 @@ div[data-baseweb="select"] > div {{
     border-radius: 10px !important;
 }}
 
-/* Styling for dropdown options popup background when opened */
 div[data-baseweb="popover"], div[data-baseweb="menu"], ul[role="listbox"] {{
     background-color: #041022 !important;
     color: #FFFFFF !important;
@@ -129,7 +127,6 @@ div[role="option"]:hover {{
     color: #FFFFFF !important;
 }}
 
-/* Navigation label and text styling */
 label[data-baseweb="checkbox"], label[data-baseweb="radio"], .stSelectbox label p, p {{
     color: #FFFFFF !important;
 }}
@@ -692,13 +689,13 @@ if menu in {"Dashboard", "Find Leads"}:
         st.cache_data.clear()
         st.rerun()
 
-    # 3. Custom metrics display showing requested values
+    # 3. Custom metrics display showing exact requested data (found 245, verified 185, qualified 125, reply 65, meeting 12)
     custom_kpi_data = [
         ("👥", 245, "Leads Found", "↗ Live database"),
-        ("✓", 195, "Verified Leads", "↗ Email detected"),
-        ("✉", 145, "Email Ready", "↗ Queue"),
-        ("➤", 95, "Email Send", "↗ Outreach"),
+        ("✓", 185, "Verified Leads", "↗ Email detected"),
+        ("🎯", 125, "Qualified Leads", "↗ Pipeline"),
         ("●", 65, "Reply", "↗ Responses"),
+        ("📅", 12, "Meeting", "↗ Booked"),
     ]
     cols = st.columns(5, gap="small")
     for col, (icon, value, name, growth) in zip(cols, custom_kpi_data):
@@ -718,7 +715,6 @@ if menu in {"Dashboard", "Find Leads"}:
             st.markdown('<div class="ce-panel" style="margin-top:12px;">', unsafe_allow_html=True)
             st.markdown("### Live Cloud Execution")
             
-            # JavaScript to scroll down to the execution panel automatically when button is clicked
             st.markdown("""
                 <script>
                     const element = document.getElementById('execution-logs');
