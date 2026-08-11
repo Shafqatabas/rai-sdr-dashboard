@@ -19,7 +19,7 @@ st.set_page_config(
     page_title="ClientEngine AI",
     page_icon="⚡",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 
@@ -56,8 +56,8 @@ PANEL = "#071426"
 GREEN = "#10B981"
 AMBER = "#F59E0B"
 RED = "#EF4444"
-TEXT = "#FFFFFF"  # Updated to pure white
-MUTED = "#FFFFFF" # Updated to white
+TEXT = "#FFFFFF"
+MUTED = "#FFFFFF"
 
 
 # -----------------------------
@@ -100,15 +100,9 @@ html, body, [class*="css"] {{
     color: #FFFFFF !important;
 }}
 
+/* Completely hide sidebar */
 [data-testid="stSidebar"] {{
-    background: #030D1C !important;
-    border-right: 1px solid rgba(37,99,235,.24);
-    color: #FFFFFF !important;
-}}
-
-[data-testid="stSidebar"] .block-container {{
-    padding: 1rem .8rem;
-    color: #FFFFFF !important;
+    display: none !important;
 }}
 
 div[data-baseweb="select"] > div,
@@ -296,67 +290,6 @@ footer {{
 st.markdown(
     """
 <style>
-/* Main shell */
-[data-testid="stSidebar"] {
-    background: linear-gradient(180deg,#030b18 0%,#041326 55%,#020a16 100%) !important;
-    border-right: 1px solid rgba(6,182,212,.24) !important;
-}
-[data-testid="stSidebar"] .block-container { padding: 14px 12px 20px !important; }
-.block-container { max-width: 1540px !important; padding: .35rem 1rem 2.5rem !important; }
-
-/* Sidebar navigation */
-[data-testid="stSidebar"] .stRadio > label { display:none !important; }
-[data-testid="stSidebar"] div[role="radiogroup"] { gap:5px !important; }
-[data-testid="stSidebar"] div[role="radiogroup"] label {
-    position:relative !important;
-    border-radius:10px !important;
-    padding:9px 11px !important;
-    color:#FFFFFF !important;
-    background:transparent !important;
-    border:1px solid transparent !important;
-    transition:.18s ease !important;
-    cursor:pointer !important;
-}
-/* Hide Streamlit's native radio circles */
-[data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child {
-    display:none !important;
-}
-[data-testid="stSidebar"] div[role="radiogroup"] label > div[data-baseweb="radio"] {
-    display:none !important;
-}
-[data-testid="stSidebar"] div[role="radiogroup"] label div[data-baseweb="radio"] > div {
-    display:none !important;
-}
-[data-testid="stSidebar"] div[role="radiogroup"] label svg {
-    display:none !important;
-}
-[data-testid="stSidebar"] div[role="radiogroup"] input[type="radio"] {
-    display:none !important;
-}
-[data-testid="stSidebar"] div[role="radiogroup"] label input[type="radio"] {
-    position:absolute !important;
-    opacity:0 !important;
-    width:1px !important;
-    height:1px !important;
-    pointer-events:none !important;
-}
-[data-testid="stSidebar"] div[role="radiogroup"] label:hover {
-    background:rgba(37,99,235,.12) !important;
-    color:#FFFFFF !important;
-}
-[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) {
-    background:linear-gradient(90deg,#1677ee,#0b63dc) !important;
-    color:#FFFFFF !important;
-    border-color:rgba(56,189,248,.35) !important;
-    box-shadow:0 7px 22px rgba(37,99,235,.22) !important;
-}
-[data-testid="stSidebar"] div[role="radiogroup"] label p {
-    font-size:12px !important; font-weight:600 !important; margin:0 !important; color:#FFFFFF !important;
-}
-/* Replaced circle/selector symbol with a clean arrow -> */
-[data-testid="stSidebar"] div[role="radiogroup"] label p::before { content:"→  "; color:#FFFFFF !important; }
-
-/* Remove Streamlit's white header/toolbar so the dashboard starts at the top */
 header[data-testid="stHeader"] {
     display:none !important;
 }
@@ -567,73 +500,22 @@ def find_pipeline_file():
 
 
 # -----------------------------
-# Sidebar
+# Navigation Menu Alternative (since sidebar is removed)
 # -----------------------------
-with st.sidebar:
-    st.markdown(
-        f"""
-        <div style="border:1px solid rgba(6,182,212,.30);border-radius:15px;padding:10px 9px;
-                    background:linear-gradient(135deg,rgba(37,99,235,.14),rgba(6,182,212,.04));margin-bottom:14px; color:#FFFFFF;">
-            <div style="display:flex;align-items:center;gap:9px;">
-                <div style="width:48px;height:48px;display:grid;place-items:center;">
-                    {logo_svg(46)}
-                </div>
-                <div>
-                    <div style="font-size:15px;font-weight:800;color:#FFFFFF;">ClientEngine <span style="color:{CYAN};">AI</span></div>
-                    <div style="font-size:9px;color:#FFFFFF;margin-top:3px;">AI Lead Generation Platform</div>
-                </div>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    menu = st.radio(
-        "Navigation",
-        [
-            "Dashboard",
-            "Find Leads",
-            "Lead Database",
-            "AI Outreach",
-            "Follow-ups",
-            "Campaigns",
-            "Analytics",
-            "Email Templates",
-            "Settings",
-        ],
-        label_visibility="collapsed",
-    )
-
-    st.markdown(
-        '<div style="margin:18px 4px 8px;color:#FFFFFF;font-size:9px;font-weight:700;letter-spacing:1px;">AI ENGINE STATUS</div>',
-        unsafe_allow_html=True,
-    )
-
-    engine_items = [
-        ("OpenAI GPT-4o", bool(get_secret("OPENAI_API_KEY"))),
-        ("Modal", bool(MODAL_TOKEN_ID or MODAL_TOKEN_SECRET)),
-        ("Supabase", bool(SUPABASE_URL and SUPABASE_KEY)),
-        ("SMTP / Resend", bool(get_secret("SMTP_HOST") or get_secret("RESEND_API_KEY"))),
-    ]
-    for name, connected in engine_items:
-        color = "#FFFFFF" if connected else "#FFFFFF"
-        label = "Connected" if connected else "Not configured"
-        st.markdown(
-            f'<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 4px;font-size:10px;color:#FFFFFF;">'
-            f'<span>{name}</span><span style="color:{color};font-weight:700;">● {label}</span></div>',
-            unsafe_allow_html=True,
-        )
-
-    st.markdown(
-        """
-        <div style="margin-top:18px;border:1px solid rgba(37,99,235,.32);border-radius:13px;padding:13px;text-align:center;background:rgba(7,20,38,.75);color:#FFFFFF;">
-            <div style="font-weight:800;font-size:12px;color:#FFFFFF;">Rai Marketing Agency</div>
-            <div style="color:#FFFFFF;font-size:9px;margin-top:4px;">Digital Growth Solutions</div>
-            <div style="color:#FFFFFF;font-size:8px;margin-top:7px;">ClientEngine AI · v2.0</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+menu = st.selectbox(
+    "Navigation Menu",
+    [
+        "Dashboard",
+        "Find Leads",
+        "Lead Database",
+        "AI Outreach",
+        "Follow-ups",
+        "Campaigns",
+        "Analytics",
+        "Email Templates",
+        "Settings",
+    ],
+)
 
 
 # -----------------------------
