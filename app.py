@@ -610,7 +610,7 @@ st.markdown(
 )
 
 # -----------------------------
-# Find customers + engine status inside placeholders
+# Find customers + engine status inside proper placeholders (Fixed positioning)
 # -----------------------------
 if menu in {"Dashboard", "Find Leads"}:
     query_params = st.query_params
@@ -628,7 +628,7 @@ if menu in {"Dashboard", "Find Leads"}:
         "Saudi Arabia", "Pakistan", "France", "Italy", "Netherlands", "Worldwide / Global", "Custom Location...",
     ]
 
-    # Two placeholders side by side for "Find Your Next Customer" and "AI Engine Status"
+    # Two columns precisely matching the layout placeholders shown in the user's second screenshot
     top_placeholder_col1, top_placeholder_col2 = st.columns([3.2, 1], gap="small")
     
     with top_placeholder_col1:
@@ -694,7 +694,7 @@ if menu in {"Dashboard", "Find Leads"}:
         st.cache_data.clear()
         st.rerun()
 
-    # 3. Custom metrics display showing requested values
+    # Metrics display
     custom_kpi_data = [
         ("👥", 245, "Leads Found", "↗ Live database"),
         ("✓", 195, "Verified Leads", "↗ Email detected"),
@@ -710,7 +710,7 @@ if menu in {"Dashboard", "Find Leads"}:
                 unsafe_allow_html=True,
             )
 
-    # 2. Pipeline execution anchor point / auto-scroll container
+    # Pipeline execution anchor point / auto-scroll container
     if run_pipeline:
         st.markdown('<div id="execution-logs"></div>', unsafe_allow_html=True)
         if not clean_niche or not clean_location:
@@ -720,7 +720,6 @@ if menu in {"Dashboard", "Find Leads"}:
             st.markdown('<div class="ce-panel" style="margin-top:12px;">', unsafe_allow_html=True)
             st.markdown("### Live Cloud Execution")
             
-            # JavaScript to scroll down to the execution panel automatically when button is clicked
             st.markdown("""
                 <script>
                     const element = document.getElementById('execution-logs');
@@ -759,13 +758,12 @@ if menu in {"Dashboard", "Find Leads"}:
                     status_box.error(f"Execution error: {exc}")
             st.markdown('</div>', unsafe_allow_html=True)
 
-    # Three cards matching placeholders: Lead Generation Pipeline, Country Distribution, Top Opportunities with proper numbering/leads count
+    # Three cards matching placeholders: Lead Generation Pipeline, Country Distribution, Top Opportunities with proper numbering/counts
     a1, a2, a3 = st.columns([1.05, 1, 1], gap="small")
     
     with a1:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Lead Generation Pipeline</div>', unsafe_allow_html=True)
-        # Added requested numbering/counts inside pipeline stages
         funnel = [
             ("Found", "245", "ce-f1"),
             ("Verified", "195", "ce-f2"),
@@ -780,7 +778,6 @@ if menu in {"Dashboard", "Find Leads"}:
     with a2:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Country Distribution</div>', unsafe_allow_html=True)
-        # Country distribution content added nicely inside the placeholder card
         top_countries_mock = [("United States", 120), ("United Kingdom", 65), ("Canada", 40), ("Germany", 20)]
         total_for_pct = max(sum([v for _, v in top_countries_mock]), 1)
         html = '<div class="ce-country">'
@@ -795,7 +792,6 @@ if menu in {"Dashboard", "Find Leads"}:
     with a3:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Top Opportunities</div>', unsafe_allow_html=True)
-        # Added numbering/leads count for top opportunities as requested
         top_opps_mock = [
             ("No/weak Google presence", "45 leads"),
             ("Weak Website / CTA", "38 leads"),
@@ -821,7 +817,6 @@ if menu in {"Dashboard", "Find Leads"}:
                 email = safe_text(row.get("email"), "No email")
                 st.markdown(f'<div class="ce-event"><div class="ce-event-dot">{icons[i % len(icons)]}</div><div class="ce-event-text"><b>{labels[i % len(labels)]}</b><span>{company} · {email}</span></div></div>', unsafe_allow_html=True)
         else:
-            # Fallback activity items matching mock counts so the card is nicely populated
             mock_activities = [
                 ("New lead added", "Apex Roofing · contact@apexroofing.com"),
                 ("Lead verified", "Metro Dental · info@metrodental.co"),
