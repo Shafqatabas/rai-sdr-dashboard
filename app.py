@@ -61,106 +61,106 @@ MUTED = "#FFFFFF"
 
 
 # -----------------------------
-# CSS / UI
+# CSS / UI (Fixed using normal string to avoid NameError)
 # -----------------------------
 st.markdown(
-    f"""
+    """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-:root {{
-    --bg: {BG};
-    --panel: {PANEL};
-    --blue: {BLUE};
-    --cyan: {CYAN};
-    --green: {GREEN};
-    --amber: {AMBER};
-    --red: {RED};
+:root {
+    --bg: #020817;
+    --panel: #071426;
+    --blue: #2563EB;
+    --cyan: #06B6D4;
+    --green: #10B981;
+    --amber: #F59E0B;
+    --red: #EF4444;
     --text: #FFFFFF;
     --muted: #FFFFFF;
-}}
+}
 
-html, body, [class*="css"] {{
+html, body, [class*="css"] {
     font-family: "Inter", sans-serif;
     color: #FFFFFF !important;
-}}
+}
 
-.stApp {{
+.stApp {
     background:
         radial-gradient(circle at 78% 4%, rgba(6,182,212,.09), transparent 24%),
         radial-gradient(circle at 16% 72%, rgba(37,99,235,.08), transparent 28%),
         var(--bg);
     color: #FFFFFF !important;
-}}
+}
 
-.block-container {{
+.block-container {
     max-width: 1500px;
     padding-top: 1rem;
     padding-bottom: 3rem;
     color: #FFFFFF !important;
-}}
+}
 
-[data-testid="stSidebar"] {{
+[data-testid="stSidebar"] {
     display: none !important;
-}}
+}
 
-div[data-baseweb="select"] > div {{
+div[data-baseweb="select"] > div {
     background: #041022 !important;
     color: #FFFFFF !important;
     border-color: rgba(37,99,235,.35) !important;
     border-radius: 10px !important;
-}}
+}
 
-div[data-baseweb="popover"], div[data-baseweb="menu"], ul[role="listbox"] {{
+div[data-baseweb="popover"], div[data-baseweb="menu"], ul[role="listbox"] {
     background-color: #041022 !important;
     color: #FFFFFF !important;
-}}
+}
 
-div[role="option"] {{
+div[role="option"] {
     background-color: #041022 !important;
     color: #FFFFFF !important;
-}}
+}
 
-div[role="option"]:hover {{
+div[role="option"]:hover {
     background-color: #0b2246 !important;
     color: #FFFFFF !important;
-}}
+}
 
-label[data-baseweb="checkbox"], label[data-baseweb="radio"], .stSelectbox label p, p {{
+label[data-baseweb="checkbox"], label[data-baseweb="radio"], .stSelectbox label p, p {
     color: #FFFFFF !important;
-}}
+}
 
 div[data-baseweb="input"] > div,
 .stTextInput input,
-.stTextArea textarea {{
+.stTextArea textarea {
     background: #041022 !important;
     color: #FFFFFF !important;
     border-color: rgba(37,99,235,.35) !important;
     border-radius: 10px !important;
-}}
+}
 
 .stTextInput input::placeholder,
-.stTextArea textarea::placeholder {{
+.stTextArea textarea::placeholder {
     color: #FFFFFF !important;
     opacity: 0.8;
-}}
+}
 
-.stButton > button {{
+.stButton > button {
     border: 1px solid rgba(6,182,212,.35) !important;
     border-radius: 10px !important;
-    background: linear-gradient(90deg, {BLUE}, {CYAN}) !important;
+    background: linear-gradient(90deg, #2563EB, #06B6D4) !important;
     color: #FFFFFF !important;
     font-weight: 700 !important;
     min-height: 42px !important;
     box-shadow: 0 8px 24px rgba(6,182,212,.12) !important;
-}}
+}
 
-.stButton > button:hover {{
+.stButton > button:hover {
     transform: translateY(-1px);
     box-shadow: 0 10px 30px rgba(6,182,212,.22) !important;
-}}
+}
 
-.client-card {{
+.client-card {
     background: rgba(7,20,38,.88);
     border: 1px solid rgba(37,99,235,.34);
     border-radius: 16px;
@@ -168,9 +168,9 @@ div[data-baseweb="input"] > div,
     margin-bottom: 14px;
     box-shadow: 0 12px 35px rgba(0,0,0,.18);
     color: #FFFFFF !important;
-}}
+}
 
-.hero {{
+.hero {
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(37,99,235,.52);
@@ -181,101 +181,101 @@ div[data-baseweb="input"] > div,
         radial-gradient(circle at 82% 50%, rgba(6,182,212,.13), transparent 25%),
         linear-gradient(135deg, #07182D, #041021);
     color: #FFFFFF !important;
-}}
+}
 
-.brand-title {{
+.brand-title {
     font-size: clamp(27px, 4vw, 44px);
-    line-height:1;
-    font-weight:800;
-    letter-spacing:-1.8px;
-    margin:0;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -1.8px;
+    margin: 0;
     color: #FFFFFF !important;
-}}
+}
 
-.brand-title span {{
-    color:{CYAN};
-}}
+.brand-title span {
+    color: #06B6D4;
+}
 
-.ce-heading-title {{
+.ce-heading-title {
     font-size: 20px;
     font-weight: 800;
     color: #FFFFFF !important;
     margin-bottom: 4px;
     letter-spacing: -0.5px;
-}}
+}
 
-.ce-heading-sub {{
+.ce-heading-sub {
     font-size: 12px;
     color: #38BDF8 !important;
     margin-bottom: 14px;
-}}
+}
 
-.ce-field-label {{
+.ce-field-label {
     font-size: 11px;
     font-weight: 700;
     color: #38BDF8 !important;
     margin-bottom: 5px;
-}}
+}
 
-.ce-engine-box {{
+.ce-engine-box {
     background: rgba(7,20,38,.90);
     border: 1px solid rgba(37,99,235,.38);
     border-radius: 15px;
     padding: 17px;
     height: 100%;
-}}
+}
 
-.ce-status {{
+.ce-status {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 13px;
     color: #FFFFFF !important;
     font-weight: 700;
-}}
+}
 
-.ce-online {{
+.ce-online {
     color: #34D399 !important;
     font-size: 9px;
     background: rgba(16,185,129,.10);
     border: 1px solid rgba(16,185,129,.25);
     padding: 5px 8px;
     border-radius: 20px;
-}}
+}
 
-.ce-ai-grid {{
+.ce-ai-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
-}}
+}
 
-.ce-ai {{
+.ce-ai {
     background: #041022;
     border: 1px solid rgba(37,99,235,.28);
     border-radius: 10px;
     padding: 10px;
     min-height: 68px;
     color: #FFFFFF !important;
-}}
+}
 
-.ce-ai-icon {{
+.ce-ai-icon {
     font-size: 18px;
-}}
+}
 
-.ce-ai-name {{
+.ce-ai-name {
     font-size: 10px;
     margin-top: 4px;
     color: #FFFFFF !important;
     font-weight: 700;
-}}
+}
 
-.ce-ai-active {{
+.ce-ai-active {
     color: #34D399 !important;
     font-size: 8px;
     margin-top: 2px;
-}}
+}
 
-.ce-kpi {{
+.ce-kpi {
     position: relative;
     overflow: hidden;
     padding: 13px 14px;
@@ -284,38 +284,43 @@ div[data-baseweb="input"] > div,
     background: linear-gradient(145deg,#081a31,#051225);
     border: 1px solid rgba(37,99,235,.38);
     color: #FFFFFF !important;
-}}
-.ce-kpi-icon {{ font-size: 20px; }}
-.ce-kpi-value {{ font-size: 22px; font-weight: 800; margin-top: 6px; color: #FFFFFF !important; }}
-.ce-kpi-name {{ color: #FFFFFF !important; font-size: 10px; }}
-.ce-kpi-growth {{ color: #38BDF8 !important; font-size: 8px; margin-top: 6px; }}
+}
+.ce-kpi-icon { font-size: 20px; }
+.ce-kpi-value { font-size: 22px; font-weight: 800; margin-top: 6px; color: #FFFFFF !important; }
+.ce-kpi-name { color: #FFFFFF !important; font-size: 10px; }
+.ce-kpi-growth { color: #38BDF8 !important; font-size: 8px; margin-top: 6px; }
 
-.ce-panel {{
+.ce-panel {
     background: rgba(7,20,38,.90);
     border: 1px solid rgba(37,99,235,.38);
     border-radius: 15px;
     padding: 17px;
     box-shadow: 0 12px 35px rgba(0,0,0,.16);
     color: #FFFFFF !important;
-}}
-.ce-panel-title {{ font-size: 16px; font-weight: 750; color: #FFFFFF !important; }}
+}
+.ce-panel-title { font-size: 16px; font-weight: 750; color: #FFFFFF !important; }
 
-.ce-funnel {{ display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 14px; }}
-.ce-funnel-item {{ height: 27px; display: grid; place-items: center; font-size: 9px; font-weight: 700; border-radius: 5px; color: #FFFFFF !important; }}
-.ce-f1{width:92%;background:#2563eb} .ce-f2{width:78%;background:#0891b2} .ce-f3{width:65%;background:#14b8a6} .ce-f4{width:52%;background:#8b5cf6} .ce-f5{width:38%;background:#f59e0b} .ce-f6{width:25%;background:#ef4444}
+.ce-funnel { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 14px; }
+.ce-funnel-item { height: 27px; display: grid; place-items: center; font-size: 9px; font-weight: 700; border-radius: 5px; color: #FFFFFF !important; }
+.ce-f1 { width: 92%; background: #2563eb; }
+.ce-f2 { width: 78%; background: #0891b2; }
+.ce-f3 { width: 65%; background: #14b8a6; }
+.ce-f4 { width: 52%; background: #8b5cf6; }
+.ce-f5 { width: 38%; background: #f59e0b; }
+.ce-f6 { width: 25%; background: #ef4444; }
 
 .ce-country { margin-top: 12px; }
-.ce-country-row {{ display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin: 10px 0; color: #FFFFFF !important; }}
-.ce-country-track {{ height: 5px; margin-top: 5px; background: #17243a; border-radius: 20px; overflow: hidden; }}
-.ce-country-fill {{ height: 100%; border-radius: 20px; background: linear-gradient(90deg,#2563eb,#06b6d4); }}
+.ce-country-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin: 10px 0; color: #FFFFFF !important; }
+.ce-country-track { height: 5px; margin-top: 5px; background: #17243a; border-radius: 20px; overflow: hidden; }
+.ce-country-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg,#2563eb,#06b6d4); }
 
-.ce-op {{ display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.10); font-size: 10px; color: #FFFFFF !important; }}
-.ce-event {{ display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.10); color: #FFFFFF !important; }}
-.ce-event-dot {{ width: 27px; height: 27px; border-radius: 50%; display: grid; place-items: center; background: rgba(37,99,235,.16); color: #FFFFFF !important; flex-shrink: 0; }}
-.ce-event-text {{ font-size: 10px; color: #FFFFFF !important; }}
-.ce-event-text span {{ display: block; color: #38BDF8 !important; margin-top: 3px; font-size: 9px; }}
+.ce-op { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.10); font-size: 10px; color: #FFFFFF !important; }
+.ce-event { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.10); color: #FFFFFF !important; }
+.ce-event-dot { width: 27px; height: 27px; border-radius: 50%; display: grid; place-items: center; background: rgba(37,99,235,.16); color: #FFFFFF !important; flex-shrink: 0; }
+.ce-event-text { font-size: 10px; color: #FFFFFF !important; }
+.ce-event-text span { display: block; color: #38BDF8 !important; margin-top: 3px; font-size: 9px; }
 
-footer {{ visibility: hidden; }}
+footer { visibility: hidden; }
 </style>
 """,
     unsafe_allow_html=True,
