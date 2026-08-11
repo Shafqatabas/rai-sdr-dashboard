@@ -19,7 +19,7 @@ st.set_page_config(
     page_title="ClientEngine AI",
     page_icon="⚡",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 
@@ -56,8 +56,8 @@ PANEL = "#071426"
 GREEN = "#10B981"
 AMBER = "#F59E0B"
 RED = "#EF4444"
-TEXT = "#FFFFFF"
-MUTED = "#FFFFFF"
+TEXT = "#F8FAFC"
+MUTED = "#94A3B8"
 
 
 # -----------------------------
@@ -76,13 +76,12 @@ st.markdown(
     --green: {GREEN};
     --amber: {AMBER};
     --red: {RED};
-    --text: #FFFFFF;
-    --muted: #FFFFFF;
+    --text: {TEXT};
+    --muted: {MUTED};
 }}
 
 html, body, [class*="css"] {{
     font-family: "Inter", sans-serif;
-    color: #FFFFFF !important;
 }}
 
 .stApp {{
@@ -90,70 +89,44 @@ html, body, [class*="css"] {{
         radial-gradient(circle at 78% 4%, rgba(6,182,212,.09), transparent 24%),
         radial-gradient(circle at 16% 72%, rgba(37,99,235,.08), transparent 28%),
         var(--bg);
-    color: #FFFFFF !important;
+    color: var(--text);
 }}
 
 .block-container {{
     max-width: 1500px;
     padding-top: 1rem;
     padding-bottom: 3rem;
-    color: #FFFFFF !important;
 }}
 
-/* Completely hide sidebar */
 [data-testid="stSidebar"] {{
-    display: none !important;
+    background: #030D1C !important;
+    border-right: 1px solid rgba(37,99,235,.24);
 }}
 
-/* Navigation Menu Dropdown Styling (Text white & Dropdown Box Background) */
-div[data-baseweb="select"] > div {{
-    background: #041022 !important;
-    color: #FFFFFF !important;
-    border-color: rgba(37,99,235,.35) !important;
-    border-radius: 10px !important;
+[data-testid="stSidebar"] .block-container {{
+    padding: 1rem .8rem;
 }}
 
-/* Styling for dropdown options popup background when opened */
-div[data-baseweb="popover"], div[data-baseweb="menu"], ul[role="listbox"] {{
-    background-color: #041022 !important;
-    color: #FFFFFF !important;
-}}
-
-div[role="option"] {{
-    background-color: #041022 !important;
-    color: #FFFFFF !important;
-}}
-
-div[role="option"]:hover {{
-    background-color: #0b2246 !important;
-    color: #FFFFFF !important;
-}}
-
-/* Navigation label and text styling */
-label[data-baseweb="checkbox"], label[data-baseweb="radio"], .stSelectbox label p, p {{
-    color: #FFFFFF !important;
-}}
-
+div[data-baseweb="select"] > div,
 div[data-baseweb="input"] > div,
 .stTextInput input,
 .stTextArea textarea {{
     background: #041022 !important;
-    color: #FFFFFF !important;
+    color: white !important;
     border-color: rgba(37,99,235,.35) !important;
     border-radius: 10px !important;
 }}
 
 .stTextInput input::placeholder,
 .stTextArea textarea::placeholder {{
-    color: #FFFFFF !important;
-    opacity: 0.8;
+    color: #64748B !important;
 }}
 
 .stButton > button {{
     border: 1px solid rgba(6,182,212,.35) !important;
     border-radius: 10px !important;
     background: linear-gradient(90deg, {BLUE}, {CYAN}) !important;
-    color: #FFFFFF !important;
+    color: white !important;
     font-weight: 700 !important;
     min-height: 42px !important;
     box-shadow: 0 8px 24px rgba(6,182,212,.12) !important;
@@ -169,15 +142,14 @@ div[data-testid="stMetric"] {{
     border: 1px solid rgba(37,99,235,.35);
     border-radius: 14px;
     padding: 12px 14px;
-    color: #FFFFFF !important;
 }}
 
 div[data-testid="stMetricLabel"] {{
-    color: #FFFFFF !important;
+    color: #94A3B8 !important;
 }}
 
 div[data-testid="stMetricValue"] {{
-    color: #FFFFFF !important;
+    color: #38BDF8 !important;
 }}
 
 .client-card {{
@@ -187,7 +159,6 @@ div[data-testid="stMetricValue"] {{
     padding: 20px;
     margin-bottom: 14px;
     box-shadow: 0 12px 35px rgba(0,0,0,.18);
-    color: #FFFFFF !important;
 }}
 
 .hero {{
@@ -200,7 +171,6 @@ div[data-testid="stMetricValue"] {{
     background:
         radial-gradient(circle at 82% 50%, rgba(6,182,212,.13), transparent 25%),
         linear-gradient(135deg, #07182D, #041021);
-    color: #FFFFFF !important;
 }}
 
 .hero:after {{
@@ -245,7 +215,6 @@ div[data-testid="stMetricValue"] {{
     font-weight:800;
     letter-spacing:-1.8px;
     margin:0;
-    color: #FFFFFF !important;
 }}
 
 .brand-title span {{
@@ -253,18 +222,18 @@ div[data-testid="stMetricValue"] {{
 }}
 
 .brand-subtitle {{
-    color:#FFFFFF !important;
+    color:#38BDF8;
     font-size:14px;
     margin-top:8px;
 }}
 
 .small-muted {{
-    color:#FFFFFF !important;
+    color:#64748B;
     font-size:11px;
 }}
 
 .status-online {{
-    color:#FFFFFF !important;
+    color:#34D399;
     font-size:11px;
     font-weight:700;
 }}
@@ -274,7 +243,7 @@ div[data-testid="stMetricValue"] {{
     padding:5px 9px;
     border-radius:999px;
     background:rgba(16,185,129,.10);
-    color:#FFFFFF !important;
+    color:#34D399;
     border:1px solid rgba(16,185,129,.18);
     font-size:10px;
     font-weight:700;
@@ -285,159 +254,19 @@ div[data-testid="stMetricValue"] {{
     border:1px solid rgba(37,99,235,.25);
     border-radius:12px;
     padding:12px;
-    color: #FFFFFF !important;
 }}
 
 [data-testid="stDataFrame"] {{
     border: 1px solid rgba(37,99,235,.22);
     border-radius: 12px;
-    color: #FFFFFF !important;
 }}
 
 hr {{
-    border-color: rgba(255,255,255,.20) !important;
+    border-color: rgba(148,163,184,.10) !important;
 }}
 
 footer {{
     visibility:hidden;
-}}
-
-/* ============================================================
-   FIX: FIND CUSTOMERS / ENGINE STATUS
-   ============================================================ */
-
-.ce-section-card {{
-    background: linear-gradient(
-        145deg,
-        rgba(7, 20, 38, 0.96),
-        rgba(3, 13, 28, 0.96)
-    );
-    border: 1px solid rgba(37, 99, 235, 0.42);
-    border-radius: 15px 15px 0 0;
-    padding: 17px 18px 10px 18px;
-    margin: 0;
-    color: #FFFFFF !important;
-}}
-
-.ce-section-card .ce-panel-title {{
-    color: #FFFFFF !important;
-    font-size: 16px;
-    font-weight: 800;
-    margin: 0;
-}}
-
-.ce-section-card .ce-panel-sub {{
-    color: #7DD3FC !important;
-    font-size: 11px;
-    margin-top: 5px;
-}}
-
-/* Field headings */
-.ce-field-heading {{
-    color: #38BDF8 !important;
-    font-size: 11px;
-    font-weight: 700;
-    margin: 8px 0 5px 2px;
-}}
-
-/* Select boxes */
-div[data-baseweb="select"] > div {{
-    background: #071A31 !important;
-    color: #FFFFFF !important;
-    border: 1px solid rgba(37, 99, 235, 0.50) !important;
-    border-radius: 9px !important;
-    min-height: 42px !important;
-}}
-
-div[data-baseweb="select"] span {{
-    color: #FFFFFF !important;
-}}
-
-div[data-baseweb="select"] svg {{
-    fill: #38BDF8 !important;
-}}
-
-/* Buttons */
-.ce-section-card ~ div .stButton > button {{
-    min-height: 42px !important;
-}}
-
-/* Feature badges */
-.ce-feature-row-main {{
-    margin-top: 11px !important;
-    padding: 0 2px 4px 2px;
-}}
-
-/* Right engine card */
-.ce-engine-card {{
-    height: 100%;
-    min-height: 170px;
-    box-sizing: border-box;
-
-    background: linear-gradient(
-        145deg,
-        rgba(7, 20, 38, 0.98),
-        rgba(3, 13, 28, 0.98)
-    );
-
-    border: 1px solid rgba(37, 99, 235, 0.42);
-    border-radius: 15px;
-    padding: 17px;
-
-    color: #FFFFFF !important;
-
-    box-shadow:
-        0 12px 35px rgba(0,0,0,.18),
-        inset 0 0 25px rgba(6,182,212,.025);
-}}
-
-.ce-engine-card .ce-status {{
-    margin-bottom: 13px;
-}}
-
-.ce-engine-card .ce-status strong {{
-    color: #FFFFFF !important;
-    font-size: 15px;
-    font-weight: 800;
-}}
-
-.ce-online {{
-    color: #34D399 !important;
-    background: rgba(16,185,129,.10);
-    border: 1px solid rgba(16,185,129,.25);
-}}
-
-/* AI cards */
-.ce-engine-card .ce-ai {{
-    background:
-        linear-gradient(
-            145deg,
-            rgba(4, 16, 34, 0.98),
-            rgba(5, 20, 40, 0.98)
-        );
-
-    border: 1px solid rgba(37,99,235,.28);
-    border-radius: 10px;
-    padding: 10px;
-    min-height: 68px;
-
-    color: #FFFFFF !important;
-}}
-
-.ce-engine-card .ce-ai-icon {{
-    color: #38BDF8 !important;
-}}
-
-.ce-engine-card .ce-ai-name {{
-    color: #FFFFFF !important;
-    font-size: 10px;
-    font-weight: 700;
-}}
-
-.ce-engine-card .ce-ai-active {{
-    color: #34D399 !important;
-    font-size: 8px;
-    margin-top: 3px;
 }}
 
 @media (max-width: 800px) {{
@@ -456,6 +285,66 @@ div[data-baseweb="select"] svg {{
 st.markdown(
     """
 <style>
+/* Main shell */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg,#030b18 0%,#041326 55%,#020a16 100%) !important;
+    border-right: 1px solid rgba(6,182,212,.24) !important;
+}
+[data-testid="stSidebar"] .block-container { padding: 14px 12px 20px !important; }
+.block-container { max-width: 1540px !important; padding: .35rem 1rem 2.5rem !important; }
+
+/* Sidebar navigation */
+[data-testid="stSidebar"] .stRadio > label { display:none !important; }
+[data-testid="stSidebar"] div[role="radiogroup"] { gap:5px !important; }
+[data-testid="stSidebar"] div[role="radiogroup"] label {
+    position:relative !important;
+    border-radius:10px !important;
+    padding:9px 11px !important;
+    color:#9fb0c6 !important;
+    background:transparent !important;
+    border:1px solid transparent !important;
+    transition:.18s ease !important;
+    cursor:pointer !important;
+}
+/* Hide Streamlit's native radio circles — navigation is styled as menu items */
+[data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child {
+    display:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label > div[data-baseweb="radio"] {
+    display:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label div[data-baseweb="radio"] > div {
+    display:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label svg {
+    display:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] input[type="radio"] {
+    display:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label input[type="radio"] {
+    position:absolute !important;
+    opacity:0 !important;
+    width:1px !important;
+    height:1px !important;
+    pointer-events:none !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label:hover {
+    background:rgba(37,99,235,.12) !important;
+    color:#fff !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) {
+    background:linear-gradient(90deg,#1677ee,#0b63dc) !important;
+    color:#fff !important;
+    border-color:rgba(56,189,248,.35) !important;
+    box-shadow:0 7px 22px rgba(37,99,235,.22) !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label p {
+    font-size:12px !important; font-weight:600 !important; margin:0 !important;
+}
+[data-testid="stSidebar"] div[role="radiogroup"] label p::before { content:"◈  "; color:#38bdf8; }
+
+/* Remove Streamlit's white header/toolbar so the dashboard starts at the top */
 header[data-testid="stHeader"] {
     display:none !important;
 }
@@ -477,21 +366,21 @@ header[data-testid="stHeader"] {
     height:48px; display:flex; align-items:center; justify-content:space-between;
     margin:0 0 10px; padding:0 4px;
 }
-.ce-topline { color:#FFFFFF !important; font-size:12px; letter-spacing:.2px; }
+.ce-topline { color:#43cfff; font-size:12px; letter-spacing:.2px; }
 .ce-topright { display:flex; align-items:center; gap:12px; }
 .ce-searchbox {
     width:260px; height:36px; display:flex; align-items:center; gap:8px;
     border:1px solid rgba(37,99,235,.45); border-radius:9px;
-    background:#061225; color:#FFFFFF !important; padding:0 12px; font-size:11px;
+    background:#061225; color:#64748b; padding:0 12px; font-size:11px;
 }
-.ce-icon { color:#FFFFFF !important; font-size:16px; }
+.ce-icon { color:#94a3b8; font-size:16px; }
 .ce-avatar {
     width:34px; height:34px; border-radius:50%; display:grid; place-items:center;
-    background:linear-gradient(135deg,#0ea5e9,#2563eb); color:#FFFFFF !important; font-size:12px; font-weight:800;
+    background:linear-gradient(135deg,#0ea5e9,#2563eb); color:#fff; font-size:12px; font-weight:800;
     box-shadow:0 0 18px rgba(14,165,233,.25);
 }
-.ce-user { display:flex; align-items:center; gap:8px; font-size:11px; color:#FFFFFF !important; }
-.ce-user small { display:block; color:#FFFFFF !important; margin-top:2px; font-size:9px; }
+.ce-user { display:flex; align-items:center; gap:8px; font-size:11px; }
+.ce-user small { display:block; color:#64748b; margin-top:2px; font-size:9px; }
 
 /* Hero */
 .ce-hero {
@@ -500,7 +389,6 @@ header[data-testid="stHeader"] {
     background:radial-gradient(circle at 75% 50%,rgba(6,182,212,.18),transparent 24%),
                linear-gradient(135deg,#071a32,#031020);
     box-shadow:inset 0 0 40px rgba(6,182,212,.025),0 14px 45px rgba(0,0,0,.18);
-    color: #FFFFFF !important;
 }
 .ce-hero:after {
     content:""; position:absolute; width:350px; height:350px; right:-80px; top:-95px;
@@ -512,48 +400,96 @@ header[data-testid="stHeader"] {
 .ce-logo-large { width:78px; height:78px; display:grid; place-items:center; border-radius:16px; flex-shrink:0;
     background:linear-gradient(145deg,rgba(37,99,235,.16),rgba(6,182,212,.08));
     border:1px solid rgba(6,182,212,.45); box-shadow:0 0 28px rgba(6,182,212,.20); }
-.ce-title { font-size:clamp(32px,4vw,52px); line-height:.98; font-weight:800; letter-spacing:-2.5px; color:#FFFFFF !important; }
-.ce-title span { color:#FFFFFF !important; }
-.ce-subtitle { color:#FFFFFF !important; font-size:16px; margin-top:9px; }
+.ce-title { font-size:clamp(32px,4vw,52px); line-height:.98; font-weight:800; letter-spacing:-2.5px; color:#f8fafc; }
+.ce-title span { color:#06b6d4; }
+.ce-subtitle { color:#38bdf8; font-size:16px; margin-top:9px; }
 .ce-coverage { min-width:220px; position:relative; z-index:3; padding:16px 20px; border:1px solid rgba(37,99,235,.38);
-    border-radius:14px; background:rgba(3,13,28,.72); backdrop-filter:blur(8px); color:#FFFFFF !important; }
-.ce-coverage-title { font-size:13px; font-weight:700; margin-bottom:10px; color:#FFFFFF !important; }
+    border-radius:14px; background:rgba(3,13,28,.72); backdrop-filter:blur(8px); }
+.ce-coverage-title { font-size:13px; font-weight:700; margin-bottom:10px; }
 .ce-flags { font-size:23px; letter-spacing:7px; }
-.ce-coverage small { color:#FFFFFF !important; display:block; margin-top:8px; }
+.ce-coverage small { color:#94a3b8; display:block; margin-top:8px; }
 
 /* Cards */
-.ce-panel { background:rgba(7,20,38,.90); border:1px solid rgba(37,99,235,.38); border-radius:15px; padding:17px; box-shadow:0 12px 35px rgba(0,0,0,.16); color:#FFFFFF !important; }
-.ce-panel-title { font-size:16px; font-weight:750; color:#FFFFFF !important; }
-.ce-panel-sub { color:#FFFFFF !important; font-size:11px; margin-top:4px; }
+.ce-panel { background:rgba(7,20,38,.90); border:1px solid rgba(37,99,235,.38); border-radius:15px; padding:17px; box-shadow:0 12px 35px rgba(0,0,0,.16); }
+.ce-panel-title { font-size:16px; font-weight:750; color:#f8fafc; }
+.ce-panel-sub { color:#64748b; font-size:11px; margin-top:4px; }
 .ce-search-grid { display:grid; grid-template-columns:1fr 1fr 1.05fr; gap:11px; margin-top:16px; }
-.ce-field { background:#041022; border:1px solid rgba(37,99,235,.35); border-radius:9px; padding:9px 11px; min-height:58px; color:#FFFFFF !important; }
-.ce-field-label { color:#FFFFFF !important; font-size:9px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+.ce-field { background:#041022; border:1px solid rgba(37,99,235,.35); border-radius:9px; padding:9px 11px; min-height:58px; }
+.ce-field-label { color:#38bdf8; font-size:9px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
 .ce-feature-row { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
-.ce-feature { border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#FFFFFF !important; padding:5px 8px; border-radius:20px; font-size:9px; }
-.ce-status { display:flex; justify-content:space-between; align-items:center; margin-bottom:13px; color:#FFFFFF !important; }
+.ce-feature { border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34d399; padding:5px 8px; border-radius:20px; font-size:9px; }
+.ce-status { display:flex; justify-content:space-between; align-items:center; margin-bottom:13px; }
+.ce-online { color:#34d399; font-size:9px; background:rgba(16,185,129,.10); border:1px solid rgba(16,185,129,.17); padding:5px 8px; border-radius:20px; }
 .ce-ai-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.ce-ai { background:#041022; border:1px solid rgba(37,99,235,.22); border-radius:10px; padding:10px; min-height:70px; }
+.ce-ai-icon { font-size:19px; } .ce-ai-name { font-size:10px; margin-top:5px; } .ce-ai-active { color:#34d399; font-size:8px; margin-top:2px; }
 
 /* KPI */
 .ce-kpis { display:grid; grid-template-columns:repeat(5,1fr); gap:11px; margin:12px 0; }
 .ce-kpi { position:relative; overflow:hidden; padding:13px 14px; min-height:88px; border-radius:13px;
-    background:linear-gradient(145deg,#081a31,#051225); border:1px solid rgba(37,99,235,.38); color:#FFFFFF !important; }
+    background:linear-gradient(145deg,#081a31,#051225); border:1px solid rgba(37,99,235,.38); }
 .ce-kpi:after { content:""; position:absolute; left:-15%; right:20%; bottom:-22px; height:45px; border-top:2px solid rgba(6,182,212,.55); border-radius:50%; transform:rotate(-4deg); opacity:.7; }
-.ce-kpi-icon { font-size:20px; } .ce-kpi-value { font-size:22px; font-weight:800; margin-top:6px; color:#FFFFFF !important; } .ce-kpi-name { color:#FFFFFF !important; font-size:10px; } .ce-kpi-growth { color:#FFFFFF !important; font-size:8px; margin-top:6px; }
+.ce-kpi-icon { font-size:20px; } .ce-kpi-value { font-size:22px; font-weight:800; margin-top:6px; } .ce-kpi-name { color:#94a3b8; font-size:10px; } .ce-kpi-growth { color:#34d399; font-size:8px; margin-top:6px; }
 
 /* Data rows */
 .ce-three { display:grid; grid-template-columns:1.05fr 1fr 1fr; gap:12px; }
 .ce-funnel { display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:14px; }
-.ce-funnel-item { height:27px; display:grid; place-items:center; font-size:9px; font-weight:700; border-radius:5px; color:#FFFFFF !important; }
+.ce-funnel-item { height:27px; display:grid; place-items:center; font-size:9px; font-weight:700; border-radius:5px; color:white; }
 .ce-f1{width:92%;background:#2563eb} .ce-f2{width:78%;background:#0891b2} .ce-f3{width:65%;background:#14b8a6} .ce-f4{width:52%;background:#8b5cf6} .ce-f5{width:38%;background:#f59e0b} .ce-f6{width:25%;background:#ef4444}
-.ce-country { margin-top:12px; } .ce-country-row { display:flex; justify-content:space-between; align-items:center; font-size:10px; margin:10px 0; color:#FFFFFF !important; }
+.ce-country { margin-top:12px; } .ce-country-row { display:flex; justify-content:space-between; align-items:center; font-size:10px; margin:10px 0; }
 .ce-country-track { height:5px; margin-top:5px; background:#17243a; border-radius:20px; overflow:hidden; } .ce-country-fill { height:100%; border-radius:20px; background:linear-gradient(90deg,#2563eb,#06b6d4); }
-.ce-op { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.10); font-size:10px; color:#FFFFFF !important; } .ce-op:last-child{border-bottom:0} .ce-op span:last-child{color:#FFFFFF !important;}
+.ce-op { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(148,163,184,.08); font-size:10px; } .ce-op:last-child{border-bottom:0} .ce-op span:last-child{color:#34d399}
 
 /* Activity */
-.ce-activity { margin-top:12px; } .ce-event { display:flex; gap:10px; padding:9px 0; border-bottom:1px solid rgba(255,255,255,.10); color:#FFFFFF !important; } .ce-event:last-child{border-bottom:0} .ce-event-dot{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:rgba(37,99,235,.16);color:#FFFFFF !important;flex-shrink:0} .ce-event-text{font-size:10px; color:#FFFFFF !important;} .ce-event-text span{display:block;color:#FFFFFF !important;margin-top:3px;font-size:9px}
+.ce-activity { margin-top:12px; } .ce-event { display:flex; gap:10px; padding:9px 0; border-bottom:1px solid rgba(148,163,184,.07); } .ce-event:last-child{border-bottom:0} .ce-event-dot{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:rgba(37,99,235,.16);color:#38bdf8;flex-shrink:0} .ce-event-text{font-size:10px} .ce-event-text span{display:block;color:#64748b;margin-top:3px;font-size:9px}
 
 /* Recent leads */
-.ce-table { overflow-x:auto; margin-top:12px; } .ce-table table{width:100%;border-collapse:collapse;min-width:850px} .ce-table th{text-align:left;color:#FFFFFF !important;font-size:8px;font-weight:600;padding:9px;border-bottom:1px solid rgba(255,255,255,.10)} .ce-table td{padding:10px 9px;font-size:9px;border-bottom:1px solid rgba(255,255,255,.10);color:#FFFFFF !important;} .ce-score{background:rgba(16,185,129,.12);color:#FFFFFF !important;padding:4px 7px;border-radius:7px} .ce-ready{color:#FFFFFF !important} .ce-follow{color:#FFFFFF !important} .ce-draft{color:#FFFFFF !important}
+.ce-table { overflow-x:auto; margin-top:12px; } .ce-table table{width:100%;border-collapse:collapse;min-width:850px} .ce-table th{text-align:left;color:#64748b;font-size:8px;font-weight:600;padding:9px;border-bottom:1px solid rgba(148,163,184,.10)} .ce-table td{padding:10px 9px;font-size:9px;border-bottom:1px solid rgba(148,163,184,.07)} .ce-score{background:rgba(16,185,129,.12);color:#34d399;padding:4px 7px;border-radius:7px} .ce-ready{color:#34d399} .ce-follow{color:#fbbf24} .ce-draft{color:#38bdf8}
+
+/* Fixed dashboard search/engine layout: no raw HTML wrapper around Streamlit widgets */
+.ce-panel-header {
+    background: rgba(7,20,38,.90);
+    border: 1px solid rgba(37,99,235,.38);
+    border-bottom: 0;
+    border-radius: 15px 15px 0 0;
+    padding: 17px 17px 8px;
+    margin-bottom: 0;
+}
+.ce-panel-header .ce-panel-title { color:#f8fafc !important; font-size:16px; font-weight:750; }
+.ce-panel-header .ce-panel-sub { color:#38bdf8 !important; font-size:11px; margin-top:4px; }
+
+/* Give the actual Streamlit widget area the panel background */
+.ce-panel-header + div,
+[data-testid="stHorizontalBlock"]:has(.ce-panel-header) {
+    color:#f8fafc;
+}
+
+.ce-engine-panel {
+    background: rgba(7,20,38,.90);
+    border:1px solid rgba(37,99,235,.38);
+    border-radius:15px;
+    padding:17px;
+    min-height:100%;
+    box-shadow:0 12px 35px rgba(0,0,0,.16);
+}
+.ce-engine-panel .ce-status { margin-bottom:13px; }
+.ce-engine-panel .ce-status strong { color:#f8fafc !important; font-size:15px; font-weight:750; }
+.ce-engine-panel .ce-ai-name { color:#f8fafc !important; }
+.ce-engine-panel .ce-ai-icon { color:#38bdf8 !important; }
+
+.ce-button-spacer { height:27px; }
+.ce-feature-row-main { margin-bottom:2px; }
+
+/* Make widget labels match the screenshot instead of disappearing into dark text */
+label[data-testid="stWidgetLabel"] p {
+    color:#38bdf8 !important;
+    font-size:11px !important;
+    font-weight:700 !important;
+}
+
+/* Streamlit widgets in cards */
+.ce-widget-wrap div[data-baseweb="select"] > div, .ce-widget-wrap .stTextInput input { min-height:38px !important; }
+.ce-widget-wrap .stButton > button { min-height:42px !important; }
 
 @media(max-width:1050px){
   .ce-search-grid{grid-template-columns:1fr 1fr} .ce-search-grid > :last-child{grid-column:1/-1;height:45px}
@@ -626,6 +562,7 @@ def status_counts(leads):
         if status in counts:
             counts[status] += 1
 
+        # tolerate common alternative status values
         if status in {"ready", "ready to send", "qualified"}:
             counts["pending"] += 1
         if status in {"contacted", "emailed"}:
@@ -659,24 +596,73 @@ def find_pipeline_file():
 
 
 # -----------------------------
-# Navigation Menu Alternative (with white text color)
+# Sidebar
 # -----------------------------
-st.markdown('<p style="color: #FFFFFF; font-weight: 600; margin-bottom: 4px;">Navigation Menu</p>', unsafe_allow_html=True)
-menu = st.selectbox(
-    "Navigation Menu",
-    [
-        "Dashboard",
-        "Find Leads",
-        "Lead Database",
-        "AI Outreach",
-        "Follow-ups",
-        "Campaigns",
-        "Analytics",
-        "Email Templates",
-        "Settings",
-    ],
-    label_visibility="collapsed",
-)
+with st.sidebar:
+    st.markdown(
+        f"""
+        <div style="border:1px solid rgba(6,182,212,.30);border-radius:15px;padding:10px 9px;
+                    background:linear-gradient(135deg,rgba(37,99,235,.14),rgba(6,182,212,.04));margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:9px;">
+                <div style="width:48px;height:48px;display:grid;place-items:center;">
+                    {logo_svg(46)}
+                </div>
+                <div>
+                    <div style="font-size:15px;font-weight:800;">ClientEngine <span style="color:{CYAN};">AI</span></div>
+                    <div style="font-size:9px;color:#64748b;margin-top:3px;">AI Lead Generation Platform</div>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    menu = st.radio(
+        "Navigation",
+        [
+            "Dashboard",
+            "Find Leads",
+            "Lead Database",
+            "AI Outreach",
+            "Follow-ups",
+            "Campaigns",
+            "Analytics",
+            "Email Templates",
+            "Settings",
+        ],
+        label_visibility="collapsed",
+    )
+
+    st.markdown(
+        '<div style="margin:18px 4px 8px;color:#64748b;font-size:9px;font-weight:700;letter-spacing:1px;">AI ENGINE STATUS</div>',
+        unsafe_allow_html=True,
+    )
+
+    engine_items = [
+        ("OpenAI GPT-4o", bool(get_secret("OPENAI_API_KEY"))),
+        ("Modal", bool(MODAL_TOKEN_ID or MODAL_TOKEN_SECRET)),
+        ("Supabase", bool(SUPABASE_URL and SUPABASE_KEY)),
+        ("SMTP / Resend", bool(get_secret("SMTP_HOST") or get_secret("RESEND_API_KEY"))),
+    ]
+    for name, connected in engine_items:
+        color = "#34D399" if connected else "#F59E0B"
+        label = "Connected" if connected else "Not configured"
+        st.markdown(
+            f'<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 4px;font-size:10px;">'
+            f'<span>{name}</span><span style="color:{color};font-weight:700;">● {label}</span></div>',
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        """
+        <div style="margin-top:18px;border:1px solid rgba(37,99,235,.32);border-radius:13px;padding:13px;text-align:center;background:rgba(7,20,38,.75);">
+            <div style="font-weight:800;font-size:12px;">Rai Marketing Agency</div>
+            <div style="color:#94a3b8;font-size:9px;margin-top:4px;">Digital Growth Solutions</div>
+            <div style="color:#38bdf8;font-size:8px;margin-top:7px;">ClientEngine AI · v2.0</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 # -----------------------------
@@ -705,7 +691,7 @@ st.markdown(
     <div class="ce-topbar">
         <div class="ce-topline">✦ &nbsp; Find. Engage. Convert. Grow.</div>
         <div class="ce-topright">
-            <div class="ce-searchbox">⌕ <span>Search leads, companies...</span><span style="margin-left:auto;color:#FFFFFF;">⌘K</span></div>
+            <div class="ce-searchbox">⌕ <span>Search leads, companies...</span><span style="margin-left:auto;color:#475569;">⌘K</span></div>
             <div class="ce-icon">♧</div>
             <div class="ce-icon">⚙</div>
             <div class="ce-user"><div class="ce-avatar">SA</div><div><strong>Shafqat Abbas</strong><small>Founder</small></div></div>
@@ -741,7 +727,7 @@ st.markdown(
 )
 
 # -----------------------------
-# FIND CUSTOMERS + AI ENGINE STATUS
+# Find customers + engine status
 # -----------------------------
 if menu in {"Dashboard", "Find Leads"}:
     query_params = st.query_params
@@ -759,59 +745,27 @@ if menu in {"Dashboard", "Find Leads"}:
         "Saudi Arabia", "Pakistan", "France", "Italy", "Netherlands", "Worldwide / Global", "Custom Location...",
     ]
 
-    top_placeholder_col1, top_placeholder_col2 = st.columns(
-        [3.2, 1],
-        gap="small"
-    )
+    left, right = st.columns([3.2, 1], gap="small")
 
-    # ------------------------------------------------------------
-    # LEFT: FIND YOUR NEXT CUSTOMERS
-    # ------------------------------------------------------------
-    with top_placeholder_col1:
-
+    # IMPORTANT: Streamlit widgets cannot be nested inside raw HTML divs.
+    # The previous version opened .ce-panel before rendering the widgets,
+    # which created empty boxes because Streamlit renders widgets outside
+    # that HTML element. We now use CSS wrappers around the actual columns.
+    with left:
         st.markdown(
-            """
-            <div class="ce-section-card">
-                <div class="ce-panel-title">
-                    Find Your Next Customers
-                </div>
-                <div class="ce-panel-sub">
-                    Tell us your industry and location, and let AI find &amp;
-                    analyze potential clients.
-                </div>
-            </div>
-            """,
+            '<div class="ce-panel-header"><div class="ce-panel-title">Find Your Next Customers</div><div class="ce-panel-sub">Tell us your industry and location, and let AI find &amp; analyze potential clients.</div></div>',
             unsafe_allow_html=True,
         )
 
-        c1, c2, c3 = st.columns(
-            [1, 1, 1.05],
-            gap="small"
-        )
-
+        c1, c2, c3 = st.columns([1, 1, 1.05], gap="small")
         with c1:
-            st.markdown(
-                """
-                <div class="ce-field-heading">
-                    Industry / Niche
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-
-            industry_default = (
-                industries.index(url_niche)
-                if url_niche in industries
-                else 0
-            )
-
+            industry_default = industries.index(url_niche) if url_niche in industries else 0
             selected_industry = st.selectbox(
                 "Industry / Niche",
                 industries,
                 index=industry_default,
-                label_visibility="collapsed",
+                label_visibility="visible",
             )
-
             if selected_industry == "Custom Industry...":
                 final_niche = st.text_input(
                     "Custom industry",
@@ -822,28 +776,13 @@ if menu in {"Dashboard", "Find Leads"}:
                 final_niche = selected_industry
 
         with c2:
-            st.markdown(
-                """
-                <div class="ce-field-heading">
-                    Location / Country
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-
-            country_default = (
-                countries.index(url_location)
-                if url_location in countries
-                else 0
-            )
-
+            country_default = countries.index(url_location) if url_location in countries else 0
             selected_country = st.selectbox(
                 "Location / Country",
                 countries,
                 index=country_default,
-                label_visibility="collapsed",
+                label_visibility="visible",
             )
-
             if selected_country == "Custom Location...":
                 final_location = st.text_input(
                     "Custom location",
@@ -856,17 +795,12 @@ if menu in {"Dashboard", "Find Leads"}:
                 final_location = selected_country
 
         with c3:
-            st.markdown(
-                '<div style="height:24px;"></div>',
-                unsafe_allow_html=True,
-            )
-
+            st.markdown('<div class="ce-button-spacer"></div>', unsafe_allow_html=True)
             run_pipeline = st.button(
                 "⌕  Find Potential Customers  →",
                 use_container_width=True,
                 type="primary",
             )
-
             refresh = st.button(
                 "↻  Refresh Database",
                 use_container_width=True,
@@ -876,88 +810,51 @@ if menu in {"Dashboard", "Find Leads"}:
         clean_location = clean_target(final_location)
 
         st.markdown(
-            """
-            <div class="ce-feature-row ce-feature-row-main">
-                <span class="ce-feature">✓ Auto Search</span>
-                <span class="ce-feature">✓ Verify Emails</span>
-                <span class="ce-feature">✓ Analyze Websites</span>
-                <span class="ce-feature">✓ Score Leads</span>
-                <span class="ce-feature">✓ Generate Emails</span>
-            </div>
-            """,
+            '<div class="ce-feature-row ce-feature-row-main">'
+            '<span class="ce-feature">✓ Auto Search</span>'
+            '<span class="ce-feature">✓ Verify Emails</span>'
+            '<span class="ce-feature">✓ Analyze Websites</span>'
+            '<span class="ce-feature">✓ Score Leads</span>'
+            '<span class="ce-feature">✓ Generate Emails</span>'
+            '</div>',
             unsafe_allow_html=True,
         )
 
-    # ------------------------------------------------------------
-    # RIGHT: AI ENGINE STATUS
-    # ------------------------------------------------------------
-    with top_placeholder_col2:
-
-        modal_active = bool(
-            MODAL_TOKEN_ID or MODAL_TOKEN_SECRET
-        )
-
-        openai_active = bool(
-            get_secret("OPENAI_API_KEY")
-        )
+    with right:
+        modal_connected = bool(MODAL_TOKEN_ID or MODAL_TOKEN_SECRET)
+        openai_connected = bool(get_secret("OPENAI_API_KEY"))
 
         st.markdown(
-            f"""
-            <div class="ce-engine-card">
-
+            f'''
+            <div class="ce-engine-panel">
                 <div class="ce-status">
                     <strong>AI Engine Status</strong>
-                    <span class="ce-online">
-                        ● All Systems Online
-                    </span>
+                    <span class="ce-online">● All Systems Online</span>
                 </div>
-
                 <div class="ce-ai-grid">
-
                     <div class="ce-ai">
                         <div class="ce-ai-icon">🌐</div>
-                        <div class="ce-ai-name">
-                            Web Scraping
-                        </div>
-                        <div class="ce-ai-active">
-                            ● {"Active" if modal_active else "Offline"}
-                        </div>
+                        <div class="ce-ai-name">Web Scraping</div>
+                        <div class="ce-ai-active">● {"Active" if modal_connected else "Offline"}</div>
                     </div>
-
                     <div class="ce-ai">
                         <div class="ce-ai-icon">🧠</div>
-                        <div class="ce-ai-name">
-                            AI Analysis
-                        </div>
-                        <div class="ce-ai-active">
-                            ● {"Active" if openai_active else "Offline"}
-                        </div>
+                        <div class="ce-ai-name">AI Analysis</div>
+                        <div class="ce-ai-active">● {"Active" if openai_connected else "Offline"}</div>
                     </div>
-
                     <div class="ce-ai">
                         <div class="ce-ai-icon">✉</div>
-                        <div class="ce-ai-name">
-                            Email Generation
-                        </div>
-                        <div class="ce-ai-active">
-                            ● {"Active" if openai_active else "Offline"}
-                        </div>
+                        <div class="ce-ai-name">Email Generation</div>
+                        <div class="ce-ai-active">● {"Active" if openai_connected else "Offline"}</div>
                     </div>
-
                     <div class="ce-ai">
                         <div class="ce-ai-icon">▥</div>
-                        <div class="ce-ai-name">
-                            Lead Scoring
-                        </div>
-                        <div class="ce-ai-active">
-                            ● Active
-                        </div>
+                        <div class="ce-ai-name">Lead Scoring</div>
+                        <div class="ce-ai-active">● Active</div>
                     </div>
-
                 </div>
-
             </div>
-            """,
+            ''',
             unsafe_allow_html=True,
         )
 
@@ -965,41 +862,30 @@ if menu in {"Dashboard", "Find Leads"}:
         st.cache_data.clear()
         st.rerun()
 
-    # Metrics display
-    custom_kpi_data = [
-        ("👥", 245, "Leads Found", "↗ Live database"),
-        ("✓", 195, "Verified Leads", "↗ Email detected"),
-        ("✉", 145, "Email Ready", "↗ Queue"),
-        ("➤", 95, "Email Send", "↗ Outreach"),
-        ("●", 65, "Reply", "↗ Responses"),
+    # KPI cards
+    kpi_data = [
+        ("👥", total_leads, "Leads Found", "↗ Live database"),
+        ("✓", verified_leads, "Verified Leads", "↗ Email detected"),
+        ("✉", pending_queue, "Emails Ready", "↗ Queue"),
+        ("➤", sent_emails, "Emails Sent", "↗ Outreach"),
+        ("●", replies, "Replies", "↗ Responses"),
     ]
     cols = st.columns(5, gap="small")
-    for col, (icon, value, name, growth) in zip(cols, custom_kpi_data):
+    for col, (icon, value, name, growth) in zip(cols, kpi_data):
         with col:
             st.markdown(
                 f'<div class="ce-kpi"><div class="ce-kpi-icon">{icon}</div><div class="ce-kpi-value">{value}</div><div class="ce-kpi-name">{name}</div><div class="ce-kpi-growth">{growth}</div></div>',
                 unsafe_allow_html=True,
             )
 
-    # Pipeline execution anchor point / auto-scroll container
+    # Pipeline execution
     if run_pipeline:
-        st.markdown('<div id="execution-logs"></div>', unsafe_allow_html=True)
         if not clean_niche or not clean_location:
             st.error("Please enter both an industry and a location.")
         else:
             pipeline = find_pipeline_file()
             st.markdown('<div class="ce-panel" style="margin-top:12px;">', unsafe_allow_html=True)
             st.markdown("### Live Cloud Execution")
-            
-            st.markdown("""
-                <script>
-                    const element = document.getElementById('execution-logs');
-                    if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                    }
-                </script>
-            """, unsafe_allow_html=True)
-
             if not pipeline:
                 st.error("No pipeline file was found. Put master_pipeline.py or sdr_agent.py in the same folder as app.py.")
             else:
@@ -1029,19 +915,42 @@ if menu in {"Dashboard", "Find Leads"}:
                     status_box.error(f"Execution error: {exc}")
             st.markdown('</div>', unsafe_allow_html=True)
 
-    # Three cards matching placeholders: Lead Generation Pipeline, Country Distribution, Top Opportunities with proper numbering/counts
+    # Analytics cards
+    countries_count = {}
+    for row in all_leads:
+        country = safe_text(row.get("country"), "Unknown")
+        countries_count[country] = countries_count.get(country, 0) + 1
+    top_countries = sorted(countries_count.items(), key=lambda x: x[1], reverse=True)[:4]
+    total_for_pct = max(sum(countries_count.values()), 1)
+
+    opp_counts = {
+        "No/weak Google presence": 0,
+        "Weak Website / CTA": 0,
+        "Poor SEO signals": 0,
+        "Missing contact path": 0,
+        "Social media opportunity": 0,
+    }
+    for row in all_leads:
+        website = str(row.get("website", "")).strip()
+        email = str(row.get("email", "")).strip()
+        if not website: opp_counts["Weak Website / CTA"] += 1
+        if not email: opp_counts["Missing contact path"] += 1
+        # These are opportunity buckets, not claims of verified technical audits.
+        if website: opp_counts["Poor SEO signals"] += 1
+        if row.get("industry"): opp_counts["Social media opportunity"] += 1
+    top_opps = sorted(opp_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+
     a1, a2, a3 = st.columns([1.05, 1, 1], gap="small")
-    
     with a1:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Lead Generation Pipeline</div>', unsafe_allow_html=True)
         funnel = [
-            ("Found", "245", "ce-f1"),
-            ("Verified", "195", "ce-f2"),
-            ("Qualified", "145", "ce-f3"),
-            ("Contacted", "95", "ce-f4"),
-            ("Replied", "65", "ce-f5"),
-            ("Meetings", "12", "ce-f6"),
+            ("Found", total_leads, "ce-f1"),
+            ("Verified", verified_leads, "ce-f2"),
+            ("Qualified", qualified_leads, "ce-f3"),
+            ("Contacted", sent_emails, "ce-f4"),
+            ("Replied", replies, "ce-f5"),
+            ("Meetings", meetings, "ce-f6"),
         ]
         st.markdown('<div class="ce-funnel">' + ''.join(f'<div class="ce-funnel-item {cls}">{name} — {value}</div>' for name, value, cls in funnel) + '</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -1049,36 +958,33 @@ if menu in {"Dashboard", "Find Leads"}:
     with a2:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Country Distribution</div>', unsafe_allow_html=True)
-        top_countries_mock = [("United States", 120), ("United Kingdom", 65), ("Canada", 40), ("Germany", 20)]
-        total_for_pct = max(sum([v for _, v in top_countries_mock]), 1)
-        html = '<div class="ce-country">'
-        for country, n in top_countries_mock:
-            pct = round((n / total_for_pct) * 100)
-            flag = {"United States":"🇺🇸","United Kingdom":"🇬🇧","Canada":"🇨🇦","Germany":"🇩🇪"}.get(country, "🌍")
-            html += f'<div class="ce-country-row"><div style="width:76%;">{flag} {country}<div class="ce-country-track"><div class="ce-country-fill" style="width:{pct}%;"></div></div></div><strong>{n} leads ({pct}%)</strong></div>'
-        html += '</div>'
-        st.markdown(html, unsafe_allow_html=True)
+        if top_countries:
+            html = '<div class="ce-country">'
+            for country, n in top_countries:
+                pct = round((n / total_for_pct) * 100)
+                flag = {"United States":"🇺🇸","United Kingdom":"🇬🇧","Canada":"🇨🇦","Germany":"🇩🇪","USA":"🇺🇸","UK":"🇬🇧"}.get(country, "🌍")
+                html += f'<div class="ce-country-row"><div style="width:76%;">{flag} {country}<div class="ce-country-track"><div class="ce-country-fill" style="width:{pct}%;"></div></div></div><strong>{pct}%</strong></div>'
+            html += '</div>'
+            st.markdown(html, unsafe_allow_html=True)
+        else:
+            st.info("Country distribution will appear after leads are stored.")
         st.markdown('</div>', unsafe_allow_html=True)
 
     with a3:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Top Opportunities</div>', unsafe_allow_html=True)
-        top_opps_mock = [
-            ("No/weak Google presence", "45 leads"),
-            ("Weak Website / CTA", "38 leads"),
-            ("Poor SEO signals", "30 leads"),
-            ("Missing contact path", "22 leads"),
-            ("Social media opportunity", "15 leads"),
-        ]
-        for name, count_str in top_opps_mock:
-            st.markdown(f'<div class="ce-op"><span>{name}</span><span>{count_str} →</span></div>', unsafe_allow_html=True)
+        if top_opps:
+            for name, n in top_opps:
+                st.markdown(f'<div class="ce-op"><span>{name}</span><span>{n} leads →</span></div>', unsafe_allow_html=True)
+        else:
+            st.info("Opportunities will appear after leads are stored.")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Lower section containing Recent Activity and Quick Actions inside placeholders
+    # Recent activity + quick actions
     act, qa = st.columns([2.1, 1], gap="small")
     with act:
         st.markdown('<div class="ce-panel ce-activity">', unsafe_allow_html=True)
-        st.markdown('<div class="ce-panel-title">Recent Activity <span style="float:right;color:#FFFFFF;font-size:9px;">● Live</span></div>', unsafe_allow_html=True)
+        st.markdown('<div class="ce-panel-title">Recent Activity <span style="float:right;color:#34d399;font-size:9px;">● Live</span></div>', unsafe_allow_html=True)
         recent = all_leads[:5]
         if recent:
             icons = ["+", "✓", "✦", "➤", "●"]
@@ -1088,28 +994,22 @@ if menu in {"Dashboard", "Find Leads"}:
                 email = safe_text(row.get("email"), "No email")
                 st.markdown(f'<div class="ce-event"><div class="ce-event-dot">{icons[i % len(icons)]}</div><div class="ce-event-text"><b>{labels[i % len(labels)]}</b><span>{company} · {email}</span></div></div>', unsafe_allow_html=True)
         else:
-            mock_activities = [
-                ("New lead added", "Apex Roofing · contact@apexroofing.com"),
-                ("Lead verified", "Metro Dental · info@metrodental.co"),
-                ("Outreach ready", "Elite Builders · sales@elitebuilders.us"),
-            ]
-            icons = ["+", "✓", "✦"]
-            for i, (label, detail) in enumerate(mock_activities):
-                st.markdown(f'<div class="ce-event"><div class="ce-event-dot">{icons[i]}</div><div class="ce-event-text"><b>{label}</b><span>{detail}</span></div></div>', unsafe_allow_html=True)
+            st.info("Recent activity will appear after leads are stored.")
         st.markdown('</div>', unsafe_allow_html=True)
 
     with qa:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Quick Actions</div>', unsafe_allow_html=True)
         st.markdown('<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">', unsafe_allow_html=True)
-        st.markdown('<div style="padding:16px 8px;border:1px solid rgba(139,92,246,.45);border-radius:10px;text-align:center;background:rgba(139,92,246,.08); color:#FFFFFF;">＋<br><small>New Campaign</small></div>', unsafe_allow_html=True)
-        st.markdown('<div style="padding:16px 8px;border:1px solid rgba(37,99,235,.45);border-radius:10px;text-align:center;background:rgba(37,99,235,.08); color:#FFFFFF;">⇩<br><small>Export Leads</small></div>', unsafe_allow_html=True)
-        st.markdown('<div style="padding:16px 8px;border:1px solid rgba(16,185,129,.45);border-radius:10px;text-align:center;background:rgba(16,185,129,.08); color:#FFFFFF;">✉<br><small>Email Templates</small></div>', unsafe_allow_html=True)
-        st.markdown('<div style="padding:16px 8px;border:1px solid rgba(245,158,11,.45);border-radius:10px;text-align:center;background:rgba(245,158,11,.08); color:#FFFFFF;">▥<br><small>View Analytics</small></div>', unsafe_allow_html=True)
+        st.markdown('<div style="padding:16px 8px;border:1px solid rgba(139,92,246,.45);border-radius:10px;text-align:center;background:rgba(139,92,246,.08);">＋<br><small>New Campaign</small></div>', unsafe_allow_html=True)
+        st.markdown('<div style="padding:16px 8px;border:1px solid rgba(37,99,235,.45);border-radius:10px;text-align:center;background:rgba(37,99,235,.08);">⇩<br><small>Export Leads</small></div>', unsafe_allow_html=True)
+        st.markdown('<div style="padding:16px 8px;border:1px solid rgba(16,185,129,.45);border-radius:10px;text-align:center;background:rgba(16,185,129,.08);">✉<br><small>Email Templates</small></div>', unsafe_allow_html=True)
+        st.markdown('<div style="padding:16px 8px;border:1px solid rgba(245,158,11,.45);border-radius:10px;text-align:center;background:rgba(245,158,11,.08);">▥<br><small>View Analytics</small></div>', unsafe_allow_html=True)
         st.markdown('</div></div>', unsafe_allow_html=True)
 
+    # Recent high-value leads
     st.markdown('<div class="ce-panel" style="margin-top:12px;">', unsafe_allow_html=True)
-    st.markdown('<div class="ce-panel-title">Recent High-Value Leads <span style="float:right;color:#FFFFFF;font-size:10px;">View All →</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="ce-panel-title">Recent High-Value Leads <span style="float:right;color:#38bdf8;font-size:10px;">View All →</span></div>', unsafe_allow_html=True)
     if db_error:
         st.warning(f"Supabase: {db_error}")
     if all_leads:
@@ -1515,7 +1415,7 @@ PIPELINE_FILE="master_pipeline.py"
 # -----------------------------
 st.markdown(
     """
-    <div style="text-align:center;color:#FFFFFF;font-size:9px;padding:20px 0 4px;">
+    <div style="text-align:center;color:#475569;font-size:9px;padding:20px 0 4px;">
         ClientEngine AI · Rai Marketing Agency · Find. Analyze. Engage. Grow.
     </div>
     """,
