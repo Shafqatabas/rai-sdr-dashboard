@@ -299,13 +299,6 @@ div[data-baseweb="input"] > div,
     margin-top: 2px;
 }
 
-.ce-kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
 .ce-kpi {
     position: relative;
     overflow: hidden;
@@ -315,7 +308,7 @@ div[data-baseweb="input"] > div,
     background: linear-gradient(145deg,#081a31,#051225);
     border: 1px solid rgba(37,99,235,.38);
     color: #FFFFFF !important;
-    height: 100%;
+    margin-bottom: 8px;
 }
 .ce-kpi-icon { font-size: 18px; }
 .ce-kpi-value { font-size: 20px; font-weight: 800; margin-top: 4px; color: #FFFFFF !important; }
@@ -374,18 +367,6 @@ div[data-baseweb="input"] > div,
         align-items: stretch !important;
         gap: 8px;
         height: auto !important;
-    }
-    .ce-kpi-grid {
-        grid-template-columns: repeat(6, 1fr);
-    }
-    .ce-kpi-item:nth-child(1),
-    .ce-kpi-item:nth-child(2),
-    .ce-kpi-item:nth-child(3) {
-        grid-column: span 2;
-    }
-    .ce-kpi-item:nth-child(4),
-    .ce-kpi-item:nth-child(5) {
-        grid-column: span 3;
     }
 }
 
@@ -593,7 +574,7 @@ if menu in {"Dashboard", "Find Leads"}:
 
     st.markdown('<div style="height: 10px;"></div>', unsafe_allow_html=True)
 
-    # Metrics display with responsive 3/2 grid for mobile
+    # Metrics display using native Streamlit columns for 3 and 2 layout on mobile/desktop cleanly
     custom_kpi_data = [
         ("👥", 245, "Leads Found", "Live database"),
         ("✓", 195, "Verified Leads", "Email detected"),
@@ -602,20 +583,25 @@ if menu in {"Dashboard", "Find Leads"}:
         ("●", 65, "Reply", "Responses"),
     ]
     
-    kpi_html = '<div class="ce-kpi-grid">'
-    for icon, value, name, growth in custom_kpi_data:
-        kpi_html += f'''
-        <div class="ce-kpi-item">
-            <div class="ce-kpi">
-                <div class="ce-kpi-icon">{icon}</div>
-                <div class="ce-kpi-value">{value}</div>
-                <div class="ce-kpi-name">{name}</div>
-                <div class="ce-kpi-growth">{growth}</div>
-            </div>
-        </div>
-        '''
-    kpi_html += '</div>'
-    st.markdown(kpi_html, unsafe_allow_html=True)
+    # First row: 3 cards
+    cols_row1 = st.columns(3, gap="small")
+    for idx in range(3):
+        icon, value, name, growth = custom_kpi_data[idx]
+        with cols_row1[idx]:
+            st.markdown(
+                f'<div class="ce-kpi"><div class="ce-kpi-icon">{icon}</div><div class="ce-kpi-value">{value}</div><div class="ce-kpi-name">{name}</div><div class="ce-kpi-growth">{growth}</div></div>',
+                unsafe_allow_html=True,
+            )
+
+    # Second row: 2 cards
+    cols_row2 = st.columns(2, gap="small")
+    for idx in range(3, 5):
+        icon, value, name, growth = custom_kpi_data[idx]
+        with cols_row2[idx - 3]:
+            st.markdown(
+                f'<div class="ce-kpi"><div class="ce-kpi-icon">{icon}</div><div class="ce-kpi-value">{value}</div><div class="ce-kpi-name">{name}</div><div class="ce-kpi-growth">{growth}</div></div>',
+                unsafe_allow_html=True,
+            )
 
     if run_pipeline:
         st.markdown('<div id="execution-logs"></div>', unsafe_allow_html=True)
