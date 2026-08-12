@@ -574,7 +574,7 @@ if menu in {"Dashboard", "Find Leads"}:
 
     st.markdown('<div style="height: 10px;"></div>', unsafe_allow_html=True)
 
-    # Metrics display using native Streamlit columns for 3 and 2 layout on mobile/desktop cleanly
+    # Metrics display: Desktop pe 5 columns (ek row), Mobile pe 3 and 2 rows
     custom_kpi_data = [
         ("👥", 245, "Leads Found", "Live database"),
         ("✓", 195, "Verified Leads", "Email detected"),
@@ -583,23 +583,12 @@ if menu in {"Dashboard", "Find Leads"}:
         ("●", 65, "Reply", "Responses"),
     ]
     
-    # First row: 3 cards
-    cols_row1 = st.columns(3, gap="small")
-    for idx in range(3):
-        icon, value, name, growth = custom_kpi_data[idx]
-        with cols_row1[idx]:
+    # Desktop View (5 columns in 1 row)
+    desktop_cols = st.columns(5, gap="small")
+    for idx, (icon, value, name, growth) in enumerate(custom_kpi_data):
+        with desktop_cols[idx]:
             st.markdown(
-                f'<div class="ce-kpi"><div class="ce-kpi-icon">{icon}</div><div class="ce-kpi-value">{value}</div><div class="ce-kpi-name">{name}</div><div class="ce-kpi-growth">{growth}</div></div>',
-                unsafe_allow_html=True,
-            )
-
-    # Second row: 2 cards
-    cols_row2 = st.columns(2, gap="small")
-    for idx in range(3, 5):
-        icon, value, name, growth = custom_kpi_data[idx]
-        with cols_row2[idx - 3]:
-            st.markdown(
-                f'<div class="ce-kpi"><div class="ce-kpi-icon">{icon}</div><div class="ce-kpi-value">{value}</div><div class="ce-kpi-name">{name}</div><div class="ce-kpi-growth">{growth}</div></div>',
+                f'<div class="desktop-kpi" style="display: block;"><div class="ce-kpi"><div class="ce-kpi-icon">{icon}</div><div class="ce-kpi-value">{value}</div><div class="ce-kpi-name">{name}</div><div class="ce-kpi-growth">{growth}</div></div></div>',
                 unsafe_allow_html=True,
             )
 
