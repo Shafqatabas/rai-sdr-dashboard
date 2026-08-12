@@ -61,7 +61,7 @@ MUTED = "#FFFFFF"
 
 
 # -----------------------------
-# CSS / UI (Fully Responsive)
+# CSS / UI (Responsive & Clean)
 # -----------------------------
 st.markdown(
     """
@@ -197,7 +197,7 @@ div[data-baseweb="input"] > div,
 }
 
 .brand-title {
-    font-size: clamp(24px, 4vw, 40px);
+    font-size: clamp(22px, 4vw, 40px);
     line-height: 1.1;
     font-weight: 800;
     letter-spacing: -1.5px;
@@ -207,6 +207,15 @@ div[data-baseweb="input"] > div,
 
 .brand-title span {
     color: #06B6D4;
+}
+
+.logo-container {
+    width: 65px;
+    height: 65px;
+}
+
+.country-card {
+    display: block;
 }
 
 .ce-heading-title {
@@ -337,14 +346,21 @@ div[data-baseweb="input"] > div,
 .ce-event-text { font-size: 10px; color: #FFFFFF !important; }
 .ce-event-text span { display: block; color: #38BDF8 !important; margin-top: 3px; font-size: 9px; }
 
-/* Responsive Media Queries */
+/* Mobile Responsive Adjustments */
 @media (max-width: 768px) {
     .hero-inner {
         flex-direction: column;
         align-items: flex-start;
     }
     .brand-title {
-        font-size: 24px;
+        font-size: 20px;
+    }
+    .logo-container {
+        width: 50px;
+        height: 50px;
+    }
+    .country-card {
+        display: none !important;
     }
     .top-bar-container {
         flex-direction: column;
@@ -454,22 +470,22 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Hero
+# Hero (with responsive logo sizing and conditional country card)
 st.markdown(
     f"""
     <div class="hero">
       <div class="hero-inner">
-        <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
-          <div style="width:78px; height:78px; display:grid; place-items:center; border-radius:16px; flex-shrink:0; background:linear-gradient(145deg,rgba(37,99,235,.16),rgba(6,182,212,.08)); border:1px solid rgba(6,182,212,.45); box-shadow:0 0 28px rgba(6,182,212,.20);">{logo_svg(72)}</div>
+        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+          <div class="logo-container" style="display:grid; place-items:center; border-radius:14px; flex-shrink:0; background:linear-gradient(145deg,rgba(37,99,235,.16),rgba(6,182,212,.08)); border:1px solid rgba(6,182,212,.45); box-shadow:0 0 28px rgba(6,182,212,.20);">{logo_svg(54)}</div>
           <div>
             <div class="brand-title">ClientEngine <span>AI</span></div>
-            <div style="color:#38BDF8; font-size:15px; margin-top:6px;">AI-Powered Lead Generation &amp; Outreach Platform</div>
+            <div style="color:#38BDF8; font-size:14px; margin-top:4px;">AI-Powered Lead Generation &amp; Outreach Platform</div>
           </div>
         </div>
-        <div style="padding:14px 18px; border:1px solid rgba(37,99,235,.38); border-radius:14px; background:rgba(3,13,28,.72);">
+        <div class="country-card" style="padding:12px 16px; border:1px solid rgba(37,99,235,.38); border-radius:14px; background:rgba(3,13,28,.72);">
           <div style="font-size:12px; font-weight:700; margin-bottom:6px; color:#FFFFFF;">Global Coverage</div>
-          <div style="font-size:20px; letter-spacing:5px;">🇺🇸 🇬🇧 🇨🇦 🇩🇪</div>
-          <small style="color:#38BDF8; display:block; margin-top:6px;">4 Countries Active</small>
+          <div style="font-size:18px; letter-spacing:4px;">🇺🇸 🇬🇧 🇨🇦 🇩🇪</div>
+          <small style="color:#38BDF8; display:block; margin-top:4px;">4 Countries Active</small>
         </div>
       </div>
     </div>
