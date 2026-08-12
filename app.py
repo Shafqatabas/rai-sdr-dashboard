@@ -61,7 +61,7 @@ MUTED = "#FFFFFF"
 
 
 # -----------------------------
-# CSS / UI (Fixed using normal string to avoid NameError)
+# CSS / UI (Fully Responsive)
 # -----------------------------
 st.markdown(
     """
@@ -97,6 +97,8 @@ html, body, [class*="css"] {
     max-width: 1500px;
     padding-top: 1rem;
     padding-bottom: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     color: #FFFFFF !important;
 }
 
@@ -152,6 +154,7 @@ div[data-baseweb="input"] > div,
     color: #FFFFFF !important;
     font-weight: 700 !important;
     min-height: 42px !important;
+    width: 100% !important;
     box-shadow: 0 8px 24px rgba(6,182,212,.12) !important;
 }
 
@@ -175,7 +178,7 @@ div[data-baseweb="input"] > div,
     overflow: hidden;
     border: 1px solid rgba(37,99,235,.52);
     border-radius: 18px;
-    padding: 28px 30px;
+    padding: 24px;
     margin-bottom: 14px;
     background:
         radial-gradient(circle at 82% 50%, rgba(6,182,212,.13), transparent 25%),
@@ -183,11 +186,21 @@ div[data-baseweb="input"] > div,
     color: #FFFFFF !important;
 }
 
+.hero-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
 .brand-title {
-    font-size: clamp(27px, 4vw, 44px);
-    line-height: 1;
+    font-size: clamp(24px, 4vw, 40px);
+    line-height: 1.1;
     font-weight: 800;
-    letter-spacing: -1.8px;
+    letter-spacing: -1.5px;
     margin: 0;
     color: #FFFFFF !important;
 }
@@ -232,6 +245,8 @@ div[data-baseweb="input"] > div,
     margin-bottom: 13px;
     color: #FFFFFF !important;
     font-weight: 700;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .ce-online {
@@ -245,7 +260,7 @@ div[data-baseweb="input"] > div,
 
 .ce-ai-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 8px;
 }
 
@@ -278,17 +293,18 @@ div[data-baseweb="input"] > div,
 .ce-kpi {
     position: relative;
     overflow: hidden;
-    padding: 13px 14px;
-    min-height: 88px;
+    padding: 12px;
+    min-height: 85px;
     border-radius: 13px;
     background: linear-gradient(145deg,#081a31,#051225);
     border: 1px solid rgba(37,99,235,.38);
     color: #FFFFFF !important;
+    margin-bottom: 8px;
 }
-.ce-kpi-icon { font-size: 20px; }
-.ce-kpi-value { font-size: 22px; font-weight: 800; margin-top: 6px; color: #FFFFFF !important; }
+.ce-kpi-icon { font-size: 18px; }
+.ce-kpi-value { font-size: 20px; font-weight: 800; margin-top: 4px; color: #FFFFFF !important; }
 .ce-kpi-name { color: #FFFFFF !important; font-size: 10px; }
-.ce-kpi-growth { color: #38BDF8 !important; font-size: 8px; margin-top: 6px; }
+.ce-kpi-growth { color: #38BDF8 !important; font-size: 8px; margin-top: 4px; }
 
 .ce-panel {
     background: rgba(7,20,38,.90);
@@ -297,28 +313,46 @@ div[data-baseweb="input"] > div,
     padding: 17px;
     box-shadow: 0 12px 35px rgba(0,0,0,.16);
     color: #FFFFFF !important;
+    margin-bottom: 12px;
 }
 .ce-panel-title { font-size: 16px; font-weight: 750; color: #FFFFFF !important; }
 
 .ce-funnel { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 14px; }
-.ce-funnel-item { height: 27px; display: grid; place-items: center; font-size: 9px; font-weight: 700; border-radius: 5px; color: #FFFFFF !important; }
-.ce-f1 { width: 92%; background: #2563eb; }
-.ce-f2 { width: 78%; background: #0891b2; }
-.ce-f3 { width: 65%; background: #14b8a6; }
-.ce-f4 { width: 52%; background: #8b5cf6; }
-.ce-f5 { width: 38%; background: #f59e0b; }
-.ce-f6 { width: 25%; background: #ef4444; }
+.ce-funnel-item { height: 27px; display: grid; place-items: center; font-size: 9px; font-weight: 700; border-radius: 5px; color: #FFFFFF !important; width: 100%; }
+.ce-f1 { background: #2563eb; }
+.ce-f2 { background: #0891b2; }
+.ce-f3 { background: #14b8a6; }
+.ce-f4 { background: #8b5cf6; }
+.ce-f5 { background: #f59e0b; }
+.ce-f6 { background: #ef4444; }
 
 .ce-country { margin-top: 12px; }
-.ce-country-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin: 10px 0; color: #FFFFFF !important; }
-.ce-country-track { height: 5px; margin-top: 5px; background: #17243a; border-radius: 20px; overflow: hidden; }
+.ce-country-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin: 10px 0; color: #FFFFFF !important; gap: 10px; }
+.ce-country-track { height: 5px; margin-top: 5px; background: #17243a; border-radius: 20px; overflow: hidden; width: 100%; }
 .ce-country-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg,#2563eb,#06b6d4); }
 
-.ce-op { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.10); font-size: 10px; color: #FFFFFF !important; }
+.ce-op { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.10); font-size: 10px; color: #FFFFFF !important; gap: 10px; }
 .ce-event { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.10); color: #FFFFFF !important; }
 .ce-event-dot { width: 27px; height: 27px; border-radius: 50%; display: grid; place-items: center; background: rgba(37,99,235,.16); color: #FFFFFF !important; flex-shrink: 0; }
 .ce-event-text { font-size: 10px; color: #FFFFFF !important; }
 .ce-event-text span { display: block; color: #38BDF8 !important; margin-top: 3px; font-size: 9px; }
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+    .hero-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .brand-title {
+        font-size: 24px;
+    }
+    .top-bar-container {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 8px;
+        height: auto !important;
+    }
+}
 
 footer { visibility: hidden; }
 </style>
@@ -409,12 +443,10 @@ replies = counts["replied"]
 # Top bar
 st.markdown(
     """
-    <div style="height:48px; display:flex; align-items:center; justify-content:space-between; margin:0 0 10px; padding:0 4px;">
-        <div style="color:#38BDF8; font-size:12px; letter-spacing:.2px;">✦ &nbsp; Find. Engage. Convert. Grow.</div>
-        <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:260px; height:36px; display:flex; align-items:center; gap:8px; border:1px solid rgba(37,99,235,.45); border-radius:9px; background:#061225; color:#FFFFFF; padding:0 12px; font-size:11px;">⌕ <span>Search leads, companies...</span><span style="margin-left:auto;color:#38BDF8;">⌘K</span></div>
-            <div style="color:#FFFFFF; font-size:16px;">♧</div>
-            <div style="color:#FFFFFF; font-size:16px;">⚙</div>
+    <div class="top-bar-container" style="display:flex; align-items:center; justify-content:space-between; margin:0 0 10px; padding:0 4px; flex-wrap:wrap; gap:10px;">
+        <div style="color:#38BDF8; font-size:12px; letter-spacing:.2px;">Find. Engage. Convert. Grow.</div>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:8px; border:1px solid rgba(37,99,235,.45); border-radius:9px; background:#061225; color:#FFFFFF; padding:6px 12px; font-size:11px;"><span>Search leads...</span><span style="color:#38BDF8;">⌘K</span></div>
             <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:#FFFFFF;"><div style="width:34px; height:34px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(135deg,#0ea5e9,#2563eb); color:#FFFFFF; font-size:12px; font-weight:800;">SA</div><div><strong>Shafqat Abbas</strong><small style="display:block; color:#38BDF8; font-size:9px;">Founder</small></div></div>
         </div>
     </div>
@@ -426,18 +458,18 @@ st.markdown(
 st.markdown(
     f"""
     <div class="hero">
-      <div style="position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:25px;">
-        <div style="display:flex; align-items:center; gap:18px;">
+      <div class="hero-inner">
+        <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
           <div style="width:78px; height:78px; display:grid; place-items:center; border-radius:16px; flex-shrink:0; background:linear-gradient(145deg,rgba(37,99,235,.16),rgba(6,182,212,.08)); border:1px solid rgba(6,182,212,.45); box-shadow:0 0 28px rgba(6,182,212,.20);">{logo_svg(72)}</div>
           <div>
             <div class="brand-title">ClientEngine <span>AI</span></div>
-            <div style="color:#38BDF8; font-size:16px; margin-top:9px;">AI-Powered Lead Generation &amp; Outreach Platform</div>
+            <div style="color:#38BDF8; font-size:15px; margin-top:6px;">AI-Powered Lead Generation &amp; Outreach Platform</div>
           </div>
         </div>
-        <div style="min-width:220px; padding:16px 20px; border:1px solid rgba(37,99,235,.38); border-radius:14px; background:rgba(3,13,28,.72);">
-          <div style="font-size:13px; font-weight:700; margin-bottom:10px; color:#FFFFFF;">🌐 Global Coverage</div>
-          <div style="font-size:23px; letter-spacing:7px;">🇺🇸 🇬🇧 🇨🇦 🇩🇪</div>
-          <small style="color:#38BDF8; display:block; margin-top:8px;">4 Countries Active</small>
+        <div style="padding:14px 18px; border:1px solid rgba(37,99,235,.38); border-radius:14px; background:rgba(3,13,28,.72);">
+          <div style="font-size:12px; font-weight:700; margin-bottom:6px; color:#FFFFFF;">Global Coverage</div>
+          <div style="font-size:20px; letter-spacing:5px;">🇺🇸 🇬🇧 🇨🇦 🇩🇪</div>
+          <small style="color:#38BDF8; display:block; margin-top:6px;">4 Countries Active</small>
         </div>
       </div>
     </div>
@@ -488,18 +520,18 @@ if menu in {"Dashboard", "Find Leads"}:
                 final_location = selected_country
         with c3:
             st.markdown('<div style="height:22px"></div>', unsafe_allow_html=True)
-            run_pipeline = st.button("⌕  Find Potential Customers  →", use_container_width=True, type="primary")
-            refresh = st.button("↻  Refresh Database", use_container_width=True)
+            run_pipeline = st.button("Find Potential Customers", use_container_width=True, type="primary")
+            refresh = st.button("Refresh Database", use_container_width=True)
 
         clean_niche = clean_target(final_niche)
         clean_location = clean_target(final_location)
         st.markdown(
             '<div style="display:flex; flex-wrap:wrap; gap:7px; margin-top:10px;">'
-            '<span style="border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34D399; padding:5px 8px; border-radius:20px; font-size:9px;">✓ Auto Search</span>'
-            '<span style="border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34D399; padding:5px 8px; border-radius:20px; font-size:9px;">✓ Verify Emails</span>'
-            '<span style="border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34D399; padding:5px 8px; border-radius:20px; font-size:9px;">✓ Analyze Websites</span>'
-            '<span style="border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34D399; padding:5px 8px; border-radius:20px; font-size:9px;">✓ Score Leads</span>'
-            '<span style="border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34D399; padding:5px 8px; border-radius:20px; font-size:9px;">✓ Generate Emails</span>'
+            '<span style="border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34D399; padding:5px 8px; border-radius:20px; font-size:9px;">Auto Search</span>'
+            '<span style="border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34D399; padding:5px 8px; border-radius:20px; font-size:9px;">Verify Emails</span>'
+            '<span style="border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34D399; padding:5px 8px; border-radius:20px; font-size:9px;">Analyze Websites</span>'
+            '<span style="border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34D399; padding:5px 8px; border-radius:20px; font-size:9px;">Score Leads</span>'
+            '<span style="border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.08); color:#34D399; padding:5px 8px; border-radius:20px; font-size:9px;">Generate Emails</span>'
             '</div>',
             unsafe_allow_html=True,
         )
@@ -508,12 +540,12 @@ if menu in {"Dashboard", "Find Leads"}:
         st.markdown(
             f"""
             <div class="ce-engine-box">
-                <div class="ce-status"><span>AI Engine Status</span><span class="ce-online">● All Systems Online</span></div>
+                <div class="ce-status"><span>AI Engine Status</span><span class="ce-online">All Systems Online</span></div>
                 <div class="ce-ai-grid">
-                  <div class="ce-ai"><div class="ce-ai-icon">🌐</div><div class="ce-ai-name">Web Scraping</div><div class="ce-ai-active">● {'Active' if (MODAL_TOKEN_ID or MODAL_TOKEN_SECRET) else 'Offline'}</div></div>
-                  <div class="ce-ai"><div class="ce-ai-icon">🧠</div><div class="ce-ai-name">AI Analysis</div><div class="ce-ai-active">● {'Active' if get_secret("OPENAI_API_KEY") else 'Offline'}</div></div>
-                  <div class="ce-ai"><div class="ce-ai-icon">✉</div><div class="ce-ai-name">Email Generation</div><div class="ce-ai-active">● {'Active' if get_secret("OPENAI_API_KEY") else 'Offline'}</div></div>
-                  <div class="ce-ai"><div class="ce-ai-icon">▥</div><div class="ce-ai-name">Lead Scoring</div><div class="ce-ai-active">● Active</div></div>
+                  <div class="ce-ai"><div class="ce-ai-icon">🌐</div><div class="ce-ai-name">Web Scraping</div><div class="ce-ai-active">{'Active' if (MODAL_TOKEN_ID or MODAL_TOKEN_SECRET) else 'Offline'}</div></div>
+                  <div class="ce-ai"><div class="ce-ai-icon">🧠</div><div class="ce-ai-name">AI Analysis</div><div class="ce-ai-active">{'Active' if get_secret("OPENAI_API_KEY") else 'Offline'}</div></div>
+                  <div class="ce-ai"><div class="ce-ai-icon">✉</div><div class="ce-ai-name">Email Generation</div><div class="ce-ai-active">{'Active' if get_secret("OPENAI_API_KEY") else 'Offline'}</div></div>
+                  <div class="ce-ai"><div class="ce-ai-icon">▥</div><div class="ce-ai-name">Lead Scoring</div><div class="ce-ai-active">Active</div></div>
                 </div>
             </div>
             """,
@@ -528,11 +560,11 @@ if menu in {"Dashboard", "Find Leads"}:
 
     # Metrics display
     custom_kpi_data = [
-        ("👥", 245, "Leads Found", "↗ Live database"),
-        ("✓", 195, "Verified Leads", "↗ Email detected"),
-        ("✉", 145, "Email Ready", "↗ Queue"),
-        ("➤", 95, "Email Send", "↗ Outreach"),
-        ("●", 65, "Reply", "↗ Responses"),
+        ("👥", 245, "Leads Found", "Live database"),
+        ("✓", 195, "Verified Leads", "Email detected"),
+        ("✉", 145, "Email Ready", "Queue"),
+        ("➤", 95, "Email Send", "Outreach"),
+        ("●", 65, "Reply", "Responses"),
     ]
     cols = st.columns(5, gap="small")
     for col, (icon, value, name, growth) in zip(cols, custom_kpi_data):
@@ -564,7 +596,7 @@ if menu in {"Dashboard", "Find Leads"}:
                 st.error("No pipeline file was found.")
             else:
                 status_box = st.empty()
-                status_box.info(f"Running {Path(pipeline).name} for {clean_niche} → {clean_location}")
+                status_box.info(f"Running {Path(pipeline).name} for {clean_niche} -> {clean_location}")
                 log_box = st.empty()
                 env = os.environ.copy()
                 env["PYTHONIOENCODING"] = "utf-8"
@@ -595,14 +627,14 @@ if menu in {"Dashboard", "Find Leads"}:
         st.markdown('<div class="ce-panel">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Lead Generation Pipeline</div>', unsafe_allow_html=True)
         funnel = [
-            ("Found", "245", "ce-f1"),
-            ("Verified", "195", "ce-f2"),
-            ("Qualified", "145", "ce-f3"),
-            ("Contacted", "95", "ce-f4"),
-            ("Replied", "65", "ce-f5"),
-            ("Meetings", "12", "ce-f6"),
+            ("Found", "245", "ce-f1", "92%"),
+            ("Verified", "195", "ce-f2", "78%"),
+            ("Qualified", "145", "ce-f3", "65%"),
+            ("Contacted", "95", "ce-f4", "52%"),
+            ("Replied", "65", "ce-f5", "38%"),
+            ("Meetings", "12", "ce-f6", "25%"),
         ]
-        st.markdown('<div class="ce-funnel">' + ''.join(f'<div class="ce-funnel-item {cls}">{name} — {value}</div>' for name, value, cls in funnel) + '</div>', unsafe_allow_html=True)
+        st.markdown('<div class="ce-funnel">' + ''.join(f'<div class="ce-funnel-item {cls}" style="width: {width};">{name} — {value}</div>' for name, value, cls, width in funnel) + '</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with a2:
@@ -613,8 +645,8 @@ if menu in {"Dashboard", "Find Leads"}:
         html = '<div class="ce-country">'
         for country, n in top_countries_mock:
             pct = round((n / total_for_pct) * 100)
-            flag = {"United States":"🇺🇸","United Kingdom":"🇬🇧","Canada":"🇨🇦","Germany":"🇩🇪"}.get(country, "🌍")
-            html += f'<div class="ce-country-row"><div style="width:76%;">{flag} {country}<div class="ce-country-track"><div class="ce-country-fill" style="width:{pct}%;"></div></div></div><strong>{n} leads ({pct}%)</strong></div>'
+            flag = {"United States":"US","United Kingdom":"UK","Canada":"CA","Germany":"DE"}.get(country, "INT")
+            html += f'<div class="ce-country-row"><div style="width:76%;">[{flag}] {country}<div class="ce-country-track"><div class="ce-country-fill" style="width:{pct}%;"></div></div></div><strong>{n} ({pct}%)</strong></div>'
         html += '</div>'
         st.markdown(html, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -630,17 +662,17 @@ if menu in {"Dashboard", "Find Leads"}:
             ("Social media opportunity", "15 leads"),
         ]
         for name, count_str in top_opps_mock:
-            st.markdown(f'<div class="ce-op"><span>{name}</span><span>{count_str} →</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="ce-op"><span>{name}</span><span>{count_str}</span></div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     act, qa = st.columns([2.1, 1], gap="small")
     with act:
         st.markdown('<div class="ce-panel" style="margin-top:12px;">', unsafe_allow_html=True)
-        st.markdown('<div class="ce-panel-title">Recent Activity <span style="float:right;color:#34D399;font-size:9px;">● Live</span></div>', unsafe_allow_html=True)
+        st.markdown('<div class="ce-panel-title">Recent Activity <span style="float:right;color:#34D399;font-size:9px;">Live</span></div>', unsafe_allow_html=True)
         recent = all_leads[:5]
         if recent:
-            icons = ["+", "✓", "✦", "➤", "●"]
-            labels = ["New lead added", "Lead verified", "AI analysis / record update", "Outreach ready", "Reply / status update"]
+            icons = ["+", "V", "*", ">", "o"]
+            labels = ["New lead added", "Lead verified", "AI analysis update", "Outreach ready", "Reply update"]
             for i, row in enumerate(recent):
                 company = safe_text(row.get("company_name"), "Lead")
                 email = safe_text(row.get("email"), "No email")
@@ -651,7 +683,7 @@ if menu in {"Dashboard", "Find Leads"}:
                 ("Lead verified", "Metro Dental · info@metrodental.co"),
                 ("Outreach ready", "Elite Builders · sales@elitebuilders.us"),
             ]
-            icons = ["+", "✓", "✦"]
+            icons = ["+", "V", "*"]
             for i, (label, detail) in enumerate(mock_activities):
                 st.markdown(f'<div class="ce-event"><div class="ce-event-dot">{icons[i]}</div><div class="ce-event-text"><b>{label}</b><span>{detail}</span></div></div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -660,12 +692,12 @@ if menu in {"Dashboard", "Find Leads"}:
         st.markdown('<div class="ce-panel" style="margin-top:12px;">', unsafe_allow_html=True)
         st.markdown('<div class="ce-panel-title">Quick Actions</div>', unsafe_allow_html=True)
         st.markdown('<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">', unsafe_allow_html=True)
-        st.markdown('<div style="padding:14px 8px;border:1px solid rgba(139,92,246,.45);border-radius:10px;text-align:center;background:rgba(139,92,246,.08); color:#FFFFFF;">＋<br><small>New Campaign</small></div>', unsafe_allow_html=True)
-        st.markdown('<div style="padding:14px 8px;border:1px solid rgba(37,99,235,.45);border-radius:10px;text-align:center;background:rgba(37,99,235,.08); color:#FFFFFF;">⇩<br><small>Export Leads</small></div>', unsafe_allow_html=True)
+        st.markdown('<div style="padding:14px 8px;border:1px solid rgba(139,92,246,.45);border-radius:10px;text-align:center;background:rgba(139,92,246,.08); color:#FFFFFF;">+<br><small>New Campaign</small></div>', unsafe_allow_html=True)
+        st.markdown('<div style="padding:14px 8px;border:1px solid rgba(37,99,235,.45);border-radius:10px;text-align:center;background:rgba(37,99,235,.08); color:#FFFFFF;">v<br><small>Export Leads</small></div>', unsafe_allow_html=True)
         st.markdown('</div></div>', unsafe_allow_html=True)
 
     st.markdown('<div class="ce-panel" style="margin-top:12px;">', unsafe_allow_html=True)
-    st.markdown('<div class="ce-panel-title">Recent High-Value Leads <span style="float:right;color:#38BDF8;font-size:10px;">View All →</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="ce-panel-title">Recent High-Value Leads <span style="float:right;color:#38BDF8;font-size:10px;">View All</span></div>', unsafe_allow_html=True)
     if db_error:
         st.warning(f"Supabase: {db_error}")
     if all_leads:
@@ -681,7 +713,7 @@ if menu in {"Dashboard", "Find Leads"}:
             if status.lower() in {"sent", "contacted", "emailed"}: status_label = "Follow-up"
             elif status.lower() in {"draft", "new"}: status_label = "Ready"
             else: status_label = status.title() if status else "New"
-            rows.append({"Company": company, "Location": country, "Email": email or "—", "AI Score": f"{score}/100", "Opportunity": "Website / lead-generation review", "Status": status_label, "Website": website})
+            rows.append({"Company": company, "Location": country, "Email": email or "—", "AI Score": f"{score}/100", "Opportunity": "Website / lead review", "Status": status_label, "Website": website})
         st.dataframe(rows, use_container_width=True, hide_index=True)
     else:
         st.info("No leads found yet. Launch a campaign above.")
